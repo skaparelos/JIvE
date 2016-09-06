@@ -1,25 +1,56 @@
-var Map_cell = function () {
+var Map_cell = function (type) {
+	/*
+		
+	*/
 	this.id = 0;
-	this.type = 0;
-	//var non_walkable
-	//var sprite
+
+	/* 
+		Types:	
+		0 -> nothing is here
+		1 -> non-walkable surface. i.e. either building or tree or etc..
+		2 -> sprites
+	*/
+	this.type = type;
+	
+	/* This should hold the building instance or the sprite instance */	 
+	this.entity = 0;
 };
 
 
 var Map = function() {
 	/* map_lvl0 holds only the background. Anything in this map is walkable */
-	var map_lvl0 = [];
+	this.map_lvl0 = [];
 	/* map_lvl1 holds all the non walkable stuff and the sprites */
-	var map_lvl1 = [];
-	var width = 0, height = 0;	
+	this.map_lvl1 = [];
+	this.width = 0, this.height = 0;
+	
+	this.images = [];
 };
 
 
 Map.prototype.draw = function(){
-	alert(2);
+	for (var i = 0; i < this.height; i++)
+		for (var j = 0; j < this.width; j++) {
+			var val = this.map_lvl0[i][j];
+			this.images[val-1].draw(i, j);
+            }
 };
 
 
 Map.prototype.load_map_from_file = function(){
-
+	/* Load map_lvl0 first */
+	this.map_lvl0 = [
+	[1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1],
+	];
+	this.width = 8;
+	this.height = 8;
+	this.images.push(new cImage(1, "dirt.png"));
+	
 };
