@@ -8,7 +8,7 @@ var cImage = function(character, path){
 };
 
 
-cImage.prototype.draw = function(i, j){
-	myGameArea.context.drawImage(this.img, 0, 0);
-	console.log("Draw!!");
+cImage.prototype.draw = function(ctx, i, j){
+	ctx.drawImage(this.img, 10, 10);
+	//console.log("Draw!!");
 };

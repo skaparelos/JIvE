@@ -28,12 +28,13 @@ var Map = function() {
 };
 
 
-Map.prototype.draw = function(){
-	for (var i = 0; i < this.height; i++)
+Map.prototype.draw = function(ctx){
+	for (var i = 0; i < this.height; i++){
 		for (var j = 0; j < this.width; j++) {
 			var val = this.map_lvl0[i][j];
-			this.images[val-1].draw(i, j);
+			this.images[val-1].draw(ctx, i, j);
             }
+	}
 };
 
 
@@ -52,5 +53,5 @@ Map.prototype.load_map_from_file = function(){
 	this.width = 8;
 	this.height = 8;
 	this.images.push(new cImage(1, "dirt.png"));
-	
+	console.log("map lvl0=");
 };
