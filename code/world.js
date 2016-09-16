@@ -31,7 +31,7 @@ var World = function(width, height){
 
 World.prototype.start = function(){
 	this.init_canvas(this.screen.get_width(), this.screen.get_height());
-	// call the game loop function 50 times per second
+	// call the game loop function period times per second
 	setInterval(this.game_loop.bind(this), this.screen.period);
 };
 
@@ -52,16 +52,17 @@ World.prototype.update_canvas_size = function (width, height) {
 };
 
 
+World.prototype.clear = function () {
+	/* Clears the screen */
+	this.context.clearRect(0, 0, this.screen.width, this.screen.height);
+};
+
+
 World.prototype.game_loop = function () {
 	if (this.running){
 		this.update();	
 		this.draw();
 	}
-};
-
-
-World.prototype.clear = function () {
-	this.context.clearRect(0, 0, this.screen.width, this.screen.height);
 };
 
 
@@ -111,6 +112,7 @@ World.prototype.draw = function(ctx){
 
 
 /* ------ Screen.js ------ */
+
 var Screen = function(width, height){
 	this.width = width;
 	this.height = height;
@@ -155,7 +157,7 @@ var keys = {
 };
 
 
-var _keycode = new Array(0, 0, 0, 0); //up,down,left, right
+var _keycode = new Array(0, 0, 0, 0); //up, down, left, right
 
 /* key is pressed */
 window.addEventListener('keydown', function (e) {

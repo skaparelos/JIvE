@@ -23,7 +23,6 @@ var Map = function() {
 	/* map_lvl1 holds all the non walkable stuff and the sprites */
 	this.map_lvl1 = [];
 	this.width = 0, this.height = 0;
-	
 	this.images = [];
 };
 
@@ -53,5 +52,4 @@ Map.prototype.load_map_from_file = function(){
 	this.width = 8;
 	this.height = 8;
 	this.images.push(new cImage(1, "dirt.png"));
-	console.log("map lvl0=");
 };
