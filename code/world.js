@@ -13,8 +13,9 @@ var World = function(width, height){
 	this.map.load_map_from_file();
 
 	/* scrolling speed: How fast is the map going to move using the arrows */
-	this.speed = 20;
-
+	this.speed = 15;
+	this.zoom_level = 1;
+	
 	/* The change in each axis */
 	this.changeX = 0;
 	this.changeY = 0;
@@ -31,6 +32,8 @@ var World = function(width, height){
 
 World.prototype.start = function(){
 	this.init_canvas(this.screen.get_width(), this.screen.get_height());
+	//call draw() once to draw something
+	this.draw();
 	// call the game loop function period times per second
 	setInterval(this.game_loop.bind(this), this.screen.period);
 };
@@ -60,6 +63,7 @@ World.prototype.clear = function () {
 
 World.prototype.game_loop = function () {
 	if (this.running){
+		this.update();
 		this.update();	
 		this.draw();
 	}
@@ -98,14 +102,19 @@ World.prototype.update = function(){
 		_screen_resize = false;
 		this.change = true;
 	}
+
+	if (this.zoom_level != _keycode[4]){
+		this.zoom_level = _keycode[4];
+		this.change = true;
+	}
 };
 
 
-World.prototype.draw = function(ctx){
+World.prototype.draw = function(){
 	if(this.change){
-		console.log("called");
 		this.clear();
-		this.map.draw(this.context, this.changeX, this.changeY);
+		this.map.draw(this.context, this.changeX, 
+						this.changeY, this.zoom_level);
 		this.change = false;
 	}
 };
@@ -157,7 +166,7 @@ var keys = {
 };
 
 
-var _keycode = new Array(0, 0, 0, 0); //up, down, left, right
+var _keycode = new Array(0, 0, 0, 0, 1); //up, down, left, right, zoom_level
 
 /* key is pressed */
 window.addEventListener('keydown', function (e) {
@@ -165,16 +174,14 @@ window.addEventListener('keydown', function (e) {
     if (e.keyCode == keys.DOWN || e.keyCode == keys.S) _keycode[1] = 1;
     if (e.keyCode == keys.LEFT || e.keyCode == keys.A) _keycode[2] = 1;
     if (e.keyCode == keys.RIGHT || e.keyCode == keys.D) _keycode[3] = 1;
-    /*if (e.keyCode == keys.MINUS) { //zoom out
-        if (g_zoomLevel < 4)
-            Math.floor(g_zoomLevel++); 
-        g_change=true;
+    if (e.keyCode == keys.MINUS) { //zoom out
+        if (_keycode[4] < 4)
+            Math.floor(_keycode[4]++); 
     }
     if (e.keyCode == keys.PLUS) { //zoom in
-        if(g_zoomLevel>1)
-            Math.floor(g_zoomLevel--);
-        g_change=true;
-    }*/
+        if(_keycode[4]>1)
+            Math.floor(_keycode[4]--);
+    }
     /*if (e.keyCode == keys.P && running==false){
         running=true;
         run();

@@ -27,11 +27,11 @@ var Map = function() {
 };
 
 
-Map.prototype.draw = function(ctx, changeX, changeY){
-	for (var i = 0; i < this.height; i++){
-		for (var j = 0; j < this.width; j++) {
+Map.prototype.draw = function(ctx, changeX, changeY, zoom_level){
+	for (var i = 0; i < this.height; i++){ //row
+		for (var j = 0; j < this.width; j++) { //column
 			var val = this.map_lvl0[i][j];
-			this.images[val-1].draw(ctx, i, j, changeX, changeY);
+			this.images[val-1].draw(ctx, j, i, changeX, changeY, zoom_level);
             }
 	}
 };
