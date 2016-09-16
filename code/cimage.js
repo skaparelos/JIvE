@@ -8,7 +8,7 @@ var cImage = function(character, path){
 };
 
 
-cImage.prototype.draw = function(ctx, i, j){
-	ctx.drawImage(this.img, 10, 10);
+cImage.prototype.draw = function(ctx, i, j, changeX, changeY){
+	ctx.drawImage(this.img, i*this.width + changeX, j*this.height + changeY);
 	//console.log("Draw!!");
 };
