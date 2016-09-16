@@ -15,7 +15,8 @@ var World = function(width, height){
 	/* scrolling speed: How fast is the map going to move using the arrows */
 	this.speed = 15;
 	this.zoom_level = 1;
-	
+	this.mouse_click_event = null;	
+
 	/* The change in each axis */
 	this.changeX = 0;
 	this.changeY = 0;
@@ -72,8 +73,8 @@ World.prototype.game_loop = function () {
 
 World.prototype.update = function(){
 	
-    /* check if the user has pressed any map scrolling button */
-    if (_keycode[0] == 1 || _keycode[1] == 1 || 
+    /* Handle map scrolling */
+	if (_keycode[0] == 1 || _keycode[1] == 1 || 
 			_keycode[2] == 1 || _keycode[3] == 1) {
 
         var dx = 0,
@@ -95,7 +96,7 @@ World.prototype.update = function(){
         this.change = true;
     }
 
-	/* screen resize */
+	/* Handle screen resize */
 	if (_screen_resize){
 		this.screen.get_fullscreen();
 		this.context = this.canvas.getContext("2d");
@@ -103,9 +104,17 @@ World.prototype.update = function(){
 		this.change = true;
 	}
 
+	/* Handle zoom level */
 	if (this.zoom_level != _keycode[4]){
 		this.zoom_level = _keycode[4];
 		this.change = true;
+	}
+
+	/* Handle left mouse click */
+	if (this.mouse_click_event != _mouse_click_event){
+		this.mouse_click_event = _mouse_click_event;
+		var map_tiles = this.world_2_map_coords(_mouse_click_event);
+		console.log("Tiles = " + map_tiles);
 	}
 };
 
@@ -117,6 +126,45 @@ World.prototype.draw = function(){
 						this.changeY, this.zoom_level);
 		this.change = false;
 	}
+};
+
+
+/* Translates map coordinates to on screen coordinates 
+	- Runs in O(1)
+	- Takes as input a click event
+	- Outputs the cell in the map that was clicked
+*/
+World.prototype.world_2_map_coords = function (e) {
+
+    /*  Solve the drawing functions for tileX, tileY
+        These are the 2 drawing functions:
+        screenX = (this.tileX - this.tileY) * this.tileWidth / 2 + g_changeX;
+        screenY = (this.tileY + this.tileX) * this.tileHeight / 2 + g_changeY;  
+	*/
+    
+	if(this.map.map_lvl0[0][0] == undefined) 
+			//|| this.map.length != this.map.height)
+		return -1;
+    
+    //adjustX=-60 has been set empirically to correct the tile choice
+    var adjustX = -60/this.zoom_level;
+
+    var tiley = Math.floor(this.zoom_level * ((e.clientY - 
+				this.changeY) / _unit_tile_height - (e.clientX - this.changeX + 
+				adjustX) / _unit_tile_width));
+
+    var tilex = Math.floor(2 * this.zoom_level * (e.clientX - this.changeX + 
+				adjustX) / _unit_tile_width + tiley);
+    
+    if (tilex < 0 || tiley < 0 || 
+			tilex >= this.map.width || tiley >= this.map.height)
+        return -1;
+
+    if (tilex == undefined || tiley == undefined ||
+				isNaN(tilex) || isNaN(tiley))
+        return -1;
+
+    return [tiley, tilex]
 };
 
 
@@ -208,10 +256,11 @@ window.addEventListener('contextmenu', function (e) {
 
 
 /* mouse click */
+var _mouse_click_event;
 window.addEventListener('mousedown', function (e) {
 	switch (e.which) {
 		case 1: //left click
-       		//leftClick(e);
+       		_mouse_click_event = e;
 		break;
 		case 2: /* middle mouse button */ break;
 		case 3: /* right click has its own event listener */ break;
@@ -229,3 +278,12 @@ var _screen_resize = false;
 window.addEventListener("resize", function () {
 	_screen_resize = true;
 });
+
+
+var fake_event = {
+    clientX: -1,
+    clientY: -1
+};
+
+
+
