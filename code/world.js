@@ -157,7 +157,7 @@ World.prototype.world_2_map_coords = function (e) {
 			//|| this.map.length != this.map.height)
 		return -1;
     
-    //adjustX=-60 has been set empirically to correct the tile choice
+    //adjustX=-40 has been set empirically to correct the tile choice
     var adjustX = -40/this.zoom_level;
 
     var tiley = Math.floor(this.zoom_level * ((e.clientY - 
