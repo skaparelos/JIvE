@@ -4,7 +4,8 @@ var Map_cell = function (type) {
 	*/
 	this.id = 0;
 
-	/* 
+	/*
+		// this helps path finding 
 		Types:	
 		0 -> nothing is here
 		1 -> non-walkable surface. i.e. either building or tree or etc..
@@ -36,6 +37,21 @@ Map.prototype.draw = function(ctx, changeX, changeY, zoom_level){
 	}
 };
 
+//todo delete this var
+var lastchange = [0, 0]
+Map.prototype.change_cell_tile = function (map_lvl, row, col, value){
+	
+	if (map_lvl == 0){
+		this.map_lvl0[lastchange[0]][lastchange[1]] = 1;
+		this.map_lvl0[row][col] = value;
+	}
+	if (map_lvl == 1){
+		this.map_lvl1[row][col] = value;
+	}
+	lastchange = [row, col];
+	
+};
+
 
 Map.prototype.load_map_from_file = function(){
 	/* Load map_lvl0 first */
@@ -51,5 +67,6 @@ Map.prototype.load_map_from_file = function(){
 	];
 	this.width = 8;
 	this.height = 8;
-	this.images.push(new cImage(1, "dirt.png"));
+	this.images.push(new cImage(1, "dirt_red.png"));
+	this.images.push(new cImage(2, "dirt_green.png"));
 };

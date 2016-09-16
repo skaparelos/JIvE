@@ -15,7 +15,8 @@ var World = function(width, height){
 	/* scrolling speed: How fast is the map going to move using the arrows */
 	this.speed = 15;
 	this.zoom_level = 1;
-	this.mouse_click_event = null;	
+	this.mouse_click_event = null;
+	this.mouse_scroll_event = null;	
 
 	/* The change in each axis */
 	this.changeX = 0;
@@ -116,6 +117,16 @@ World.prototype.update = function(){
 		var map_tiles = this.world_2_map_coords(_mouse_click_event);
 		console.log("Tiles = " + map_tiles);
 	}
+
+	/* Handle mouse scroll */
+	if (this.mouse_scroll_event != _mouse_scroll_event){
+		this.mouse_scroll_event = _mouse_scroll_event;
+		var map_tiles = this.world_2_map_coords(_mouse_scroll_event);
+		if (map_tiles != -1){
+			this.map.change_cell_tile(0, map_tiles[0], map_tiles[1], 2);
+			this.change = true;
+		}
+	}
 };
 
 
@@ -147,7 +158,7 @@ World.prototype.world_2_map_coords = function (e) {
 		return -1;
     
     //adjustX=-60 has been set empirically to correct the tile choice
-    var adjustX = -60/this.zoom_level;
+    var adjustX = -40/this.zoom_level;
 
     var tiley = Math.floor(this.zoom_level * ((e.clientY - 
 				this.changeY) / _unit_tile_height - (e.clientX - this.changeX + 
@@ -246,7 +257,6 @@ window.addEventListener('keyup', function (e) {
 });
 
 
-
 /* right click */
 window.addEventListener('contextmenu', function (e) {
     e.preventDefault();
@@ -269,7 +279,9 @@ window.addEventListener('mousedown', function (e) {
 });
 
 
+var _mouse_scroll_event;
 window.addEventListener('mousemove', function (e) {
+		_mouse_scroll_event = e;
 });
 
 
@@ -284,6 +296,3 @@ var fake_event = {
     clientX: -1,
     clientY: -1
 };
-
-
-
