@@ -155,13 +155,16 @@ World.prototype.world_2_map_coords = function (e) {
         screenX = (tileX - tileY) * unittileWidth / 2 + changeX;
         screenY = (tileY + tileX) * unittileHeight / 2 + changeY;  
 	*/
-    
+   
 	if(this.map.map_lvl0[0][0] == undefined) 
 			//|| this.map.length != this.map.height)
 		return -1;
     
+    /* old one:
+
     //adjustX=-40 has been set empirically to correct the tile choice
-    var adjustX = -40/this.zoom_level;
+
+	var adjustX = -40/this.zoom_level;
 
     var tiley = Math.floor(this.zoom_level * ((e.clientY - 
 				this.changeY) / _unit_tile_height - 
@@ -169,7 +172,20 @@ World.prototype.world_2_map_coords = function (e) {
 
     var tilex = Math.floor(2 * this.zoom_level * (e.clientX - this.changeX + 
 				adjustX) / _unit_tile_width + tiley);
-    
+    */
+	
+	var adjustX = -40/this.zoom_level;
+	
+	var tilex = Math.floor(this.zoom_level * ( 
+				((e.clientX - this.changeX + adjustX)/_unit_tile_width) + 
+				((e.clientY - this.changeY)/_unit_tile_height)
+				));
+
+	var tiley = Math.floor(this.zoom_level * (
+				((e.clientY - this.changeY)/_unit_tile_height) - 
+				((e.clientX - this.changeX + adjustX)/_unit_tile_width)
+				));
+
     if (tilex < 0 || tiley < 0 || 
 			tilex >= this.map.width || tiley >= this.map.height)
         return -1;
@@ -281,7 +297,8 @@ var _mouse_click_event;
 window.addEventListener('mousedown', function (e) {
 	switch (e.which) {
 		case 1: //left click
-       		_mouse_click_event = e;
+			console.log("clicked: X=" + e.clientX + " Y=" + e.clientY);
+			_mouse_click_event = e;
 		break;
 		case 2: /* middle mouse button */ break;
 		case 3: /* right click has its own event listener */ break;

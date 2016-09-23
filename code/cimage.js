@@ -1,8 +1,8 @@
 /* cImage means custom Image. */
 var cImage = function(character, path){
-    this.character = character;
+	this.character = character;
 	this.loaded = false;
-    this.img = new Image();
+	this.img = new Image();
 
 	/* Once the image has been loaded set its width and height */
 	var that = this;
@@ -12,7 +12,7 @@ var cImage = function(character, path){
 		that.loaded = true;	
 	};
 
-    this.img.src = 'imgs/' + path;
+	this.img.src = 'imgs/' + path;
 };
 
 var _unit_tile_width  = 128;
@@ -29,8 +29,8 @@ cImage.prototype.draw = function(ctx, col, row, changeX, changeY, zoom_level){
 	var screenX = Math.round(initX/zoom_level + changeX);
 	var screenY = Math.round(initY/zoom_level + changeY);
 
-    //calculate the new tile width and height based on the zoom level
-    var tWidthZoom = Math.round(this.width_/zoom_level);
+	//calculate the new tile width and height based on the zoom level
+	var tWidthZoom = Math.round(this.width_/zoom_level);
     var tHeightZoom = Math.round(this.height_/zoom_level);
 
 	ctx.drawImage(this.img, screenX, screenY, tWidthZoom, tHeightZoom);
