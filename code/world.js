@@ -140,8 +140,8 @@ World.prototype.draw = function(){
 			Check the 4 edges of the screen to see which tiles are there.
 			Then draw the tiles that can appear on the screen and nothing more
             
-			This is big reduction: 
-			in a 200x200 map we drop from 40.000 iterations to about ~1000.
+			This is a big reduction: 
+			in a 200x200 map we drop from 40.000 iterations to about 1000.
         */
         
         var start_i = 0,
