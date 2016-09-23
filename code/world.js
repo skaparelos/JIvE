@@ -14,7 +14,7 @@ var World = function(width, height){
 
 	/* scrolling speed: How fast is the map going to move using the arrows */
 	this.speed = 15;
-	this.zoom_level = 1;
+	this.zoom_level = 2;
 	this.mouse_click_event = null;
 	this.mouse_scroll_event = null;	
 
@@ -35,7 +35,9 @@ var World = function(width, height){
 World.prototype.start = function(){
 	this.init_canvas(this.screen.get_width(), this.screen.get_height());
 	//call draw() once to draw something
-	this.draw();
+	this.draw(); 
+	// draw map without an event trigger.
+	this.change = true;
 	// call the game loop function period times per second
 	setInterval(this.game_loop.bind(this), this.screen.period);
 };
@@ -65,6 +67,7 @@ World.prototype.clear = function () {
 
 World.prototype.game_loop = function () {
 	if (this.running){
+		/* update two times for each frame */
 		this.update();
 		this.update();	
 		this.draw();
@@ -118,7 +121,7 @@ World.prototype.update = function(){
 		console.log("Tiles = " + map_tiles);
 	}
 
-	/* Handle mouse scroll */
+	/* Handle mouse scroll (tile selection) */
 	if (this.mouse_scroll_event != _mouse_scroll_event){
 		this.mouse_scroll_event = _mouse_scroll_event;
 		var map_tiles = this.world_2_map_coords(_mouse_scroll_event);
@@ -149,8 +152,8 @@ World.prototype.world_2_map_coords = function (e) {
 
     /*  Solve the drawing functions for tileX, tileY
         These are the 2 drawing functions:
-        screenX = (this.tileX - this.tileY) * this.tileWidth / 2 + g_changeX;
-        screenY = (this.tileY + this.tileX) * this.tileHeight / 2 + g_changeY;  
+        screenX = (tileX - tileY) * unittileWidth / 2 + changeX;
+        screenY = (tileY + tileX) * unittileHeight / 2 + changeY;  
 	*/
     
 	if(this.map.map_lvl0[0][0] == undefined) 
@@ -161,8 +164,8 @@ World.prototype.world_2_map_coords = function (e) {
     var adjustX = -40/this.zoom_level;
 
     var tiley = Math.floor(this.zoom_level * ((e.clientY - 
-				this.changeY) / _unit_tile_height - (e.clientX - this.changeX + 
-				adjustX) / _unit_tile_width));
+				this.changeY) / _unit_tile_height - 
+				(e.clientX - this.changeX + adjustX) / _unit_tile_width));
 
     var tilex = Math.floor(2 * this.zoom_level * (e.clientX - this.changeX + 
 				adjustX) / _unit_tile_width + tiley);
@@ -220,27 +223,35 @@ var keys = {
     P: 80,
     B: 66,
     ESC: 27,
-    PLUS: 61,
-    MINUS: 173
+    PLUS_firefox: 61, // firefox has different codes
+    MINUS_firefox: 173, 
+	PLUS: 187,
+	MINUS: 189 
 };
 
 
-var _keycode = new Array(0, 0, 0, 0, 1); //up, down, left, right, zoom_level
+var _keycode = new Array(0, 0, 0, 0, 2); //up, down, left, right, zoom_level
 
 /* key is pressed */
 window.addEventListener('keydown', function (e) {
+
+	/* Map scrolling */
     if (e.keyCode == keys.UP || e.keyCode == keys.W) _keycode[0] = 1;
     if (e.keyCode == keys.DOWN || e.keyCode == keys.S) _keycode[1] = 1;
     if (e.keyCode == keys.LEFT || e.keyCode == keys.A) _keycode[2] = 1;
     if (e.keyCode == keys.RIGHT || e.keyCode == keys.D) _keycode[3] = 1;
-    if (e.keyCode == keys.MINUS) { //zoom out
+
+	/* zoom level */
+    if (e.keyCode == keys.MINUS || e.keyCode == keys.MINUS_firefox ) { //zoom out
         if (_keycode[4] < 4)
-            Math.floor(_keycode[4]++); 
+            _keycode[4]++; 
     }
-    if (e.keyCode == keys.PLUS) { //zoom in
-        if(_keycode[4]>1)
-            Math.floor(_keycode[4]--);
+    if (e.keyCode == keys.PLUS || e.keyCode == keys.PLUS_firefox) { //zoom in
+        if(_keycode[4] > 1)
+            _keycode[4]--;
     }
+
+	/* Game pause */
     /*if (e.keyCode == keys.P && running==false){
         running=true;
         run();

@@ -37,6 +37,7 @@ Map.prototype.draw = function(ctx, changeX, changeY, zoom_level){
 	}
 };
 
+
 //todo delete this var
 var lastchange = [0, 0]
 Map.prototype.change_cell_tile = function (map_lvl, row, col, value){
