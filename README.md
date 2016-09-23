@@ -13,7 +13,7 @@ Currently Supported:
 As simple as:
 	
 ~~~~
-var world = new World(0, 0);
+var world = new World(0, 0); //fullscreen
 world.start(); 
 ~~~~
 
