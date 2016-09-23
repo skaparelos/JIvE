@@ -7,7 +7,7 @@ Currently Supported:
 - map scroll
 - tile selection
 - use tiles of any size
-- load maps from tiled (to some extend)
+- load maps from tiled (to some extent)
 - zoom in, zoom out
 
 As simple as:
