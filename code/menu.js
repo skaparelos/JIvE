@@ -3,6 +3,7 @@ function main(){
 	init_world();
 };
 
+
 function init_menu(){
 	//TODO
 };

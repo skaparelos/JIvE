@@ -29,9 +29,11 @@ var g_unit_tile_height = 32;
  */
 var g_level0_images = [
     [1, "ground_64_32.png"],
-    [2, "water_64_32.png"],
-	[3, "dirt_red.png"]
+    [2, "water_64_32.png"]
 ];
+
+/* image to use for tile selection */
+var g_selector = "selector_64_32.png";
 
 
 /*  Load your own map: 

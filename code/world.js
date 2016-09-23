@@ -124,7 +124,8 @@ World.prototype.update = function(){
 		this.mouse_scroll_event = _mouse_scroll_event;
 		var map_tiles = this.world_2_map_coords(_mouse_scroll_event);
 		if (map_tiles != -1){
-			this.map.change_cell_tile(0, map_tiles[0], map_tiles[1], 2);
+			this.map.update_selector(map_tiles[0], map_tiles[1]);
+			//this.map.change_cell_tile(0, map_tiles[0], map_tiles[1], 3);
 			this.change = true;
 		}
 	}
