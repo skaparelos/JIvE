@@ -15,23 +15,21 @@ var cImage = function(character, path){
 	this.img.src = 'imgs/' + path;
 };
 
-var _unit_tile_width  = 128;
-var _unit_tile_height = 64;
 
 cImage.prototype.draw = function(ctx, col, row, changeX, changeY, zoom_level){
 
-	/* make sure the image has loaded */
+	/* make sure the image has is loaded */
 	if (this.loaded == false)
 		return ;
 
-	var initX = (col - row) * _unit_tile_width/2;
-	var initY = (row + col) * _unit_tile_height/2;
-	var screenX = Math.round(initX/zoom_level + changeX);
-	var screenY = Math.round(initY/zoom_level + changeY);
+	var initX = (col - row) * g_unit_tile_width/2;
+	var initY = (row + col) * g_unit_tile_height/2;
+	var screenX = Math.floor(initX/zoom_level + changeX);
+	var screenY = Math.floor(initY/zoom_level + changeY);
 
 	//calculate the new tile width and height based on the zoom level
-	var tWidthZoom = Math.round(this.width_/zoom_level);
-    var tHeightZoom = Math.round(this.height_/zoom_level);
+	var t_width_zoom  = Math.floor(this.width_/zoom_level);
+	var t_height_zoom = Math.floor(this.height_/zoom_level);
 
-	ctx.drawImage(this.img, screenX, screenY, tWidthZoom, tHeightZoom);
+	ctx.drawImage(this.img, screenX, screenY, t_width_zoom, t_height_zoom);
 };

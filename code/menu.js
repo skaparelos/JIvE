@@ -10,5 +10,5 @@ function init_menu(){
 
 function init_world(){
 	var world = new World(0, 0); // (0,0) means full screen
-	world.start(); //using what is set in the "map_setup.js" file.
+	world.start(); 
 };

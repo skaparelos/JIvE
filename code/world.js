@@ -14,11 +14,12 @@ var World = function(width, height){
 
 	/* scrolling speed: How fast is the map going to move using the arrows */
 	this.speed = 15;
+	/* starting zoom level. Also change at the bottom */
 	this.zoom_level = 2;
 	this.mouse_click_event = null;
 	this.mouse_scroll_event = null;	
 
-	/* The change in each axis */
+	/* The change in each axis to control map movement */
 	this.changeX = 0;
 	this.changeY = 0;
 
@@ -26,9 +27,6 @@ var World = function(width, height){
 	this.change = true;
 	/* game state */
 	this.running = true;
-
-	//var g_UnitTileWidth ; 
-	//var g_UnitTileHeight ;
 };
 
 
@@ -159,40 +157,27 @@ World.prototype.world_2_map_coords = function (e) {
 	if(this.map.map_lvl0[0][0] == undefined) 
 			//|| this.map.length != this.map.height)
 		return -1;
-    
-    /* old one:
 
-    //adjustX=-40 has been set empirically to correct the tile choice
-
-	var adjustX = -40/this.zoom_level;
-
-    var tiley = Math.floor(this.zoom_level * ((e.clientY - 
-				this.changeY) / _unit_tile_height - 
-				(e.clientX - this.changeX + adjustX) / _unit_tile_width));
-
-    var tilex = Math.floor(2 * this.zoom_level * (e.clientX - this.changeX + 
-				adjustX) / _unit_tile_width + tiley);
-    */
-	
+	//adjustX=-40 has been set empirically to correct the tile choice	
 	var adjustX = -40/this.zoom_level;
 	
 	var tilex = Math.floor(this.zoom_level * ( 
-				((e.clientX - this.changeX + adjustX)/_unit_tile_width) + 
-				((e.clientY - this.changeY)/_unit_tile_height)
+				((e.clientX - this.changeX + adjustX)/g_unit_tile_width) + 
+				((e.clientY - this.changeY)/g_unit_tile_height)
 				));
 
 	var tiley = Math.floor(this.zoom_level * (
-				((e.clientY - this.changeY)/_unit_tile_height) - 
-				((e.clientX - this.changeX + adjustX)/_unit_tile_width)
+				((e.clientY - this.changeY)/g_unit_tile_height) - 
+				((e.clientX - this.changeX + adjustX)/g_unit_tile_width)
 				));
 
-    if (tilex < 0 || tiley < 0 || 
+	if (tilex < 0 || tiley < 0 || 
 			tilex >= this.map.width || tiley >= this.map.height)
-        return -1;
+		return -1;
 
-    if (tilex == undefined || tiley == undefined ||
-				isNaN(tilex) || isNaN(tiley))
-        return -1;
+	if (tilex == undefined || tiley == undefined || 
+			isNaN(tilex) || isNaN(tiley))
+		return -1;
 
     return [tiley, tilex]
 };
@@ -241,8 +226,8 @@ var keys = {
     ESC: 27,
     PLUS_firefox: 61, // firefox has different codes
     MINUS_firefox: 173, 
-	PLUS: 187,
-	MINUS: 189 
+    PLUS: 187,
+    MINUS: 189 
 };
 
 
@@ -301,7 +286,7 @@ window.addEventListener('mousedown', function (e) {
 			_mouse_click_event = e;
 		break;
 		case 2: /* middle mouse button */ break;
-		case 3: /* right click has its own event listener */ break;
+		case 3: /* right click has its own event listener (see above) */ break;
 		/*default:   alert("You have a strange mouse!"); */
     }
 });
@@ -309,7 +294,7 @@ window.addEventListener('mousedown', function (e) {
 
 var _mouse_scroll_event;
 window.addEventListener('mousemove', function (e) {
-		_mouse_scroll_event = e;
+	_mouse_scroll_event = e;
 });
 
 
