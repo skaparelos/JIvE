@@ -29,11 +29,12 @@ var Map = function() {
 };
 
 
-Map.prototype.draw = function(ctx, changeX, changeY, zoom_level){
+Map.prototype.draw = function(ctx, changeX, changeY, zoom_level, 
+			start_i, end_i, start_j, end_j){
 	
 	/* draw level 0 */
-	for (var i = 0; i < this.height; i++){ //row
-		for (var j = 0; j < this.width; j++) { //column
+	for (var i = start_i; i < end_i; i++){ //row
+		for (var j = start_j; j < end_j; j++) { //column
 			var val = this.map_lvl0[i][j];
 			this.images_lvl0[val-1].draw(ctx, j, i, changeX, changeY, zoom_level);
             }
@@ -50,6 +51,7 @@ Map.prototype.draw = function(ctx, changeX, changeY, zoom_level){
 
 
 Map.prototype.update_selector = function (tiley, tilex){
+	/* update the tile selector */
 	this.selector_tiley = tiley;
 	this.selector_tilex = tilex;
 };

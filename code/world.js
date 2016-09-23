@@ -116,7 +116,7 @@ World.prototype.update = function(){
 	if (this.mouse_click_event != _mouse_click_event){
 		this.mouse_click_event = _mouse_click_event;
 		var map_tiles = this.world_2_map_coords(_mouse_click_event);
-		console.log("Tiles = " + map_tiles);
+		//console.log("Tiles = " + map_tiles);
 	}
 
 	/* Handle mouse scroll (tile selection) */
@@ -125,7 +125,6 @@ World.prototype.update = function(){
 		var map_tiles = this.world_2_map_coords(_mouse_scroll_event);
 		if (map_tiles != -1){
 			this.map.update_selector(map_tiles[0], map_tiles[1]);
-			//this.map.change_cell_tile(0, map_tiles[0], map_tiles[1], 3);
 			this.change = true;
 		}
 	}
@@ -134,9 +133,54 @@ World.prototype.update = function(){
 
 World.prototype.draw = function(){
 	if(this.change){
+		// clear the screen
 		this.clear();
+
+ 		/* 
+			Check the 4 edges of the screen to see which tiles are there.
+			Then draw the tiles that can appear on the screen and nothing more
+            
+			This is big reduction: 
+			in a 200x200 map we drop from 40.000 iterations to about ~1000.
+        */
+        
+        var start_i = 0,
+            start_j = 0,
+            end_i = this.map.height,
+            end_j = this.map.width;
+
+        fake_event.clientX = 0;
+        fake_event.clientY = 0;
+        var res = this.world_2_map_coords(fake_event);
+        if (res != -1) {
+            start_j = res.tileX;
+        }
+
+        fake_event.clientX = this.screen.width;
+        fake_event.clientY = 0;
+        res = this.world_2_map_coords(fake_event);
+        if (res != -1) {
+            start_i = res.tileY;
+        }
+
+        fake_event.clientX = 0;
+        fake_event.clientY = this.screen.height;
+        res = this.world_2_map_coords(fake_event);
+        if (res != -1) {
+            end_i = (res.tileY + 2 > this.map.height) ? this.map.height : res.tileY + 2;
+        }
+
+        fake_event.clientX = this.screen.width;
+        fake_event.clientY = this.screen.height;
+        res = this.world_2_map_coords(fake_event);
+        if (res != -1) {
+            end_j = (res.tileX + 1 > this.map.width) ? this.map.width : res.tileX + 1;
+        }
+
 		this.map.draw(this.context, this.changeX, 
-						this.changeY, this.zoom_level);
+						this.changeY, this.zoom_level, start_i, end_i,
+						start_j, end_j);	
+
 		this.change = false;
 	}
 };
@@ -283,7 +327,6 @@ var _mouse_click_event;
 window.addEventListener('mousedown', function (e) {
 	switch (e.which) {
 		case 1: //left click
-			console.log("clicked: X=" + e.clientX + " Y=" + e.clientY);
 			_mouse_click_event = e;
 		break;
 		case 2: /* middle mouse button */ break;
