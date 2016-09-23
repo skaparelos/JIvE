@@ -64,11 +64,10 @@ Map.prototype.load_map_from_file = function(){
 	this.width  = this.map_lvl0[0].length;
 	console.log("map width = " + this.width + " height = " + this.height);
 	
-	//this.images_lvl0.push(new cImage(1, "dirt_red.png"));
-	//this.images_lvl0.push(new cImage(2, "dirt_green.png"));
-
     var l = g_level0_images.length;
     for(var i=0; i<l; i++)
 		this.images_lvl0.push(new cImage(g_level0_images[i][0], 
 			g_level0_images[i][1]));
+	g_level0_images = [];
+	
 };

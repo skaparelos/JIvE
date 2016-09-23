@@ -6,8 +6,17 @@ Written using VanillaJS.
 Currently Supported:
 - map scroll
 - tile selection
-- any tile size
+- use tiles of any size
 - load maps from tiled (to some extend)
+- zoom in, zoom out
+
+As simple as:
+	
+~~~~
+var world = new World(0, 0);
+world.start(); 
+~~~~
+
 
 Tile Selection (128x64 tiles, zoom in):
 ![alt tag](https://github.com/skaparelos/JIvE/blob/master/screenshots/1-tile_selection.png)
