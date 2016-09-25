@@ -8,10 +8,10 @@
 
 
 /* UNIT TILE WIDTH (smallest possible width) */
-var g_unit_tile_width = 64;
+var g_unit_tile_width = 128;
 
 /* UNIT TILE HEIGHT (smallest possible height) */
-var g_unit_tile_height = 32;
+var g_unit_tile_height = 64;
 
 
 /* Images(Images must be in the folder imgs).
@@ -28,13 +28,13 @@ var g_unit_tile_height = 32;
  * info5 -> whether it's a background tile or a building
  */
 var g_level0_images = [
-    [1, "ground_64_32.png"],
-    [2, "water_64_32.png"]
+    [1, "green.png"],
+    [2, "dirt.png"]
 ];
 
 /* image to use for tile selection */
-var g_selector = "selector_64_32.png";
-var g_non_selector = "non_selector_64_32.png";
+var g_selector = "selector.png";
+var g_non_selector = "non_selector.png";
 
 
 /*  Load your own map: 

@@ -17,6 +17,8 @@ var world = new World(0, 0); //fullscreen
 world.start(); 
 ~~~~
 
+Current:
+![alt tag](https://github.com/skaparelos/JIvE/blob/master/screenshots/3-menu-added-houses.png)
 
 Tile Selection (128x64 tiles, zoom in):
 ![alt tag](https://github.com/skaparelos/JIvE/blob/master/screenshots/1-tile_selection.png)
