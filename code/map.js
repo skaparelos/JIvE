@@ -77,6 +77,7 @@ Map.prototype.build_building = function (tiley, tilex){
 	
 	var building = new Building();
 	building.set_image("house.png");
+	this.map_lvl1[tiley][tilex].type = 1;
 	this.map_lvl1[tiley][tilex].entity = building;
 };
 
