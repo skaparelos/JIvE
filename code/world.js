@@ -91,8 +91,20 @@ World.prototype.update = function(){
         if (_keycode[3] == 1) dx = -this.speed;
 
         //update tiles the drawing position of each tile
-        this.changeX += dx;
-        this.changeY += dy;
+		if ((this.changeX + dx)/this.zoom_level < 
+						this.map.max_changeX/this.zoom_level
+				&& (this.changeX + dx)/this.zoom_level > 
+						-g_unit_tile_width/this.zoom_level)
+	        this.changeX += dx;
+
+		if ((this.changeY + dy)/this.zoom_level < 
+						this.map.max_changeY/this.zoom_level 
+				&& (this.changeY + dy)/this.zoom_level > 
+						-this.map.max_changeY/this.zoom_level)
+        	this.changeY += dy;
+
+		//console.log("changeX= " + this.changeX);
+		//console.log("changeY= " + this.changeY);
    
 		//notify that there has been a change since the last draw 
         this.change = true;
@@ -148,33 +160,36 @@ World.prototype.draw = function(){
             start_j = 0,
             end_i = this.map.height,
             end_j = this.map.width;
+		
+		//res[0] -> tiley
+		//res[1] -> tilex
 
         fake_event.clientX = 0;
         fake_event.clientY = 0;
         var res = this.world_2_map_coords(fake_event);
         if (res != -1) {
-            start_j = res.tileX;
+            start_j = res[1];
         }
 
         fake_event.clientX = this.screen.width;
         fake_event.clientY = 0;
         res = this.world_2_map_coords(fake_event);
         if (res != -1) {
-            start_i = res.tileY;
+            start_i = res[0];
         }
 
         fake_event.clientX = 0;
         fake_event.clientY = this.screen.height;
         res = this.world_2_map_coords(fake_event);
         if (res != -1) {
-            end_i = (res.tileY + 2 > this.map.height) ? this.map.height : res.tileY + 2;
+            end_i = (res[0] + 2 > this.map.height) ? this.map.height : res[0] + 2;
         }
 
         fake_event.clientX = this.screen.width;
         fake_event.clientY = this.screen.height;
         res = this.world_2_map_coords(fake_event);
         if (res != -1) {
-            end_j = (res.tileX + 1 > this.map.width) ? this.map.width : res.tileX + 1;
+            end_j = (res[1] + 1 > this.map.width) ? this.map.width : res[1] + 1;
         }
 
 		this.map.draw(this.context, this.changeX, 

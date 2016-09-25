@@ -74,4 +74,8 @@ Map.prototype.load_map_from_file = function(){
 
 	/* load the image of the selector */
 	this.selector = new cImage(-1, g_selector);
+
+	/* set maximum scroll based on the map size */
+	this.max_changeX = (this.width * (g_unit_tile_width /2));
+	this.max_changeY = (this.height * (g_unit_tile_height/2))/2;
 };
