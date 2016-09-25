@@ -287,6 +287,8 @@ var Game_Menu = function (screen) {
 	this.add_option(0, 55);
 	this.add_option(55, 0, "#F49AC2");
 	this.add_option(55, 55);
+	this.add_option(110, 0);
+	this.add_option(165, 0);
 
 	this.options[1].set_image("icon.jpg");
 	
@@ -319,19 +321,19 @@ Game_Menu.prototype.clear = function (ctx) {
 	ctx.fillRect(0, this.menu_start_height, this.menu_width, this.menu_height);	
 };
 
-
 Game_Menu.prototype.clicked_menu = function (e){
+	/* This function checks whether a click was in the menu or not */
 	if (e.clientY > this.menu_start_height)
 		return true;
 };
 
 
 Game_Menu.prototype.handle_click = function (e){
-		
+
 };
 
 
-/* menu options */
+/* menu options. A menu option appears in the menu and is clickable */
 var Menu_Option = function (x, y, width, height, colour){
 	this.x = x;
 	this.y = y;
@@ -340,9 +342,11 @@ var Menu_Option = function (x, y, width, height, colour){
 	this.colour = colour;
 };
 
+
 Menu_Option.prototype.set_image = function (image_path){
 	this.image = new cImage(0, image_path);
 };
+
 
 Menu_Option.prototype.draw = function(ctx){
 	if (this.image === undefined){

@@ -1,20 +1,34 @@
-var Map_cell = function (type) {
-	/*
-		
-	*/
+var Map_Cell = function (type) {
+	/* TODO	do we need the id?*/
 	this.id = 0;
 
-	/*
-		// this helps path finding 
+	/*  (This helps path finding)
 		Types:	
 		0 -> nothing is here
 		1 -> non-walkable surface. i.e. either building or tree or etc..
-		2 -> sprites
-	*/
+		2 -> sprites */
 	this.type = type;
 	
 	/* This should hold the building instance or the sprite instance */	 
-	this.entity = 0;
+	this.entity = null;
+};
+
+
+var Building = function(){
+	this.width = 0;
+	this.height = 0;
+
+	/* toDraw variable checks whether that cell contains something that must
+		be drawn. e.g. if we have a house 2x2 cells, we only want to draw it
+		once and not 4 times. 
+		 ___ ___
+		|org|   |
+		 --- ---
+		|   |   |
+         --- ---
+		we only want to draw the house at origin (org), not 4 times.
+	 */
+	this.toDraw = false;
 };
 
 
@@ -26,6 +40,9 @@ var Map = function() {
 	this.width = 0, this.height = 0;
 	this.images_lvl0 = [];
 	this.images_lvl1 = [];
+
+	this.selector_tilex = 0;
+	this.selector_tiley = 0;
 };
 
 
@@ -44,8 +61,14 @@ Map.prototype.draw = function(ctx, changeX, changeY, zoom_level,
 	//TODO
 
 	/* draw selector */
-	this.selector.draw(ctx,	this.selector_tilex, this.selector_tiley, 
-		changeX, changeY, zoom_level);
+	console.log("selector on = "+this.map_lvl1[this.selector_tiley][this.selector_tilex].type );
+	if(this.map_lvl1[this.selector_tiley][this.selector_tilex].type == 0)
+		this.selector.draw(ctx,	this.selector_tilex, this.selector_tiley, 
+			changeX, changeY, zoom_level);
+	else
+		this.non_selector.draw(ctx,	this.selector_tilex, this.selector_tiley, 
+			changeX, changeY, zoom_level);
+
 	
 };
 
@@ -58,24 +81,37 @@ Map.prototype.update_selector = function (tiley, tilex){
 
 
 Map.prototype.load_map_from_file = function(){
-	/* Load map_lvl0 first */
+	/* 1.0) Load map_lvl0 */
 	this.map_lvl0 = g_level0_map;
 	this.height = this.map_lvl0.length;
 	this.width  = this.map_lvl0[0].length;
 	console.log("map width = " + this.width + " height = " + this.height);
 	g_level0_map = [];
 
-	/* load level 0 map images */	
+	/* 1.1) load level 0 map images */	
     var l = g_level0_images.length;
     for(var i=0; i<l; i++)
 		this.images_lvl0.push(new cImage(g_level0_images[i][0], 
 			g_level0_images[i][1]));
 	g_level0_images = [];
 
-	/* load the image of the selector */
-	this.selector = new cImage(-1, g_selector);
+	/* 2.0) Load map_lvl1 */
+	for (var i = 0; i < this.height; i++){ //row
+		this.map_lvl1[i] = [];
+		for (var j = 0; j < this.width; j++) { //column
+			if(g_level1_map[i][j] == 0)
+				this.map_lvl1[i][j] = new Map_Cell(0);
+			else
+				this.map_lvl1[i][j] = new Map_Cell(1);
+		}
+	}
+	g_level1_map = [];
 
-	/* set maximum scroll based on the map size */
+	/* 3.0) load the image of the selector */
+	this.selector = new cImage(-1, g_selector);
+	this.non_selector = new cImage(-1, g_non_selector);
+
+	/* 4.0) set maximum scroll based on the map size */
 	this.max_changeX = (this.width * (g_unit_tile_width /2));
 	this.max_changeY = (this.height * (g_unit_tile_height/2))/2;
 };
