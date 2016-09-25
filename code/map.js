@@ -14,33 +14,23 @@ var Map_Cell = function (type) {
 };
 
 
-var Building = function(){
-	this.width = 0;
-	this.height = 0;
-
-	/* toDraw variable checks whether that cell contains something that must
-		be drawn. e.g. if we have a house 2x2 cells, we only want to draw it
-		once and not 4 times. 
-		 ___ ___
-		|org|   |
-		 --- ---
-		|   |   |
-         --- ---
-		we only want to draw the house at origin (org), not 4 times.
-	 */
-	this.toDraw = false;
-};
-
-
 var Map = function() {
-	/* map_lvl0 holds only the background. Anything in this map is walkable */
+
+	/* map_lvl0 holds only the background. Anything placed this map 
+	shoud be walkable */
 	this.map_lvl0 = [];
+
 	/* map_lvl1 holds all the non walkable stuff and the sprites */
 	this.map_lvl1 = [];
+
+	/* width and height of both maps */
 	this.width = 0, this.height = 0;
+
+	/* images needed for each map */
 	this.images_lvl0 = [];
 	this.images_lvl1 = [];
 
+	/* set these to 0 initially */
 	this.selector_tilex = 0;
 	this.selector_tiley = 0;
 };
@@ -58,18 +48,20 @@ Map.prototype.draw = function(ctx, changeX, changeY, zoom_level,
 	}
 	
 	/* draw level 1 */
-	//TODO
+	for (var i = start_i; i < end_i; i++){ //row
+		for (var j = start_j; j < end_j; j++) { //column
+			if(this.map_lvl1[i][j].entity != null)
+				this.map_lvl1[i][j].entity.image.draw(ctx, j, i, changeX, changeY, zoom_level);
+            }
+	}
 
 	/* draw selector */
-	console.log("selector on = "+this.map_lvl1[this.selector_tiley][this.selector_tilex].type );
 	if(this.map_lvl1[this.selector_tiley][this.selector_tilex].type == 0)
 		this.selector.draw(ctx,	this.selector_tilex, this.selector_tiley, 
 			changeX, changeY, zoom_level);
 	else
 		this.non_selector.draw(ctx,	this.selector_tilex, this.selector_tiley, 
 			changeX, changeY, zoom_level);
-
-	
 };
 
 
@@ -80,7 +72,17 @@ Map.prototype.update_selector = function (tiley, tilex){
 };
 
 
+Map.prototype.build_building = function (tiley, tilex){
+	//TODO get the building type, etc..
+	
+	var building = new Building();
+	building.set_image("house.png");
+	this.map_lvl1[tiley][tilex].entity = building;
+};
+
+
 Map.prototype.load_map_from_file = function(){
+
 	/* 1.0) Load map_lvl0 */
 	this.map_lvl0 = g_level0_map;
 	this.height = this.map_lvl0.length;
@@ -115,3 +117,27 @@ Map.prototype.load_map_from_file = function(){
 	this.max_changeX = (this.width * (g_unit_tile_width /2));
 	this.max_changeY = (this.height * (g_unit_tile_height/2))/2;
 };
+
+
+var Building = function(){
+	this.width = 1;
+	this.height = 1;
+
+	/* toDraw variable checks whether that cell contains something that must
+		be drawn. e.g. if we have a house 2x2 cells, we only want to draw it
+		once and not 4 times. 
+		 ___ ___
+		|org|   |
+		 --- ---
+		|   |   |
+         --- ---
+		we only want to draw the house at origin (org), not 4 times.
+	 */
+	this.toDraw = true;
+	this.image = null;
+};
+
+Building.prototype.set_image = function (image_path){
+	this.image = new cImage(-1, image_path);
+};
+

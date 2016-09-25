@@ -39,3 +39,4 @@ cImage.prototype.draw = function(ctx, col, row, changeX, changeY, zoom_level){
 cImage.prototype.menu_draw = function(ctx, x, y){
 	ctx.drawImage(this.img, x, y)
 };
+

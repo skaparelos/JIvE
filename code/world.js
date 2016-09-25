@@ -145,8 +145,8 @@ World.prototype.update = function(){
 			this.game_menu.handle_click(_mouse_click_event);
 		}else{
 			var map_tiles = this.world_2_map_coords(_mouse_click_event);
-			//console.log("Tiles = " + map_tiles);
-			}
+			this.map.build_building(map_tiles[0], map_tiles[1]);
+		}
 	}
 
 	/* Handle mouse scroll (tile selection) */
