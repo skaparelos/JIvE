@@ -17,8 +17,11 @@ var World = function(width, height){
 
 	/* scrolling speed: How fast is the map going to move using the arrows */
 	this.speed = 15;
+
 	/* starting zoom level. Also change at the bottom */
 	this.zoom_level = 2;
+	
+	/* */
 	this.mouse_click_event = null;
 	this.mouse_scroll_event = null;	
 
@@ -28,6 +31,7 @@ var World = function(width, height){
 
 	/* checks whether a map change has happened since last draw */
 	this.change = true;
+
 	/* checks for a change in the menu (e.g. a click) */
 	this.game_menu_change = true;
 
@@ -261,6 +265,13 @@ World.prototype.world_2_map_coords = function (e) {
     return [tiley, tilex]
 };
 
+/* ------ statistics.js ------ */
+/* keep track of each user's statistics, like gold, stone, etc. */
+var User_Statistics = function (){
+	this.gold = 100;
+};
+
+
 /* ------ menu.js ------- */
 /* This is the in-game menu */
 
@@ -270,12 +281,17 @@ var Game_Menu = function (screen) {
 	this.menu_start_height = screen.height - this.menu_height;
 	//array with the options
 	this.options = [];
-	
+
+	// add some options	
 	this.add_option(0, 0, "#ffffff");
 	this.add_option(0, 55);
 	this.add_option(55, 0, "#F49AC2");
 	this.add_option(55, 55);
+
+	this.options[1].set_image("icon.jpg");
+	
 };
+
 
 Game_Menu.prototype.add_option = function(x, y, colour){
 	if (colour === undefined) {
@@ -299,7 +315,7 @@ Game_Menu.prototype.draw = function (ctx){
 
 Game_Menu.prototype.clear = function (ctx) {
 	/* Clears the game menu */
-	ctx.fillStyle = "#283f33";	
+	ctx.fillStyle = "#283f33"; //This is the bg colour of the menu
 	ctx.fillRect(0, this.menu_start_height, this.menu_width, this.menu_height);	
 };
 
@@ -311,7 +327,7 @@ Game_Menu.prototype.clicked_menu = function (e){
 
 
 Game_Menu.prototype.handle_click = function (e){
-	
+		
 };
 
 
@@ -322,13 +338,19 @@ var Menu_Option = function (x, y, width, height, colour){
 	this.width = width;
 	this.height = height;
 	this.colour = colour;
-	// if we want to add an image:
-	//this.image = new cImage(...)
+};
+
+Menu_Option.prototype.set_image = function (image_path){
+	this.image = new cImage(0, image_path);
 };
 
 Menu_Option.prototype.draw = function(ctx){
-	ctx.fillStyle = this.colour;
-	ctx.fillRect(this.x, this.y, this.width, this.height);	
+	if (this.image === undefined){
+		ctx.fillStyle = this.colour;
+		ctx.fillRect(this.x, this.y, this.width, this.height);
+	}else{
+		this.image.menu_draw(ctx, this.x, this.y);
+	}
 };
 
 
