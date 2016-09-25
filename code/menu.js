@@ -6,6 +6,7 @@ function main(){
 
 function init_menu(){
 	//TODO
+	// this is the main menu, not the in-game menu
 };
 
 

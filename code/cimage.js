@@ -22,6 +22,7 @@ cImage.prototype.draw = function(ctx, col, row, changeX, changeY, zoom_level){
 	if (this.loaded == false)
 		return ;
 
+	/* Map to World coords conversion */
 	var initX = (col - row) * g_unit_tile_width/2;
 	var initY = (row + col) * g_unit_tile_height/2;
 	var screenX = Math.floor(initX/zoom_level + changeX);

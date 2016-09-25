@@ -12,6 +12,9 @@ var World = function(width, height){
 	this.map = new Map();
 	this.map.load_map_from_file();
 
+	/* setup an in-game menu */
+	this.game_menu = new Game_Menu(this.screen);
+
 	/* scrolling speed: How fast is the map going to move using the arrows */
 	this.speed = 15;
 	/* starting zoom level. Also change at the bottom */
@@ -23,8 +26,11 @@ var World = function(width, height){
 	this.changeX = 0;
 	this.changeY = 0;
 
-	/* checks whether a change has happened since last draw */
+	/* checks whether a map change has happened since last draw */
 	this.change = true;
+	/* checks for a change in the menu (e.g. a click) */
+	this.game_menu_change = true;
+
 	/* game state */
 	this.running = true;
 };
@@ -59,7 +65,8 @@ World.prototype.update_canvas_size = function (width, height) {
 
 World.prototype.clear = function () {
 	/* Clears the screen */
-	this.context.clearRect(0, 0, this.screen.width, this.screen.height);
+	this.context.clearRect(0, 0, this.screen.width, 
+			this.screen.height - this.game_menu.menu_height);
 };
 
 
@@ -97,10 +104,12 @@ World.prototype.update = function(){
 						-g_unit_tile_width/this.zoom_level)
 	        this.changeX += dx;
 
-		if ((this.changeY + dy)/this.zoom_level < 
-						this.map.max_changeY/this.zoom_level 
-				&& (this.changeY + dy)/this.zoom_level > 
-						-this.map.max_changeY/this.zoom_level)
+		if (((this.changeY + dy)/this.zoom_level < 
+				this.map.max_changeY/this.zoom_level - 
+					this.game_menu.menu_height/this.zoom_level)  
+				&& ((this.changeY + dy)/this.zoom_level > 
+					-this.map.max_changeY/this.zoom_level 
+						- this.game_menu.menu_height/this.zoom_level))
         	this.changeY += dy;
 
 		//console.log("changeX= " + this.changeX);
@@ -127,8 +136,13 @@ World.prototype.update = function(){
 	/* Handle left mouse click */
 	if (this.mouse_click_event != _mouse_click_event){
 		this.mouse_click_event = _mouse_click_event;
-		var map_tiles = this.world_2_map_coords(_mouse_click_event);
-		//console.log("Tiles = " + map_tiles);
+		// check if the click was in the map or in the game menu
+		if(this.game_menu.clicked_menu(_mouse_click_event) == true){
+			this.game_menu.handle_click(_mouse_click_event);
+		}else{
+			var map_tiles = this.world_2_map_coords(_mouse_click_event);
+			//console.log("Tiles = " + map_tiles);
+			}
 	}
 
 	/* Handle mouse scroll (tile selection) */
@@ -198,6 +212,11 @@ World.prototype.draw = function(){
 
 		this.change = false;
 	}
+	
+	/* If there was a change in menu game (e.g. a click), redraw it */
+	if(this.game_menu_change){
+		this.game_menu.draw(this.context);	
+	}
 };
 
 
@@ -240,6 +259,76 @@ World.prototype.world_2_map_coords = function (e) {
 		return -1;
 
     return [tiley, tilex]
+};
+
+/* ------ menu.js ------- */
+/* This is the in-game menu */
+
+var Game_Menu = function (screen) {
+	this.menu_width = screen.width;
+	this.menu_height = 150;
+	this.menu_start_height = screen.height - this.menu_height;
+	//array with the options
+	this.options = [];
+	
+	this.add_option(0, 0, "#ffffff");
+	this.add_option(0, 55);
+	this.add_option(55, 0, "#F49AC2");
+	this.add_option(55, 55);
+};
+
+Game_Menu.prototype.add_option = function(x, y, colour){
+	if (colour === undefined) {
+		colour = "#779ECB";
+    }
+	//create a new option
+	var option = new Menu_Option(x + 2, this.menu_start_height + 2 + y,
+			 50, 50, colour);
+	//add the option in the menu
+	this.options.push(option);
+};
+
+
+Game_Menu.prototype.draw = function (ctx){
+	this.clear(ctx);
+	len = this.options.length;
+	for (var i = 0; i < len; i++)
+		this.options[i].draw(ctx);
+};
+
+
+Game_Menu.prototype.clear = function (ctx) {
+	/* Clears the game menu */
+	ctx.fillStyle = "#283f33";	
+	ctx.fillRect(0, this.menu_start_height, this.menu_width, this.menu_height);	
+};
+
+
+Game_Menu.prototype.clicked_menu = function (e){
+	if (e.clientY > this.menu_start_height)
+		return true;
+};
+
+
+Game_Menu.prototype.handle_click = function (e){
+	
+};
+
+
+/* menu options */
+var Menu_Option = function (x, y, width, height, colour){
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+	this.colour = colour;
+	// if we want to add an image:
+	//this.image = new cImage(...)
+};
+
+Menu_Option.prototype.draw = function(ctx){
+	ctx.fillStyle = this.colour;
+	ctx.fillRect(this.x, this.y, this.width, this.height);	
 };
 
 
