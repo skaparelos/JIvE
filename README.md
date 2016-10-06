@@ -10,12 +10,6 @@ Currently Supported:
 - load maps from tiled (to some extent)
 - zoom in, zoom out
 
-As simple as:
-	
-~~~~
-var world = new World(0, 0); //fullscreen
-world.start(); 
-~~~~
 
 Current:
 ![alt tag](https://github.com/skaparelos/JIvE/blob/master/screenshots/3-menu-added-houses.png)
