@@ -1,16 +1,16 @@
-function main(){
-	//init_menu();
-	init_world();
+function main () {
+	// init_menu();
+  init_world();
+  //var p = new Polygon()
 };
 
-
-function init_menu(){
-	//TODO
+function init_menu () {
+	// TODO
 	// this is the main menu, not the in-game menu
 };
 
 
-function init_world(){
-	var world = new World(0, 0); // (0,0) means full screen
-	world.start(); 
+function init_world () {
+  var world = new World(0, 0) // (0,0) means full screen
+  world.start()
 };
