@@ -1,7 +1,7 @@
 # JIvE
 A Javascript Isometric Game Engine (JIvE)
 
-Written using VanillaJS.
+Written using VanillaJS, trying to stick to standard js.
 
 Currently Supported:
 - map scroll
