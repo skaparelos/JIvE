@@ -12,4 +12,5 @@ class Screen {
     this.width = document.body.clientWidth
     this.height = document.body.clientHeight
   }
+
 }
