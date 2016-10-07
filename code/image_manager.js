@@ -1,14 +1,14 @@
-var imageManager = function () {
-  this._images = {}
-}
+class ImageManager {
+	constructor(){
+		this._images = {}
+	}
 
-_imageManager = imageManager.prototype
+	load(key, img_path){
+	}
 
-_imageManager.load = function (key, img_path) {
-}
-
-_imageManager.get = function (key) {
-}
-
-_imageManager.clear = function () {
+	get(key){
+	}
+	
+	clear(){
+	}
 }
