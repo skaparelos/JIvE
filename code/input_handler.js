@@ -1,7 +1,5 @@
 class InputHandler{
-
-	constructor(world, window, document_body){
-		this._world = world
+	constructor(window, document_body){
 		this._doc_body = document_body
 		// up, down, left, right, zoom_level
 		this._keycode = [0, 0, 0, 0, 2];
@@ -42,11 +40,10 @@ class InputHandler{
 		this._doc_body.addEventListener('mousemove',
 						this._mouse_hover.bind(this), false);
 
-		window.addEventListener('resize',
-						this._window_resize.bind(this));
+		window.addEventListener('resize', this._window_resize.bind(this));
 		
 
-  }
+ 	}
 
 	/**
 	 * key pressed
@@ -63,7 +60,7 @@ class InputHandler{
 		// zoom out
 		if (e.keyCode == keys.MINUS || e.keyCode == keys.MINUS_firefox) {
 			if (this._keycode[4] < 4)
-			this._keycode[4]++
+				this._keycode[4]++
 		}
 		// zoom in
 		if (e.keyCode == keys.PLUS || e.keyCode == keys.PLUS_firefox) { 
@@ -72,7 +69,7 @@ class InputHandler{
 		}
 
 		/* Game pause & resume */
-    	if (e.keyCode == keys.P) {
+		if (e.keyCode == keys.P) {
 			if (g_running == true)
 				g_running = false
 			else
@@ -115,7 +112,7 @@ class InputHandler{
     	}
 	}
 
-    /**
+	/**
 	 * mouse hovering
 	 */
 	_mouse_hover(e){
@@ -138,12 +135,24 @@ class InputHandler{
 		return this._screen_resize 
 	}
 
+	set_screen_resize_false(){
+		this._screen_resize = false
+	}
+
 	get_mouse_click(){
 		return this._mouse_click_event
 	}
 
 	get_mouse_hover(){
 		return this._mouse_scroll_event 
+	}
+
+	set_zoom_level(level){
+		this._keycode[4] = level
+	}
+	
+	get_zoom_level(){
+		return this._keycode[4]
 	}
 } // end of InputHandler
 

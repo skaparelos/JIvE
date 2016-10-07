@@ -7,48 +7,48 @@ var fake_event = {
 }
 
 class World {
-  constructor (width, height){
-    // initialise the screen components
-    this.screen = new Screen(width, height)
-    // setup a new map 
-    this.map = new Map()
-    //setup the input handler
-    this._input_handler = new InputHandler(this, window, document.body)
-    // setup an in-game menu 
-    this.game_menu = new Game_Menu(this.screen)
-    // scrolling speed: How fast is the map going to move using the arrows 
-    this.speed = 15
-    // starting zoom level. Also change at the bottom
-    this.zoom_level = 2
-    // The change in each axis to control map movement
-    this.changeX = 0
-    this.changeY = 0
-    // checks whether a map change has happened since last draw 
-    this.change = true
-    // checks for a change in the menu (e.g. a click)
-    this.game_menu_change = true
+	constructor (width, height){
+		// initialise the screen components
+		this.screen = new Screen(width, height)
+		// setup a new map 
+		this.map = new Map()
+		//setup the input handler
+		this._input_handler = new InputHandler(window, document.body)
+		// setup an in-game menu 
+		this.game_menu = new Game_Menu(this.screen)
+		// scrolling speed: How fast is the map going to move using the arrows 
+		this.speed = 15
+		// The change in each axis to control map movement
+		this.changeX = 0
+		this.changeY = 0
+		// checks whether a map change has happened since last draw 
+		this.change = true
+		// checks for a change in the menu (e.g. a click)
+		this.game_menu_change = true
 
-    this._last_mouse_click_event = null
-    this._last_mouse_scroll_event = null
+		this._last_mouse_click_event = null
+		this._last_mouse_scroll_event = null
+		this._last_zoom_level = this._input_handler.get_zoom_level()
+
   }
 
-  start() {
-    this.init_canvas(this.screen.width, this.screen.height)
-    // call draw() once to draw something
-    this.draw()
-    // draw map without an event trigger
-    this.change = true
-    // call the game loop function period times per second
-    setInterval(this.game_loop.bind(this), this.screen.period)
-  }
+	start() {
+		this.init_canvas(this.screen.get_width(), this.screen.get_height())
+		// call draw() once to draw something
+		this.draw()
+		// draw map without an event trigger
+		this.change = true
+		// call the game loop function period times per second
+		setInterval(this.game_loop.bind(this), this.screen.period)
+	}
 
-  init_canvas(width, height){
-    this.canvas = document.createElement('canvas')
-    this.canvas.width = width
-    this.canvas.height = height
-    this.context = this.canvas.getContext('2d')
-    document.body.insertBefore(this.canvas, document.body.childNodes[0])
-  }
+	init_canvas(width, height){
+		this.canvas = document.createElement('canvas')
+		this.canvas.width = width
+		this.canvas.height = height
+		this.context = this.canvas.getContext('2d')
+		document.body.insertBefore(this.canvas, document.body.childNodes[0])
+ 	}
 
 
 	update_canvas_size(width, height) {
@@ -59,8 +59,8 @@ class World {
 
 
 	clear() {
-    	this.context.clearRect(0, 0, this.screen.width, 
-        	    this.screen.height - this.game_menu.menu_height)
+    	this.context.clearRect(0, 0, this.screen.get_width(), 
+        	    this.screen.get_height() - this.game_menu.menu_height)
 	}
 
 	game_loop() {
@@ -95,18 +95,18 @@ class World {
 			if (keycode[keys.RIGHT] == 1) dx = -this.speed
 
 			// update tiles the drawing position of each tile
-			/* if ((this.changeX + dx)/this.zoom_level <
-							this.map.max_changeX/this.zoom_level
-					&& (this.changeX + dx)/this.zoom_level >
-							-g_unit_tile_width/this.zoom_level) */
+			/* if ((this.changeX + dx)/this._last_zoom_level <
+							this.map.max_changeX/this._last_zoom_level
+					&& (this.changeX + dx)/this._last_zoom_level >
+							-g_unit_tile_width/this._last_zoom_level) */
 			this.changeX += dx
 
-			/* if (((this.changeY + dy)/this.zoom_level <
-					this.map.max_changeY/this.zoom_level -
-						this.game_menu.menu_height/this.zoom_level)
-					&& ((this.changeY + dy)/this.zoom_level >
-						-this.map.max_changeY/this.zoom_level
-						- this.game_menu.menu_height/this.zoom_level)) */
+			/* if (((this.changeY + dy)/this._last_zoom_level <
+					this.map.max_changeY/this._last_zoom_level -
+						this.game_menu.menu_height/this._last_zoom_level)
+					&& ((this.changeY + dy)/this._last_zoom_level >
+						-this.map.max_changeY/this._last_zoom_level
+						- this.game_menu.menu_height/this._last_zoom_level)) */
 			this.changeY += dy
 
 			// console.log("changeX= " + this.changeX);
@@ -120,13 +120,13 @@ class World {
 		if (ih.get_screen_resized()) {
 			this.screen.get_fullscreen()
 			this.context = this.canvas.getContext('2d')
-			_screen_resize = false
+			ih.set_screen_resize_false()
 			this.change = true
 		}
 
 		/* Handle zoom level */
-		if (this.zoom_level != keycode[4]) {
-			this.zoom_level = keycode[4]
+		if (this._last_zoom_level != keycode[4]) {
+			this._last_zoom_level = keycode[4]
 			this.change = true
 		}
 
@@ -185,7 +185,7 @@ class World {
 				start_j = res[1]
 			}
 
-			fake_event.clientX = this.screen.width
+			fake_event.clientX = this.screen.get_width()
 			fake_event.clientY = 0
 			res = this.world_2_map_coords(fake_event)
 			if (res != -1) {
@@ -193,21 +193,21 @@ class World {
 			}
 
 			fake_event.clientX = 0
-			fake_event.clientY = this.screen.height
+			fake_event.clientY = this.screen.get_height()
 			res = this.world_2_map_coords(fake_event)
 			if (res != -1) {
 				end_i = (res[0] + 2 > this.map.height) ? this.map.height : res[0]+2
 			}
 
-			fake_event.clientX = this.screen.width
-			fake_event.clientY = this.screen.height
+			fake_event.clientX = this.screen.get_width()
+			fake_event.clientY = this.screen.get_height()
 			res = this.world_2_map_coords(fake_event)
 			if (res != -1) {
 				end_j = (res[1] + 1 > this.map.width) ? this.map.width : res[1] + 1
 			}
 
 			this.map.draw(this.context, this.changeX, this.changeY, 
-							this.zoom_level, start_i, end_i, start_j, end_j)
+							this._last_zoom_level, start_i, end_i, start_j, end_j)
 
 			this.change = false
 		}
@@ -237,14 +237,14 @@ class World {
       return -1
 
     // adjustX=-40 has been set empirically to correct the tile choice
-    var adjustX = -40 / this.zoom_level
+    var adjustX = -40 / this._last_zoom_level
 
-    var tilex = Math.floor(this.zoom_level * (
+    var tilex = Math.floor(this._last_zoom_level * (
 				((e.clientX - this.changeX + adjustX) / g_unit_tile_width) +
 				((e.clientY - this.changeY) / g_unit_tile_height)
 				))
 
-    var tiley = Math.floor(this.zoom_level * (
+    var tiley = Math.floor(this._last_zoom_level * (
 				((e.clientY - this.changeY) / g_unit_tile_height) -
 				((e.clientX - this.changeX + adjustX) / g_unit_tile_width)
 				))
@@ -263,7 +263,7 @@ class World {
 	//	{ "tiley":tiley,
 	//	  "tilex":tilex
 	//	}
-  }  //end wolrd_2_map_coords
+  }  //end world_2_map_coords
 
 	set_mouse_click(e){
 		this._mouse_click = e

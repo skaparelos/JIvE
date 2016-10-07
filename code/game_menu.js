@@ -76,6 +76,7 @@ _Game_Menu.handle_click = function (e) {
 	// must detect which button is it
 }
 
+
 /**
  * A menu option represents an option in the game menu.
  * e.g. a house menu option would require a click in order to build a house

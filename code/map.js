@@ -148,6 +148,7 @@ _Map.load_map_from_file = function () {
   this.max_changeY = (this.height * (g_unit_tile_height / 2)) / 2
 }
 
+
 var Building = function (type, tile_width, tile_height) {
   this.id = -1
   this.type = type
