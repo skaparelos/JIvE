@@ -1,7 +1,7 @@
 /* ------ menu.js ------- */
 /* This is the in-game menu */
 
-class Game_Menu{
+class GameMenu{
 	constructor(screen) {
 		this.menu_width = screen.width
 		this.menu_height = 150
@@ -10,6 +10,7 @@ class Game_Menu{
 		this.options = []
 
 		// add some options
+		/*
 		this.add_option(0, 0, '#ffffff')
 		this.add_option(0, 55)
 		this.add_option(55, 0, '#F49AC2')
@@ -17,6 +18,7 @@ class Game_Menu{
 		this.add_option(110, 0)
 		this.add_option(165, 0)
 		this.options[1].set_image('icon.jpg')
+		*/
 	}
 
 	add_option(x, y, colour){

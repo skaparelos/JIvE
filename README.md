@@ -1,7 +1,7 @@
 # JIvE
 A Javascript Isometric Game Engine (JIvE)
 
-Written using VanillaJS, trying to stick to standard js.
+Written using VanillaJS.
 
 Currently Supported:
 - map scroll
@@ -19,3 +19,5 @@ Tile Selection (128x64 tiles, zoom in):
 
 Lame Lake (64x32 tiles, zoom out):
 ![alt tag](https://github.com/skaparelos/JIvE/blob/master/screenshots/2-lame_lake.png)
+
+

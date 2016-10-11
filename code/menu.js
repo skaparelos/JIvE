@@ -1,31 +1,28 @@
 function main () {
 	// init_menu();
-  init_world();
-  //var p = new Point();
-  //console.log("point created");
+	var ui = document.getElementById('ui');
+	ui.style.display = "block";
+	var uiMenu = document.getElementById('menu');
+	uiMenu.style.display = "none";	
+	init_world();
+
+	/* code to get which menu button was pressed */
+	var ui = document.getElementById('ui');
+	ui.addEventListener('mouseup', function(e) {
+		console.log(e.target.getAttribute('id'));
+		e.target.src = "imgs/house_red.png";
+	}, false);
+
 };
+
 
 function init_menu () {
 	// TODO
 	// this is the main menu, not the in-game menu
 };
 
-function Point(){
-  this.X = 0;
-  this.Y = 0;
-  this.canvas = document.createElement('canvas');
-  this.canvas.width = 500;
-  this.canvas.height = 500;
-  this.area = document.body;
-  this.area.addEventListener('mousemove', this.mouseMove.bind(this), false);              
-};
-
-Point.prototype.mouseMove = function(m){
-  console.log("hehe");
-}
-
 
 function init_world () {
-  var world = new World(0, 0) // (0,0) means full screen
-  world.start()
+	var world = new World(0, 0) // (0,0) means full screen
+	world.start()
 };

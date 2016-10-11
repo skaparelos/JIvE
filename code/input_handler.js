@@ -1,3 +1,18 @@
+/**
+ * The input handler class deals with input handling (what a surprise!)
+ * here we attach event listeners and define the functions that should occur
+ * when an event is triggered .
+ * 
+ * - It is connected with world.js in a 'polling' fashion everytime the 
+ * update() function in the world.js is called, it asks to get the latest
+ * updates. This should be 50 times a second. 
+ * The alternative is to implement this in an 'interrupt' manner, i.e. every
+ * time an event occurs, notify the world, however the mouse_hover event might
+ * cause some problems as it might get called extremely often resulting to 
+ * an overhead
+ *
+ * - We only need one instance of this class.
+ */
 class InputHandler{
 	constructor(window, document_body){
 		this._doc_body = document_body
@@ -15,10 +30,11 @@ class InputHandler{
 			P: 80,
 			B: 66,
 			ESC: 27,
-			PLUS_firefox: 61, // firefox has different codes
-			MINUS_firefox: 173,
 			PLUS: 187,
-			MINUS: 189
+			MINUS: 189,
+			// firefox has different codes
+			PLUS_firefox: 61, 
+			MINUS_firefox: 173
 		};
 		this._screen_resize = false
 		this._mouse_scroll_event = null
