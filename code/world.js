@@ -10,19 +10,26 @@ class World {
 	constructor (width, height){
 		// initialise the screen components
 		this.screen = new Screen(width, height)
+
 		// setup a new map 
 		this.map = new Map()
+
 		//setup the input handler
 		this._input_handler = new InputHandler(window, document.body, ui)
+
 		// setup an in-game menu 
 		//this.game_menu = new GameMenu(this.screen)
+
 		// scrolling speed: How fast is the map going to move using the arrows 
 		this.speed = 15
+
 		// The change in each axis to control map movement
 		this.changeX = 0
 		this.changeY = 0
+
 		// checks whether a map change has happened since last draw 
 		this.change = true
+
 		// checks for a change in the menu (e.g. a click)
 		//this.game_menu_change = true
 
