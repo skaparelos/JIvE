@@ -1,3 +1,55 @@
+/**
+ *  The selector is where the mouse points at at any given instance.
+ *  i.e. which tile the user has selected
+ */
+
+class Selector{
+	constructor(){
+		this.tileX = 0
+		this.tileY = 0
+		//TODO change the images stuff
+		this.img =  new cImage(-1, g_selector)
+		this.imgNon = new cImage(-1, g_non_selector)
+	}
+
+	setSelector(tileY, tileX){
+		this.tileX = tileX
+		this.tileY = tileY
+	}
+
+	getSelector(){
+		return {
+			tileX: this.tileX,
+			tileY: this.tileY
+		}
+	}
+}
+
+
+/**
+ *  A map cell represents the contents of the level1 map
+ *  The level0 map only consists of background tiles, that do not carry any
+ *  extra information, however, level1 map cells carry a lot of information
+ *  and this class is made to contain it. 
+ */
+class MapCell{
+	constructor(type){
+		/* TODO	do we need the id? */
+		this.id = 0
+
+		/*  (This helps path finding)
+			Types:
+			0 -> nothing is here
+			1 -> non-walkable surface. i.e. either building or tree or etc..
+			2 -> sprites */
+		this.type = type
+
+		/* This should hold the building instance or the sprite instance */
+		this.entity = null
+	}
+}
+
+
 class Map{
 	constructor(){
 		/* map_lvl0 holds only the background. Anything placed in this map
@@ -11,56 +63,48 @@ class Map{
 		this.width = 0, this.height = 0
 
 		/* images needed for each map */
+		//TODO need to remove the graphics from the data
 		this.images_lvl0 = []
 
 		/* the available buildings for the game and their images */
 		this.buildings = g_buildings
 		this.building_images = []
 
-		/* keep track of the tile the user has currently selected
-		set these two to 0,0 initially */
-		this.selector_tilex = 0
-		this.selector_tiley = 0
 		this.load_map_from_file()
 	} // end of constructor()
 
 
-	draw(ctx, changeX, changeY, zoom_level, start_i, end_i, start_j, end_j){
-		/* draw level 0 */
-		for (var i = start_i; i < end_i; i++) { // row
-			for (var j = start_j; j < end_j; j++) { // column
-				var val = this.map_lvl0[i][j]
-				this.images_lvl0[val - 1].draw(ctx, j, i, changeX, changeY,
-					zoom_level)
-			}
-		}
-
-		/* draw level 1 */
-		for (var i = start_i; i < end_i; i++) { // row
-			for (var j = start_j; j < end_j; j++) { // column
-				if (this.map_lvl1[i][j].type != 0 &&
-					this.map_lvl1[i][j].entity != null)
-					this.map_lvl1[i][j].entity.image.draw(ctx, j, i, changeX,
-						changeY, zoom_level, true)
-			}
-		}
-
-		/* draw tile selector */
-		if (this.map_lvl1[this.selector_tiley][this.selector_tilex].type == 0)
-			this.selector.draw(ctx,	this.selector_tilex, this.selector_tiley,
-				changeX, changeY, zoom_level)
-		// draw red if the user cannot build there
-		else
-			this.non_selector.draw(ctx,	this.selector_tilex, this.selector_tiley,
-				changeX, changeY, zoom_level)
-	} 
-
-	update_selector(tiley, tilex){
-		/* update the tile selector */
-		this.selector_tiley = tiley
-		this.selector_tilex = tilex
+	/**
+	 * Get the map levels
+	 */
+	getMaps(){
+		return {
+			mapLvl0: this.map_lvl0,
+			mapLvl1: this.map_lvl1
+		};
 	}
 
+
+	/**
+	 * Get the width of the map in number of tiles
+	 */
+	getWidth(){
+		return this.width
+	}
+	
+
+	/**
+	 * Get the height of the map in number of tiles
+	 */
+	getHeight(){
+		return this.height
+	}
+
+	//TODO remove this
+	getImgsLvl0(){
+		return this.images_lvl0
+	}
+	
 
 	/**
 	 * The user selects a building type from the game_menu
@@ -79,6 +123,7 @@ class Map{
 			*/
 		}
 	} // end of ()
+
 
 	/**
 	 * Prints on console the two map levels in a way that can be used
@@ -127,31 +172,8 @@ class Map{
 				new cImage(-1, this.buildings[i].img_normal_path))
 			g_buildings = []
 
-		/* 4.0) load the image of the selector */
-		this.selector = new cImage(-1, g_selector)
-		this.non_selector = new cImage(-1, g_non_selector)
-
-		/* 5.0) set maximum scroll based on the map size */
+		/* 4.0) set maximum scroll based on the map size */
 		this.max_changeX = (this.width * (g_unit_tile_width / 2))
 		this.max_changeY = (this.height * (g_unit_tile_height / 2)) / 2
 	} // end of load_map_from_file()
 }
-
-
-class MapCell{
-	constructor(type){
-		/* TODO	do we need the id? */
-		this.id = 0
-
-		/*  (This helps path finding)
-			Types:
-			0 -> nothing is here
-			1 -> non-walkable surface. i.e. either building or tree or etc..
-			2 -> sprites */
-		this.type = type
-
-		/* This should hold the building instance or the sprite instance */
-		this.entity = null
-	}
-}
-

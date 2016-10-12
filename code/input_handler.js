@@ -14,8 +14,12 @@
  * - We only need one instance of this class.
  */
 class InputHandler{
-	constructor(window, document_body){
-		this._doc_body = document_body
+	constructor(){
+		// the three things we will add event listeners on:
+		this._ui = document.getElementById('ui')
+		this._doc_body = document.body
+		this._window = window
+
 		// up, down, left, right, zoom_level
 		this._keycode = [0, 0, 0, 0, 2];
 		this._keys =  {
@@ -36,35 +40,45 @@ class InputHandler{
 			PLUS_firefox: 61, 
 			MINUS_firefox: 173
 		};
-		this._screen_resize = false
+
+		this._screenResize = false
 		this._mouse_scroll_event = null
 		this._mouse_click_event = null
 
 		// attach event listeners
 		this._doc_body.addEventListener('keydown', 
-						this._key_down.bind(this), false); 
+						this._keyDown.bind(this), false); 
 
 		this._doc_body.addEventListener('keyup', 
-						this._key_up.bind(this), false);
+						this._keyUp.bind(this), false);
 
 		this._doc_body.addEventListener('contextmenu', 
-						this._right_click.bind(this), false);
+						this._rightClick.bind(this), false);
 
 		this._doc_body.addEventListener('mousedown',
-						this._mouse_down.bind(this), false);
+						this._mouseDown.bind(this), false);
 
 		this._doc_body.addEventListener('mousemove',
-						this._mouse_hover.bind(this), false);
+						this._mouseHover.bind(this), false);
 
-		window.addEventListener('resize', this._window_resize.bind(this));
+		this._window.addEventListener('resize', this._windowResize.bind(this));
 		
+		// get which in menu button was pressed
+		this._ui.addEventListener('mouseup', this._uiMenu.bind(this), false);
 
  	}
+
+
+	_uiMenu(e){
+		console.log(e.target.getAttribute('id'));
+		e.target.src = "imgs/house_red.png";
+	}
+
 
 	/**
 	 * key pressed
 	 */
-	_key_down(e){
+	_keyDown(e){
 		/* Map scrolling */
 		let keys = this._keys
 		if (e.keyCode == keys.UP || e.keyCode == keys.W) this._keycode[0] = 1
@@ -97,7 +111,7 @@ class InputHandler{
 	/**
 	 * key no longer pressed 
 	 */
-	_key_up(e){
+	_keyUp(e){
 		let keys = this._keys
 		if (e.keyCode == keys.UP || e.keyCode == keys.W)   this._keycode[0] = 0
 		if (e.keyCode == keys.DOWN || e.keyCode == keys.S) this._keycode[1] = 0
@@ -105,19 +119,21 @@ class InputHandler{
 		if (e.keyCode == keys.RIGHT || e.keyCode == keys.D)this._keycode[3] = 0
 	}
   
+
 	/**
 	 * overwrites the right click functionality
 	 */
-	_right_click(e){
+	_rightClick(e){
 		e.preventDefault()
 		console.log("right click!");
 		return false
 	}
 
+
 	/**
 	 * mouse button pressed
 	 */
-	_mouse_down(e){
+	_mouseDown(e){
 		switch (e.which) {
 			case 1: // left click
 			this._mouse_click_event = e
@@ -128,31 +144,33 @@ class InputHandler{
     	}
 	}
 
+
 	/**
 	 * mouse hovering
 	 */
-	_mouse_hover(e){
+	_mouseHover(e){
 		this._mouse_scroll_event = e	
 	}
+
 
 	/**
 	 * window resize
 	 */
-	_window_resize(e){
+	_windowResize(e){
 		console.log('window resized');
-		this._screen_resize = true
+		this._screenResize = true
 	}
 
-	get_keycode(){
+	getKeyCode(){
 		return this._keycode
 	}
 
-	get_screen_resized(){
-		return this._screen_resize 
+	isScreenResized(){
+		return this._screenResize 
 	}
 
-	set_screen_resize_false(){
-		this._screen_resize = false
+	setScreenResize(value){
+		this._screenResize = value
 	}
 
 	get_mouse_click(){

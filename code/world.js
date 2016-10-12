@@ -13,7 +13,7 @@ class World {
 		// setup a new map 
 		this.map = new Map()
 		//setup the input handler
-		this._input_handler = new InputHandler(window, document.body)
+		this._input_handler = new InputHandler(window, document.body, ui)
 		// setup an in-game menu 
 		//this.game_menu = new GameMenu(this.screen)
 		// scrolling speed: How fast is the map going to move using the arrows 
@@ -30,17 +30,25 @@ class World {
 		this._last_mouse_scroll_event = null
 		this._last_zoom_level = this._input_handler.get_zoom_level()
 
-  }
+		this._initCanvas(this.screen.get_width(), this.screen.get_height())
+
+		this.renderer = new Renderer(this, this.context, 
+				this.map.getWidth(), this.map.getHeight(), 
+				this.screen.get_width(), this.screen.get_height(), 
+				this._last_zoom_level)
+
+		this.selector = new Selector()
+
+	}
+
 
 	start() {
-		this._initCanvas(this.screen.get_width(), this.screen.get_height())
-		// call draw() once to draw something
-		this.draw()
 		// draw map without an event trigger
 		this.change = true
 		// call the game loop function period times per second
 		setInterval(this.game_loop.bind(this), this.screen.period)
 	}
+
 
 	_initCanvas(width, height){
 		this.canvas = document.createElement('canvas')
@@ -58,29 +66,30 @@ class World {
 	}
 
 
-	clear() {
-    	this.context.clearRect(0, 0, this.screen.get_width(), 
-        	    this.screen.get_height()) //- this.game_menu.menu_height)
-	}
-
 	game_loop() {
 		if (g_running) {
 			/* update two times for each frame */
 			this.update()
 			this.update()
-			this.draw()
+			if (this.change) {
+				this.renderer.drawWholeScreen(this.changeX, this.changeY, 
+					this.map.getMaps(), this.map.getImgsLvl0(), this.selector)
+				this.change = false
+			}
 		}
 	}
 
+
 	update() {
 		let ih = this._input_handler
-    	let keycode = ih.get_keycode()
+    	let keycode = ih.getKeyCode()
 		let keys = {
 			UP : 0,
 			DOWN: 1,
 			LEFT: 2,
 			RIGHT: 3
 		}
+
 
     	/* Handle map scrolling */
     	if (keycode[keys.UP] == 1 || keycode[keys.DOWN] == 1 ||
@@ -95,40 +104,29 @@ class World {
 			if (keycode[keys.RIGHT] == 1) dx = -this.speed
 
 			// update tiles the drawing position of each tile
-			/* if ((this.changeX + dx)/this._last_zoom_level <
-							this.map.max_changeX/this._last_zoom_level
-					&& (this.changeX + dx)/this._last_zoom_level >
-							-g_unit_tile_width/this._last_zoom_level) */
 			this.changeX += dx
-
-			/* if (((this.changeY + dy)/this._last_zoom_level <
-					this.map.max_changeY/this._last_zoom_level -
-						this.game_menu.menu_height/this._last_zoom_level)
-					&& ((this.changeY + dy)/this._last_zoom_level >
-						-this.map.max_changeY/this._last_zoom_level
-						- this.game_menu.menu_height/this._last_zoom_level)) */
 			this.changeY += dy
-
-			// console.log("changeX= " + this.changeX);
-			// console.log("changeY= " + this.changeY);
 
 			// notify that there has been a change since the last draw
 			this.change = true
 		}
 
+
     	/* Handle screen resize */
-		if (ih.get_screen_resized()) {
+		if (ih.isScreenResized()) {
 			this.screen.get_fullscreen()
 			this.context = this.canvas.getContext('2d')
-			ih.set_screen_resize_false()
+			ih.setScreenResize(false)
 			this.change = true
 		}
+
 
 		/* Handle zoom level */
 		if (this._last_zoom_level != keycode[4]) {
 			this._last_zoom_level = keycode[4]
 			this.change = true
 		}
+
 
 		/* Handle left mouse click */
 		if (ih.get_mouse_click() != this._last_mouse_click_event) {
@@ -137,7 +135,7 @@ class World {
 			//if (this.game_menu.clicked_menu(this._last_mouse_click_event)) {
 			//	this.game_menu.handle_click(this._last_mouse_click_event) 
 			//} else { // make building
-			var map_tiles = this.world_2_map_coords(this._last_mouse_click_event)
+			var map_tiles = this.screen_2_map_coords(this._last_mouse_click_event)
 			if (map_tiles != -1) {
 				this.map.build_building(map_tiles[0], map_tiles[1])
 				this.change = true
@@ -147,84 +145,21 @@ class World {
 		/* Handle mouse scroll (tile selection) */
 		if (ih.get_mouse_hover() != this._last_mouse_scroll_event) {
 			this._last_mouse_scroll_event = ih.get_mouse_hover()
-			var map_tiles = this.world_2_map_coords(this._last_mouse_scroll_event)
+			var map_tiles = this.screen_2_map_coords(this._last_mouse_scroll_event)
 			if (map_tiles != -1) {
-				this.map.update_selector(map_tiles[0], map_tiles[1])
+				this.selector.setSelector(map_tiles[0], map_tiles[1])
 				this.change = true
 			}
 		}
 	}//end update
 
 
-	draw() {
-		if (this.change) {
-      		// clear the screen
-      		this.clear()
-
-			/*
-         	Check the 4 edges of the screen to see which tiles are there.
-         	Then draw the tiles that can appear on the screen and nothing more
-
-         	This is a big reduction:
-         	in a 200x200 map we drop from 40.000 iterations to about 1000. 
-			*/
-
-			var start_i = 0
-			var start_j = 0
-			var end_i = this.map.height
-			var end_j = this.map.width
-
-			// res[0] -> tiley
-			// res[1] -> tilex
-
-			fake_event.clientX = 0
-			fake_event.clientY = 0
-			var res = this.world_2_map_coords(fake_event)
-			if (res != -1) {
-				start_j = res[1]
-			}
-
-			fake_event.clientX = this.screen.get_width()
-			fake_event.clientY = 0
-			res = this.world_2_map_coords(fake_event)
-			if (res != -1) {
-				start_i = res[0]
-			}
-
-			fake_event.clientX = 0
-			fake_event.clientY = this.screen.get_height()
-			res = this.world_2_map_coords(fake_event)
-			if (res != -1) {
-				end_i = (res[0] + 2 > this.map.height) ? this.map.height : res[0]+2
-			}
-
-			fake_event.clientX = this.screen.get_width()
-			fake_event.clientY = this.screen.get_height()
-			res = this.world_2_map_coords(fake_event)
-			if (res != -1) {
-				end_j = (res[1] + 1 > this.map.width) ? this.map.width : res[1] + 1
-			}
-
-			this.map.draw(this.context, this.changeX, this.changeY, 
-							this._last_zoom_level, start_i, end_i, start_j, end_j)
-
-			this.change = false
-		}
-
-		/* If there was a change in menu game (e.g. a click), redraw it */
-    	//if (this.game_menu_change) {
-		//	this.game_menu.draw(this.context)
-		//} 
-
-	}//end draw()
-
-
-	/* Translates map coordinates to on screen coordinates
+	/* Translates screen coordinates to on map coordinates
 	 - Runs in O(1)
 	 - Takes as input a click event
 	 - Outputs the cell in the map that was clicked
 	*/
-	world_2_map_coords(e) {
+	screen_2_map_coords(e) {
 		/*  Solve the drawing functions for tileX, tileY
 			These are the 2 drawing functions:
 			screenX = (tileX - tileY) * unittileWidth / 2 + changeX;
@@ -262,7 +197,7 @@ class World {
 		//	{ "tiley":tiley,
 		//	  "tilex":tilex
 		//	}
-	}  //end world_2_map_coords
+	}  //end screen_2_map_coords
 
 
 } // end of World class
