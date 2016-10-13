@@ -17,55 +17,36 @@ class InputHandler{
 	constructor(){
 		// the three things we will add event listeners on:
 		this._ui = document.getElementById('ui')
-		this._doc_body = document.body
+		this._docBody = document.body
 		this._window = window
 
 		// up, down, left, right, zoom_level
 		this._keycode = [0, 0, 0, 0, 2];
-		this._keys =  {
-			UP: 38,
-			DOWN: 40,
-			LEFT: 37,
-			RIGHT: 39,
-			W: 87,
-			S: 83,
-			A: 65,
-			D: 68,
-			P: 80,
-			B: 66,
-			ESC: 27,
-			PLUS: 187,
-			MINUS: 189,
-			// firefox has different codes
-			PLUS_firefox: 61, 
-			MINUS_firefox: 173
-		};
 
 		this._screenResize = false
 		this._mouse_scroll_event = null
 		this._mouse_click_event = null
 
 		// attach event listeners
-		this._doc_body.addEventListener('keydown', 
+		this._docBody.addEventListener('keydown', 
 						this._keyDown.bind(this), false); 
 
-		this._doc_body.addEventListener('keyup', 
+		this._docBody.addEventListener('keyup', 
 						this._keyUp.bind(this), false);
 
-		this._doc_body.addEventListener('contextmenu', 
+		this._docBody.addEventListener('contextmenu', 
 						this._rightClick.bind(this), false);
 
-		this._doc_body.addEventListener('mousedown',
+		this._docBody.addEventListener('mousedown',
 						this._mouseDown.bind(this), false);
 
-		this._doc_body.addEventListener('mousemove',
+		this._docBody.addEventListener('mousemove',
 						this._mouseHover.bind(this), false);
 
 		this._window.addEventListener('resize', this._windowResize.bind(this));
 		
 		// get which in menu button was pressed
 		this._ui.addEventListener('mouseup', this._uiMenu.bind(this), false);
-
  	}
 
 
@@ -80,7 +61,7 @@ class InputHandler{
 	 */
 	_keyDown(e){
 		/* Map scrolling */
-		let keys = this._keys
+		let keys = Utils.keyboardKeys;
 		if (e.keyCode == keys.UP || e.keyCode == keys.W) this._keycode[0] = 1
 		if (e.keyCode == keys.DOWN || e.keyCode == keys.S) this._keycode[1] = 1
 		if (e.keyCode == keys.LEFT || e.keyCode == keys.A) this._keycode[2] = 1
@@ -112,7 +93,7 @@ class InputHandler{
 	 * key no longer pressed 
 	 */
 	_keyUp(e){
-		let keys = this._keys
+		let keys = Utils.keyboardKeys;
 		if (e.keyCode == keys.UP || e.keyCode == keys.W)   this._keycode[0] = 0
 		if (e.keyCode == keys.DOWN || e.keyCode == keys.S) this._keycode[1] = 0
 		if (e.keyCode == keys.LEFT || e.keyCode == keys.A) this._keycode[2] = 0
@@ -161,30 +142,37 @@ class InputHandler{
 		this._screenResize = true
 	}
 
+
 	getKeyCode(){
 		return this._keycode
 	}
+
 
 	isScreenResized(){
 		return this._screenResize 
 	}
 
+
 	setScreenResize(value){
 		this._screenResize = value
 	}
+
 
 	get_mouse_click(){
 		return this._mouse_click_event
 	}
 
+
 	get_mouse_hover(){
 		return this._mouse_scroll_event 
 	}
+
 
 	set_zoom_level(level){
 		this._keycode[4] = level
 	}
 	
+
 	get_zoom_level(){
 		return this._keycode[4]
 	}

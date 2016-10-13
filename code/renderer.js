@@ -43,10 +43,10 @@ class Renderer{
 	    this._ctx.clearRect(0, 0, this._screenWidth, this._screenHeight)
 	}
 
-	drawWholeScreen(changeX, changeY, mapLevels, imgsLvl0, selector){
+	drawWholeScreen(cameraChange, mapLevels, imgsLvl0, selector){
 		this.clearWholeScreen()
 		var fourEdges = this.screen2mapViewport()
-		this.drawMaps(changeX, changeY, fourEdges, mapLevels, imgsLvl0, selector)
+		this.drawMaps(cameraChange, fourEdges, mapLevels, imgsLvl0, selector)
 		// TODO draw entities
 	}
 
@@ -118,7 +118,10 @@ class Renderer{
 	}
 
 	//TODO remove imgsLvl0
-	drawMaps(changeX, changeY, fourEdges, mapLevels, imgsLvl0, selector){
+	drawMaps(cameraChange, fourEdges, mapLevels, imgsLvl0, selector){
+		var changeX = cameraChange.changeX
+		var changeY = cameraChange.changeY
+
 		var start_i = fourEdges.start_i
 		var end_i = fourEdges.end_i
 		var start_j = fourEdges.start_j

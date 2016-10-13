@@ -20,13 +20,6 @@ class World {
 		// setup an in-game menu 
 		//this.game_menu = new GameMenu(this.screen)
 
-		// scrolling speed: How fast is the map going to move using the arrows 
-		this.speed = 15
-
-		// The change in each axis to control map movement
-		this.changeX = 0
-		this.changeY = 0
-
 		// checks whether a map change has happened since last draw 
 		this.change = true
 
@@ -45,6 +38,8 @@ class World {
 				this._last_zoom_level)
 
 		this.selector = new Selector()
+
+		this.camera = new Camera()
 
 	}
 
@@ -75,11 +70,9 @@ class World {
 
 	game_loop() {
 		if (g_running) {
-			/* update two times for each frame */
 			this.update()
-			this.update()
-			if (this.change) {
-				this.renderer.drawWholeScreen(this.changeX, this.changeY, 
+			if (this.change === true) {
+				this.renderer.drawWholeScreen(this.camera.getChange(), 
 					this.map.getMaps(), this.map.getImgsLvl0(), this.selector)
 				this.change = false
 			}
@@ -90,33 +83,10 @@ class World {
 	update() {
 		let ih = this._input_handler
     	let keycode = ih.getKeyCode()
-		let keys = {
-			UP : 0,
-			DOWN: 1,
-			LEFT: 2,
-			RIGHT: 3
-		}
 
-
-    	/* Handle map scrolling */
-    	if (keycode[keys.UP] == 1 || keycode[keys.DOWN] == 1 ||
-            	keycode[keys.LEFT] == 1 || keycode[keys.RIGHT] == 1) {
-     
-			var dx = 0
-			var dy = 0
-			  
-			if (keycode[keys.UP] == 1) dy = this.speed
-			if (keycode[keys.DOWN] == 1) dy = -this.speed
-			if (keycode[keys.LEFT] == 1) dx = this.speed
-			if (keycode[keys.RIGHT] == 1) dx = -this.speed
-
-			// update tiles the drawing position of each tile
-			this.changeX += dx
-			this.changeY += dy
-
-			// notify that there has been a change since the last draw
+		// camera movement
+		if (this.camera.move(keycode) === true)
 			this.change = true
-		}
 
 
     	/* Handle screen resize */
@@ -177,17 +147,21 @@ class World {
 			// || this.map.length != this.map.height)
 			return -1
 
+		var cameraChange = this.camera.getChange()
+		var changeX = cameraChange.changeX
+		var changeY = cameraChange.changeY
+
 		// adjustX=-40 has been set empirically to correct the tile choice
 		var adjustX = -40 / this._last_zoom_level
 
 		var tilex = Math.floor(this._last_zoom_level * (
-				((e.clientX - this.changeX + adjustX) / g_unit_tile_width) +
-				((e.clientY - this.changeY) / g_unit_tile_height)
+				((e.clientX - changeX + adjustX) / g_unit_tile_width) +
+				((e.clientY - changeY) / g_unit_tile_height)
 				))
 
 		var tiley = Math.floor(this._last_zoom_level * (
-				((e.clientY - this.changeY) / g_unit_tile_height) -
-				((e.clientX - this.changeX + adjustX) / g_unit_tile_width)
+				((e.clientY - changeY) / g_unit_tile_height) -
+				((e.clientX - changeX + adjustX) / g_unit_tile_width)
 				))
 
 		if (tilex < 0 || tiley < 0 ||
@@ -199,11 +173,10 @@ class World {
 			return -1
 
 		return [tiley, tilex]
-		// TODO maybe return object:
-		// it is easier to handle
-		//	{ "tiley":tiley,
-		//	  "tilex":tilex
-		//	}
+		/*return {
+			tiley: tiley,
+			tilex: tilex
+		};*/
 	}  //end screen_2_map_coords
 
 

@@ -6,31 +6,37 @@
 	<title>JIvE - Javascript Isometric Engine</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script src="code/renderer.js"></script>
-	<script src="code/input_handler.js"></script>
+	<script src="code/inputHandler.js"></script>
+	<script src="code/camera.js"></script>
 	<script src="code/screen.js"></script>
+	<script src="code/utils.js"></script>
 	<script src="code/building.js"></script>
 	<script src="code/configure.js"></script>
-	<script src="code/image_manager.js"></script>
+	<script src="code/imageManager.js"></script>
 	<script src="code/game_menu.js"></script>
 	<script src="code/menu.js"></script>
 	<script src="code/map.js"></script>
 	<script src="code/cimage.js"></script>
 	<script src="code/world.js"></script>
+
+	<script type="text/javascript" src="https://www.amcharts.com/lib/3/ammap.js"></script>
+	<script type="text/javascript" src="https://www.amcharts.com/lib/3/maps/js/greeceLow.js"></script>
+
 </head>
 
 
 <body>
 
-	<div id="menu">
-		<button class="button menuButton" onclick="main()">Play</button>
-	</div>
 
 
-	<div id="ui" style="display:none;">
+<!--
+	<div id="ui" >
 		<div id="top">
 			Account Balance: <span id="balance">0</span> Coins
-			<button class="button button1">green button</button>
+			<button class="button button1" onclick="chooseMap()">green button</button>
 		</div>
+	</div>
+
 		<div id="bottom">
 			<input id="el1" class="myButton" type="image" src="imgs/house_green.png" 
 			 style="border: 0; background: transparent" />
@@ -59,8 +65,28 @@
 			<input id="el9" class="myButton" type="image" src="imgs/house_green.png" 
 			width="50" height="50" style="border: 0; background: transparent" />
 
+
+
 		</div>
 	</div>
+-->
+
+	<div id="menu">
+		<button class="button menuButton" onclick="main()">Play</button>
+		<button class="button menuButton" onclick="chooseMap()" style="width:70px; height:70px;">Choose Region</button>
+	</div>
+
+	<div id="ui" style="display:none;">
+		<img src="imgs/simcity_menu.png" style="width:100%;height:100%;">
+	 </div>
+
+	<div id="map" style="display:none; width: 100%; height: 788px;">
+	</div>
+
+	<div id="placeholder" style="display:none;">
+	</div>
+
+
 </body>
 
 </html>
