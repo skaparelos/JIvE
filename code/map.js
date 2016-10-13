@@ -60,7 +60,8 @@ class Map{
 		this.map_lvl1 = []
 
 		/* width and height of both maps (in number of tiles) */
-		this.width = 0, this.height = 0
+		this.width = 0
+		this.height = 0
 
 		/* images needed for each map */
 		//TODO need to remove the graphics from the data
@@ -99,6 +100,7 @@ class Map{
 	getHeight(){
 		return this.height
 	}
+
 
 	//TODO remove this
 	getImgsLvl0(){

@@ -14,8 +14,11 @@ class World {
 		// setup a new map 
 		this.map = new Map()
 
+		let zoomLevel = 2
+		this.camera = new Camera(zoomLevel)
+
 		//setup the input handler
-		this._input_handler = new InputHandler(window, document.body, ui)
+		this._input_handler = new InputHandler(this.camera)
 
 		// setup an in-game menu 
 		//this.game_menu = new GameMenu(this.screen)
@@ -28,18 +31,15 @@ class World {
 
 		this._last_mouse_click_event = null
 		this._last_mouse_scroll_event = null
-		this._last_zoom_level = this._input_handler.get_zoom_level()
 
 		this._initCanvas(this.screen.get_width(), this.screen.get_height())
 
 		this.renderer = new Renderer(this, this.context, 
 				this.map.getWidth(), this.map.getHeight(), 
-				this.screen.get_width(), this.screen.get_height(), 
-				this._last_zoom_level)
+				this.screen.get_width(), this.screen.get_height(),
+				this.camera)
 
 		this.selector = new Selector()
-
-		this.camera = new Camera()
 
 	}
 
@@ -98,16 +98,15 @@ class World {
 		}
 
 
-		/* Handle zoom level */
-		if (this._last_zoom_level != keycode[4]) {
-			this._last_zoom_level = keycode[4]
+		let zoomLvl = ih.getZoomLevel() 
+		if(this.camera.getZoomLevel() != zoomLvl){
+			this.camera.setZoomLevel(zoomLvl)
 			this.change = true
 		}
 
-
 		/* Handle left mouse click */
-		if (ih.get_mouse_click() != this._last_mouse_click_event) {
-			this._last_mouse_click_event = ih.get_mouse_click()
+		if (ih.getMouseClick() != this._last_mouse_click_event) {
+			this._last_mouse_click_event = ih.getMouseClick()
 			// check if the click was in the map or in the game menu
 			//if (this.game_menu.clicked_menu(this._last_mouse_click_event)) {
 			//	this.game_menu.handle_click(this._last_mouse_click_event) 
@@ -120,8 +119,8 @@ class World {
 		}
 
 		/* Handle mouse scroll (tile selection) */
-		if (ih.get_mouse_hover() != this._last_mouse_scroll_event) {
-			this._last_mouse_scroll_event = ih.get_mouse_hover()
+		if (ih.getMouseHover() != this._last_mouse_scroll_event) {
+			this._last_mouse_scroll_event = ih.getMouseHover()
 			var map_tiles = this.screen_2_map_coords(this._last_mouse_scroll_event)
 			if (map_tiles != -1) {
 				this.selector.setSelector(map_tiles[0], map_tiles[1])
@@ -151,15 +150,17 @@ class World {
 		var changeX = cameraChange.changeX
 		var changeY = cameraChange.changeY
 
-		// adjustX=-40 has been set empirically to correct the tile choice
-		var adjustX = -40 / this._last_zoom_level
+		var zoomLevel = this.camera.getZoomLevel()
 
-		var tilex = Math.floor(this._last_zoom_level * (
+		// adjustX=-40 has been set empirically to correct the tile choice
+		var adjustX = -40 / zoomLevel
+
+		var tilex = Math.floor(zoomLevel * (
 				((e.clientX - changeX + adjustX) / g_unit_tile_width) +
 				((e.clientY - changeY) / g_unit_tile_height)
 				))
 
-		var tiley = Math.floor(this._last_zoom_level * (
+		var tiley = Math.floor(zoomLevel * (
 				((e.clientY - changeY) / g_unit_tile_height) -
 				((e.clientX - changeX + adjustX) / g_unit_tile_width)
 				))

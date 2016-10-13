@@ -6,7 +6,7 @@ var fake_event = {
 
 class Renderer{
 	constructor(world, ctx, mapWidth, mapHeight, screenWidth, screenHeight, 
-			zoomLevel){
+			camera){
 		this._world = world
 		this._ctx = ctx
 	
@@ -15,8 +15,11 @@ class Renderer{
 
 		this._screenWidth = screenWidth
 		this._screenHeight = screenHeight
-
-		this._zoomLevel = zoomLevel
+	
+		// TODO get this from the Camera
+		this._zoomLevel = 2 
+		
+		this._camera = camera
 	}
 
 
@@ -30,15 +33,6 @@ class Renderer{
 	}
 
 
-	/**
-	 *  Update the zoomLevel when it changes
-	 */
-	//TODO when a change is made update this 
-	updateZoomLevel(zoomLevel){
-		this._zoomLevel = zoomLevel
-	}
-
-
 	clearWholeScreen(){
 	    this._ctx.clearRect(0, 0, this._screenWidth, this._screenHeight)
 	}
@@ -46,7 +40,8 @@ class Renderer{
 	drawWholeScreen(cameraChange, mapLevels, imgsLvl0, selector){
 		this.clearWholeScreen()
 		var fourEdges = this.screen2mapViewport()
-		this.drawMaps(cameraChange, fourEdges, mapLevels, imgsLvl0, selector)
+		let zoomLevel = this._camera.getZoomLevel()
+		this.drawMaps(cameraChange, fourEdges, mapLevels, imgsLvl0, selector, zoomLevel)
 		// TODO draw entities
 	}
 
@@ -118,7 +113,7 @@ class Renderer{
 	}
 
 	//TODO remove imgsLvl0
-	drawMaps(cameraChange, fourEdges, mapLevels, imgsLvl0, selector){
+	drawMaps(cameraChange, fourEdges, mapLevels, imgsLvl0, selector, zoomLevel){
 		var changeX = cameraChange.changeX
 		var changeY = cameraChange.changeY
 
@@ -135,7 +130,7 @@ class Renderer{
 			for (var j = start_j; j < end_j; j++) { // column
 				var val = mapLvl0[i][j]
 				imgsLvl0[val - 1].draw(this._ctx, j, i, changeX, changeY,
-					this._zoomLevel)
+					zoomLevel)
 			}
 		}
 
@@ -145,7 +140,7 @@ class Renderer{
 				if (mapLvl1[i][j].type != 0 &&
 					mapLvl1[i][j].entity != null)
 					mapLvl1[i][j].entity.image.draw(this._ctx, j, i, changeX,
-						changeY, this._zoomLevel, true)
+						changeY, zoomLevel, true)
 			}
 		}
 
@@ -155,10 +150,10 @@ class Renderer{
 		/* draw tile selector */
 		if (mapLvl1[tileY][tileX].type == 0)
 			selector.img.draw(this._ctx, tileX, tileY,
-				changeX, changeY, this._zoomLevel)
+				changeX, changeY, zoomLevel)
 		else  // draw red if the user cannot build there
 			selector.imgNon.draw(this._ctx, tileX, tileY,
-				changeX, changeY, this._zoomLevel)
+				changeX, changeY, zoomLevel)
 	} 
 
 }

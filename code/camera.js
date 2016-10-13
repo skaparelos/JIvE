@@ -1,8 +1,9 @@
 class Camera{
-	constructor(){
+	constructor(zoomLevel){
 		this._changeX = 0;
 		this._changeY = 0;
 		this._scrollingSpeed = 30;
+		this._zoomLevel = zoomLevel
 	}
 
 
@@ -32,12 +33,28 @@ class Camera{
 		return false
 	}
 
+	/**
+	 *  Returns the change in the X and Y axes
+	 */
 	getChange(){
 		return {
 			changeX: this._changeX,
 			changeY: this._changeY
 		};
 	}
-		
+
+
+	getZoomLevel(){
+		return this._zoomLevel
+	}
+
+
+	/**
+	 *  Update the zoomLevel when it changes
+	 */
+	//TODO when a change is made update this 
+	setZoomLevel(value){
+		this._zoomLevel = value
+	}	
 
 }

@@ -14,14 +14,17 @@
  * - We only need one instance of this class.
  */
 class InputHandler{
-	constructor(){
+	constructor(camera){
 		// the three things we will add event listeners on:
 		this._ui = document.getElementById('ui')
 		this._docBody = document.body
 		this._window = window
 
-		// up, down, left, right, zoom_level
-		this._keycode = [0, 0, 0, 0, 2];
+		this._camera = camera
+
+		// up, down, left, right 
+		this._keycode = [0, 0, 0, 0];
+		this._zoomLevel = this._camera.getZoomLevel()
 
 		this._screenResize = false
 		this._mouse_scroll_event = null
@@ -45,14 +48,14 @@ class InputHandler{
 
 		this._window.addEventListener('resize', this._windowResize.bind(this));
 		
-		// get which in menu button was pressed
+		// get which in-menu button was pressed
 		this._ui.addEventListener('mouseup', this._uiMenu.bind(this), false);
  	}
 
 
 	_uiMenu(e){
 		console.log(e.target.getAttribute('id'));
-		e.target.src = "imgs/house_red.png";
+		//e.target.src = "imgs/house_red.png";
 	}
 
 
@@ -70,13 +73,13 @@ class InputHandler{
 		/* zoom level */
 		// zoom out
 		if (e.keyCode == keys.MINUS || e.keyCode == keys.MINUS_firefox) {
-			if (this._keycode[4] < 4)
-				this._keycode[4]++
+			if (this._zoomLevel < 4)
+				this._zoomLevel += 1
 		}
 		// zoom in
-		if (e.keyCode == keys.PLUS || e.keyCode == keys.PLUS_firefox) { 
-			if (this._keycode[4] > 1)
-				this._keycode[4]--
+		if (e.keyCode == keys.PLUS || e.keyCode == keys.PLUS_firefox) {
+			if (this._zoomLevel > 1)
+				this._zoomLevel -= 1
 		}
 
 		/* Game pause & resume */
@@ -158,23 +161,19 @@ class InputHandler{
 	}
 
 
-	get_mouse_click(){
+	getMouseClick(){
 		return this._mouse_click_event
 	}
 
 
-	get_mouse_hover(){
+	getMouseHover(){
 		return this._mouse_scroll_event 
 	}
 
-
-	set_zoom_level(level){
-		this._keycode[4] = level
+	getZoomLevel(){
+		return this._zoomLevel
 	}
-	
 
-	get_zoom_level(){
-		return this._keycode[4]
-	}
+
 } // end of InputHandler
 
