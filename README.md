@@ -9,6 +9,8 @@ Written using VanillaJS.
 - use tiles of any size
 - load maps from tiled (to some extent)
 - zoom in, zoom out
+- add layers of maps
+- add images
 
 ## How to use it
 //TODO write some tutorials..
