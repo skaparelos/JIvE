@@ -36,4 +36,3 @@ var fake_event = {
   clientY: -1
 }
 
-

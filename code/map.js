@@ -55,127 +55,107 @@ class MapCell{
 
 }
 
-
+// TODO change this and let the user define it
 MapCell.TYPES = {
 	EMPTY : 0,
 	NON_WALKABLE : 1,
 	SPRITE : 2	
 }
 
+
 /* ------------------------------------------------------------------------ */
+
+
+/**
+ * A map layer represents a layer. e.g. background is one layer
+ * non-moving objects can be a second layer (e.g. buildings and trees)
+ * sprites might be a third layer. etc..
+ *
+ * Note: all mapLayers must have the same dimensions. Dimensions are available
+ * from Map class (since they are all the same)
+ */ 
+class MapLayer{
+	constructor(){
+		this._map = []
+	}
+
+
+	/**
+	 *	If withMapCell is true, then that layer will have a map cell
+	 */ 
+	load(map, withMapCell){
+		if (withMapCell === false)
+			this._map = map
+
+		if (withMapCell === true){
+			var mapWidth = map[0].length
+			var mapHeight = map.length
+
+			for (var i = 0; i < mapHeight; i++) {
+				this._map[i] = []
+				for (var j = 0; j < mapWidth; j++) { 
+					this._map[i][j] = new MapCell(map[i][j])
+				} 
+			} 
+		}
+	}
+
+
+	getLayer(){
+		return this._map
+	}
+
+	
+	clear(){
+		this._map = []
+	}
+
+}
+
+
+/* ------------------------------------------------------------------------ */
+
 
 /**
  *
  */
 class Map{
 	constructor(){
-		/* map_lvl0 holds only the background. Anything placed in this map
-		shoud be walkable */
-		this.map_lvl0 = []
-
-		/* map_lvl1 holds all the non walkable stuff and the sprites */
-		this.map_lvl1 = []
-
-		/* width and height of both maps (in number of tiles) */
-		this.width = 0
-		this.height = 0
-
-		/* the available buildings for the game and their images */
-		this.buildings = g_buildings
-		this.building_images = []
-
-		this.load_map_from_file()
-	} // end of constructor()
-
-
-	/**
-	 * Get the map levels
-	 */
-	getMaps(){
-		return {
-			mapLvl0: this.map_lvl0,
-			mapLvl1: this.map_lvl1
-		};
+		this._width = 0
+		this._height = 0
+		this._map = []
 	}
 
 
-	/**
-	 * Get the width of the map in number of tiles
-	 */
+	addLayer(mapLayer){
+		this._map.push(mapLayer)
+
+		// we do the width and height update everytime since we do not
+		// know the total number of layers in advance  
+		this._width = mapLayer.getLayer()[0].length
+		this._height = mapLayer.getLayer().length
+		console.log('map width = ' + this._width + ' height = ' + this._height)
+
+		// Set maximum scroll based on the map size
+		// TODO add this in camera.js
+		//this._maxChangeX = (this._width * (g_unit_tile_width / 2))
+		//this._maxChangeY = (this._height * (g_unit_tile_height / 2)) / 2
+	}
+
+
+	getMapLayers(){
+		return this._map
+	}
+
+
 	getWidth(){
-		return this.width
+		return this._width
 	}
-	
 
-	/**
-	 * Get the height of the map in number of tiles
-	 */
+
 	getHeight(){
-		return this.height
+		return this._height
 	}
-
-
-	/**
-	 * The user selects a building type from the game_menu
-	 * that is passed as a parameter, along with the position in the map.
-	 */
-	build_building(tiley, tilex, building_type) {
-		// TODO get the building type, etc..
-
-		// if there is no building there, then build
-		if (this.map_lvl1[tiley][tilex].type === MapCell.TYPES.EMPTY) {
-			/*
-			var building = new Building();
-			building.set_image("house_blue.png");
-			this.map_lvl1[tiley][tilex].type = 1;
-			this.map_lvl1[tiley][tilex].entity = building;
-			*/
-		}
-	} // end of build_building()
-
-
-	/**
-	 * Prints on console the two map levels in a way that can be used
-	 * in "configure.js"
-	 */
-	export_map(){
-	}
-
-
-	/**
-	 * loads a map based on what is found in the configure.js file
-	 */
-	load_map_from_file(){
-		/* 1.0) Load map_lvl0 */
-		this.map_lvl0 = g_level0_map
-		this.height = this.map_lvl0.length
-		this.width = this.map_lvl0[0].length
-		console.log('map width = ' + this.width + ' height = ' + this.height)
-		g_level0_map = []
-
-		/* 2.0) Load map_lvl1 */
-		for (var i = 0; i < this.height; i++) { // row
-			this.map_lvl1[i] = []
-			for (var j = 0; j < this.width; j++) { // column
-				if (g_level1_map[i][j] === MapCell.TYPES.EMPTY)
-					this.map_lvl1[i][j] = new MapCell(0)
-				else
-					this.map_lvl1[i][j] = new MapCell(1)
-			}
-		}
-		g_level1_map = []
-
-		/* 3.0) load buildings and their images */
-		this.buildings = g_buildings
-		// load the images once and then use them for drawing.
-		this.building_images = []
-		for (var i = 0; i < this.buildings.length; i++)
-			this.building_images.push(
-				new cImage(-1, this.buildings[i].img_normal_path))
-		g_buildings = []
-
-		/* 4.0) set maximum scroll based on the map size */
-		this.max_changeX = (this.width * (g_unit_tile_width / 2))
-		this.max_changeY = (this.height * (g_unit_tile_height / 2)) / 2
-	} // end of load_map_from_file()
 }
+
+

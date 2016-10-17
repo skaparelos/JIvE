@@ -25,7 +25,6 @@ class Renderer{
 		this._mapHeight = map.getHeight()
 
 		this._selector = selector
-
 	}
 
 
@@ -139,58 +138,28 @@ class Renderer{
 		var end_col = fourEdges.end_col
 	
 		//TODO optimise this to get them whenever there is a change
-		var mapLevels = this._map.getMaps()
-		var mapLvl0 = mapLevels.mapLvl0
-		var mapLvl1 = mapLevels.mapLvl1
+		var mapLayers = this._map.getMapLayers()
+		var totalLayers = mapLayers.length
 
-		/* draw level 0 */
-		for (var row = start_row; row < end_row; row++) { // row
-			for (var col = start_col; col < end_col; col++) { // column
+		for (var layer = 0; layer < totalLayers; layer++){
+			var mapLayer = mapLayers[layer].getLayer()
+			for (var row = start_row; row < end_row; row++) { // row
+				for (var col = start_col; col < end_col; col++) { // column
 
-				var val = mapLvl0[row][col]
-				var img = this._imageManager.get(val)	
-				var imgWidth = img.getWidth()
-				var imgHeight = img.getHeight()
+					var val = mapLayer[row][col]
+					var img = this._imageManager.get(val)	
+					var imgWidth = img.getWidth()
+					var imgHeight = img.getHeight()
 
-				var coords = this._drawingCoords(row, col, imgWidth, imgHeight)
-	
-				// draw the image	
-				img.draw(this._ctx, coords.x, coords.y, coords.width,
-					coords.height)
-			}
-		}
+					var coords = this._drawingCoords(row, col, imgWidth, imgHeight)
 
-		/* draw level 1 */
-		for (var row = start_row; row < end_row; row++) { // row
-			for (var col = start_col; col < end_col; col++) { // column
+					// draw the image	
+					img.draw(this._ctx, coords.x, coords.y, coords.width,
+						coords.height)
 
-				if (mapLvl1[row][col].type !== MapCell.TYPES.EMPTY  &&
-						mapLvl1[row][col].entity !== null){
-					
-				//mapLvl1[row][col].entity.image.draw(this._ctx, col, row, changeX,
-				//		changeY, zoomLevel, true)	
-
-				/*
-				// TODO fix when I create an entity
-				var entity = mapLvl1[row][col].getEntity()...
-				var img = this._imageManager.get(entity.getCode....)
-		
-				var imgWidth = img.getWidth()
-				var imgHeight = img.getHeight()
-					
-				// calculate the actual screenX and screenY
-				var screenXX = Math.round(screenX - imgWidth / (zoom_level * 2)
-					+ g_unit_tile_width / (zoomLevel * 2))
-				var screenYY = Math.round(screenY - imgHeight / zoom_level 
-					+ g_unit_tile_height / zoomLevel)
-
-				// draw the image
-				img.draw(this._ctx, screenXX, screenYY, widthZoom, heightZoom)
-				*/
 				}
 			}
 		}
-
 
 		/* draw tile selector */
 		var sel = this._selector.getSelector()
@@ -198,12 +167,13 @@ class Renderer{
 		var col = sel.tileX
 		var img = null
 
-		if (mapLvl1[row][col].type == MapCell.TYPES.EMPTY){
-			img = this._imageManager.get("selector")
-		}else{  
-			img = this._imageManager.get("non-selector")
-		}
-
+		//if (mapLvl1[row][col].type == MapCell.TYPES.EMPTY){
+		//	img = this._imageManager.get("selector")
+		//}else{  
+		//	img = this._imageManager.get("non-selector")
+		//}
+		//TODO use the non-selector as well
+		img = this._imageManager.get("selector")
 		var coords = this._drawingCoords(row, col, img.getWidth(), img.getHeight())	
 		img.draw(this._ctx, coords.x, coords.y, coords.width, coords.height)
 	
@@ -227,7 +197,7 @@ class Renderer{
 		var screenX = Math.floor(initX / zoomLevel + changeX)
 		var screenY = Math.floor(initY / zoomLevel + changeY)
 
-		// calculate the new tile width & height based on the zoom lvl
+		// calculate the new tile width & height based on the zoom level
 		var widthZoom = Math.floor(imgWidth / zoomLevel)
 		var heightZoom = Math.floor(imgHeight / zoomLevel)
 

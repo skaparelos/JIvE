@@ -8,15 +8,13 @@ class World {
 		this._camera = new Camera(g_init_zoom_level)
 		this._inputHandler = new InputHandler(this._camera)
 
+		// canvas stuff
 		this._canvas = null
 		this._context = null
 		this._initCanvas()
 
 		this._imageManager = new ImageManager()
 		this._selector = new Selector()
-		this._renderer = new Renderer(this, this._context, 
-				this._screen.getWidth(), this._screen.getHeight(),
-				this._camera, this._imageManager, this._map, this._selector)
 
 		// setup an in-game menu 
 		//TODO create this in game menu class and put
@@ -34,10 +32,24 @@ class World {
 		this._last_mouse_click_event = null
 		this._last_mouse_scroll_event = null
 
+		this._userUpdateFunc = null
+
+	}
+
+
+	/**
+	 *  Place here all the things that require the user to have entered
+	 *  some input regarding the size of the maps etc..
+	 */
+	init(){
+		this._renderer = new Renderer(this, this._context, 
+			this._screen.getWidth(), this._screen.getHeight(),
+			this._camera, this._imageManager, this._map, this._selector)
 	}
 
 
 	start() {
+		this.init()
 		// draw map without an event trigger
 		this._change = true
 		// call the game loop function period times per second
@@ -92,14 +104,14 @@ class World {
 		}
 
 
-		let zoomLvl = ih.getZoomLevel() 
-		if(this._camera.getZoomLevel() != zoomLvl){
-			this._camera.setZoomLevel(zoomLvl)
+		let zoomLevel = ih.getZoomLevel() 
+		if(this._camera.getZoomLevel() !== zoomLevel){
+			this._camera.setZoomLevel(zoomLevel)
 			this._change = true
 		}
 
 		// Handle left mouse click 
-		if (ih.getMouseClick() != this._last_mouse_click_event) {
+		if (ih.getMouseClick() !== this._last_mouse_click_event) {
 			this._last_mouse_click_event = ih.getMouseClick()
 			// check if the click was in the map or in the game menu
 			//if (this.game_menu.clicked_menu(this._last_mouse_click_event)) {
@@ -107,19 +119,24 @@ class World {
 			//} else { // make building
 			var map_tiles = this.screen2MapCoords(this._last_mouse_click_event)
 			if (map_tiles != -1) {
-				this._map.build_building(map_tiles[0], map_tiles[1])
+				//TODO register a left click function by the user
+				//this._map.build_building(map_tiles[0], map_tiles[1])
 				this._change = true
 			}
 		}
 
 		// Handle mouse scroll (tile selection)
-		if (ih.getMouseHover() != this._last_mouse_scroll_event) {
+		if (ih.getMouseHover() !== this._last_mouse_scroll_event) {
 			this._last_mouse_scroll_event = ih.getMouseHover()
 			var map_tiles = this.screen2MapCoords(this._last_mouse_scroll_event)
 			if (map_tiles != -1) {
 				this._selector.setSelector(map_tiles[0], map_tiles[1])
 				this._change = true
 			}
+		}
+
+		if (this._userUpdateFunc !== null){
+			this._userUpdateFunc()
 		}
 
 	}//end of update()
@@ -217,6 +234,11 @@ class World {
 	
 	getScreen(){
 		return this._screen
+	}
+
+
+	setUserUpdateFunction(func){
+		this._userUpdateFunc = func
 	}
 
 } // end of World class

@@ -19,18 +19,41 @@ function main() {
 };
 
 
+/**
+ * This is the function where the user specifies the updates that he wants to 
+ * take place. This function is called every Screen.FPS times per second
+ * (default set to 50).
+ * 
+ * Write all object updates in this function
+ */
+function _userUpdate(){
+}
+
+
 function initWorld() {
 	// Initialise the world
 	var world = new World(0, 0) // (0,0) means full screen
+
+	// Set the userUpdate function 
+	world.setUserUpdateFunction(_userUpdate)
+
+	// Load the map layers
+	var layer0 = new MapLayer()
+	layer0.load(g_level0_map, false)
+	world.getMap().addLayer(layer0)
+
+	//var layer1 = new MapLayer()
+	//layer1.load(g_level1_map)
+	//world.getMap().addLayer(layer1)
 
 	// Load images to the world
 	var im = world.getImageManager()
 	im.load(g_level0_images)
 	im.load(g_selector_images)
-
+	
 	// Start the world
 	world.start()
-};
+}
 
 
 var town = null;

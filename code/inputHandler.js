@@ -120,11 +120,16 @@ class InputHandler{
 	_mouseDown(e){
 		switch (e.which) {
 			case 1: // left click
-			this._mouse_click_event = e
-			break
-		case 2: /* middle mouse button */ break
-		case 3: /* right click has its own event listener (see above) */ break
-		/* default:   alert("You have a strange mouse!"); */
+				this._mouse_click_event = e
+				break;
+			case 2: 
+				// middle mouse button 
+				break;
+			case 3: 
+				// right click has its own event listener (see above) 
+				break;
+			default:
+				break;
     	}
 	}
 

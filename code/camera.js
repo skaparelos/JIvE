@@ -8,8 +8,8 @@ class Camera{
 
 
 	/**
-	 *  Moves the camera if it can and returns true if if a movement really 
-	 *  happened, false otherwise
+	 *  Moves the camera if it can and returns true if a movement really 
+	 *  happened, false otherwise.
 	 */
 	move(keycode){
 		let keys = Utils.keys 
