@@ -121,25 +121,22 @@ class Renderer{
 		}
 
 		return {
-			start_i:  start_i,
-			end_i: end_i,
-			start_j: start_j,
-			end_j: end_j
+			start_row:  start_i,
+			end_row: end_i,
+			start_col: start_j,
+			end_col: end_j
 		};
 	}
 
 
+	/**
+	 *  Draws the map levels
+	 */
 	drawMaps(fourEdges){
-		var change = this._camera.getChange()
-		var changeX = change.changeX
-		var changeY = change.changeY
-
-		var zoomLevel = this._camera.getZoomLevel()
-
-		var start_i = fourEdges.start_i
-		var end_i = fourEdges.end_i
-		var start_j = fourEdges.start_j
-		var end_j = fourEdges.end_j
+		var start_row = fourEdges.start_row
+		var end_row = fourEdges.end_row
+		var start_col = fourEdges.start_col
+		var end_col = fourEdges.end_col
 	
 		//TODO optimise this to get them whenever there is a change
 		var mapLevels = this._map.getMaps()
@@ -147,38 +144,98 @@ class Renderer{
 		var mapLvl1 = mapLevels.mapLvl1
 
 		/* draw level 0 */
-		for (var i = start_i; i < end_i; i++) { // row
-			for (var j = start_j; j < end_j; j++) { // column
-				var val = mapLvl0[i][j]
-				var img = this._imageManager.get(val)
-				img.draw(this._ctx, j, i, changeX, changeY, zoomLevel)
+		for (var row = start_row; row < end_row; row++) { // row
+			for (var col = start_col; col < end_col; col++) { // column
+
+				var val = mapLvl0[row][col]
+				var img = this._imageManager.get(val)	
+				var imgWidth = img.getWidth()
+				var imgHeight = img.getHeight()
+
+				var coords = this._drawingCoords(row, col, imgWidth, imgHeight)
+	
+				// draw the image	
+				img.draw(this._ctx, coords.x, coords.y, coords.width,
+					coords.height)
 			}
 		}
 
 		/* draw level 1 */
-		for (var i = start_i; i < end_i; i++) { // row
-			for (var j = start_j; j < end_j; j++) { // column
-				if (mapLvl1[i][j].type != 0 &&
-					mapLvl1[i][j].entity != null)
-					mapLvl1[i][j].entity.image.draw(this._ctx, j, i, changeX,
-						changeY, zoomLevel, true)
+		for (var row = start_row; row < end_row; row++) { // row
+			for (var col = start_col; col < end_col; col++) { // column
+
+				if (mapLvl1[row][col].type !== MapCell.TYPES.EMPTY  &&
+						mapLvl1[row][col].entity !== null){
+					
+				//mapLvl1[row][col].entity.image.draw(this._ctx, col, row, changeX,
+				//		changeY, zoomLevel, true)	
+
+				/*
+				// TODO fix when I create an entity
+				var entity = mapLvl1[row][col].getEntity()...
+				var img = this._imageManager.get(entity.getCode....)
+		
+				var imgWidth = img.getWidth()
+				var imgHeight = img.getHeight()
+					
+				// calculate the actual screenX and screenY
+				var screenXX = Math.round(screenX - imgWidth / (zoom_level * 2)
+					+ g_unit_tile_width / (zoomLevel * 2))
+				var screenYY = Math.round(screenY - imgHeight / zoom_level 
+					+ g_unit_tile_height / zoomLevel)
+
+				// draw the image
+				img.draw(this._ctx, screenXX, screenYY, widthZoom, heightZoom)
+				*/
+				}
 			}
 		}
 
+
 		/* draw tile selector */
 		var sel = this._selector.getSelector()
-		var tileX = sel.tileX
-		var tileY = sel.tileY
+		var row = sel.tileY
+		var col = sel.tileX
 		var img = null
 
-		if (mapLvl1[tileY][tileX].type == MapCell.TYPES.EMPTY){
+		if (mapLvl1[row][col].type == MapCell.TYPES.EMPTY){
 			img = this._imageManager.get("selector")
 		}else{  
 			img = this._imageManager.get("non-selector")
 		}
-	
-		img.draw(this._ctx, tileX, tileY, changeX, changeY, zoomLevel)
+
+		var coords = this._drawingCoords(row, col, img.getWidth(), img.getHeight())	
+		img.draw(this._ctx, coords.x, coords.y, coords.width, coords.height)
 	
 	} // end of drawMaps() 
 
+
+	// TODO optimise this is called extremely often!!	
+	_drawingCoords(row, col, imgWidth, imgHeight){
+		var change = this._camera.getChange()
+		var changeX = change.changeX
+		var changeY = change.changeY
+
+		//TODO remove this from here and update it when it is needed
+		var zoomLevel = this._camera.getZoomLevel()
+	
+		// Map to World coords conversion 
+		var initX = (col - row) * g_unit_tile_width / 2
+		var initY = (row + col) * g_unit_tile_height / 2
+
+		// screen coordinates
+		var screenX = Math.floor(initX / zoomLevel + changeX)
+		var screenY = Math.floor(initY / zoomLevel + changeY)
+
+		// calculate the new tile width & height based on the zoom lvl
+		var widthZoom = Math.floor(imgWidth / zoomLevel)
+		var heightZoom = Math.floor(imgHeight / zoomLevel)
+
+		return{
+			x: screenX,
+			y: screenY,
+			width: widthZoom,
+			height: heightZoom
+		}
+	}
 }

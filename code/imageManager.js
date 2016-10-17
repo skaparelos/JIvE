@@ -8,15 +8,18 @@ class ImageManager {
 		this._images = {}
 	}
 
+
 	load(imgs){
 		for (var i in imgs){
 			this._images[i] = new cImage(-1, imgs[i])
 		}
 	}
 
+
 	get(key){
 		return this._images[key];
 	}
+
 	
 	clear(){
 		this._images = {}

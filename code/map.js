@@ -23,6 +23,9 @@ class Selector{
 }
 
 
+/* ------------------------------------------------------------------------ */
+
+
 /**
  *  A map cell represents the contents of the level1 map
  *  The level0 map only consists of background tiles, that do not carry any
@@ -44,13 +47,22 @@ class MapCell{
 		/* This should hold the building instance or the sprite instance */
 		this.entity = null
 	}
+
+
+	getEntity(){
+		return this.entity
+	}
+
 }
+
 
 MapCell.TYPES = {
 	EMPTY : 0,
 	NON_WALKABLE : 1,
 	SPRITE : 2	
 }
+
+/* ------------------------------------------------------------------------ */
 
 /**
  *
@@ -111,7 +123,7 @@ class Map{
 		// TODO get the building type, etc..
 
 		// if there is no building there, then build
-		if (this.map_lvl1[tiley][tilex].type == 0) {
+		if (this.map_lvl1[tiley][tilex].type === MapCell.TYPES.EMPTY) {
 			/*
 			var building = new Building();
 			building.set_image("house_blue.png");
@@ -145,7 +157,7 @@ class Map{
 		for (var i = 0; i < this.height; i++) { // row
 			this.map_lvl1[i] = []
 			for (var j = 0; j < this.width; j++) { // column
-				if (g_level1_map[i][j] == 0)
+				if (g_level1_map[i][j] === MapCell.TYPES.EMPTY)
 					this.map_lvl1[i][j] = new MapCell(0)
 				else
 					this.map_lvl1[i][j] = new MapCell(1)

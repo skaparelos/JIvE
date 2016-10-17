@@ -33,6 +33,7 @@ class Camera{
 		return false
 	}
 
+
 	/**
 	 *  Returns the change in the X and Y axes
 	 */

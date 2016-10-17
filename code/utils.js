@@ -28,7 +28,7 @@ Utils.keyboardKeys =  {
 	// firefox has different codes
 	PLUS_firefox: 61, 
 	MINUS_firefox: 173
-};
+}
 
 
 var fake_event = {
