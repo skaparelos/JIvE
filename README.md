@@ -13,6 +13,8 @@ Written using VanillaJS.
 ## How to use it
 //TODO write some tutorials..
 
+
+## Screenshots
 Current:
 ![alt tag](https://github.com/skaparelos/JIvE/blob/master/screenshots/3-menu-added-houses.png)
 
