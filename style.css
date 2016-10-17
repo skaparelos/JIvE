@@ -153,4 +153,14 @@ canvas {
 	background-repeat: no-repeat;
 	position:fixed;
 	bottom:30%;
-} 
+}
+
+
+/*#hideamd{ 
+	position:absolute;
+	width: 100px;
+	height: 50px;
+	background-color: #505050;
+	top: 15px;
+	left: 20px;
+}*/

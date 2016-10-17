@@ -11,29 +11,42 @@
 \***************************/
 
 /* UNIT TILE WIDTH (smallest possible width) */
-var g_unit_tile_width = 128
+const g_unit_tile_width = 128
 
 /* UNIT TILE HEIGHT (smallest possible height) */
-var g_unit_tile_height = 64
+const g_unit_tile_height = 64
+
+// Initial zoom level
+var g_init_zoom_level = 2
 
 
 /** *************************\
 *           Images          *
 \***************************/
-/* Images must be in the folder "imgs" */
+/* !!! Images must be in the folder "imgs" !!! */
 
-/* image to use for tile selection */
-var g_selector = 'selector.png'
-var g_non_selector = 'non_selector.png'
+/* images to use for tile selection */
+var g_selector_images = {
+	"selector" : "selector.png",
+	"non-selector" : "non_selector.png"
+}
+
 
 /**
  * Load the level 0 images. This should be background tiles
  * Just write the character - name correspondence used in the map below
  */
-var g_level0_images = [
-    [1, 'green.png'],
-    [2, 'dirt.png']
-]
+var g_level0_images = {
+	"1" : "green.png",
+	"2" : "dirt.png"
+}
+
+
+var g_random_images = {
+	"blue-house" : "house_blue.png",
+	"green-house" : "house_green.png",
+	"red-house" : "house_red.png"
+}
 
 /** *************************\
 *        Buildings          *
@@ -49,6 +62,7 @@ var g_buildings = [
     { 'id': '2', 'width_tiles': '1', 'height_tiles': '1',
 		'img_normal_path': 'house_green.png', 'hp': '300' }
 ]
+
 
 /** *************************\
 *         Maps              *

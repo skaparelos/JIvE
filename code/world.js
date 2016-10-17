@@ -1,30 +1,32 @@
-/* game state */
+// Game state
 var g_running = true
-
-var fake_event = {
-  clientX: -1,
-  clientY: -1
-}
 
 class World {
 	constructor (width, height){
-		// initialise the screen components
-		this.screen = new Screen(width, height)
+		this._screen = new Screen(width, height)
+		this._map = new Map()
+		this._camera = new Camera(g_init_zoom_level)
+		this._inputHandler = new InputHandler(this._camera)
 
-		// setup a new map 
-		this.map = new Map()
+		this._canvas = null
+		this._context = null
+		this._initCanvas()
 
-		let zoomLevel = 2
-		this.camera = new Camera(zoomLevel)
-
-		//setup the input handler
-		this._input_handler = new InputHandler(this.camera)
+		this._imageManager = new ImageManager()
+		this._selector = new Selector()
+		this._renderer = new Renderer(this, this._context, 
+				this._screen.getWidth(), this._screen.getHeight(),
+				this._camera, this._imageManager, this._map, this._selector)
 
 		// setup an in-game menu 
-		//this.game_menu = new GameMenu(this.screen)
+		//TODO create this in game menu class and put
+		// event listeners for the menu (we should have this separate than the
+		// input handler. Input handler handles the basic stuff
+		// perhaps I need to add update() methods to several classes
+		//this.game_menu = new GameMenu(this._screen)
 
 		// checks whether a map change has happened since last draw 
-		this.change = true
+		this._change = true
 
 		// checks for a change in the menu (e.g. a click)
 		//this.game_menu_change = true
@@ -32,102 +34,95 @@ class World {
 		this._last_mouse_click_event = null
 		this._last_mouse_scroll_event = null
 
-		this._initCanvas(this.screen.get_width(), this.screen.get_height())
-
-		this.renderer = new Renderer(this, this.context, 
-				this.map.getWidth(), this.map.getHeight(), 
-				this.screen.get_width(), this.screen.get_height(),
-				this.camera)
-
-		this.selector = new Selector()
-
 	}
 
 
 	start() {
 		// draw map without an event trigger
-		this.change = true
+		this._change = true
 		// call the game loop function period times per second
-		setInterval(this.game_loop.bind(this), this.screen.period)
+		setInterval(this._gameLoop.bind(this), this._screen.getPeriod())
 	}
 
 
-	_initCanvas(width, height){
-		this.canvas = document.createElement('canvas')
-		this.canvas.width = width
-		this.canvas.height = height
-		this.context = this.canvas.getContext('2d')
-		document.body.insertBefore(this.canvas, document.body.childNodes[0])
+	_initCanvas(){
+		this._canvas = document.createElement('canvas')
+		this._canvas.width = this._screen.getWidth()
+		this._canvas.height = this._screen.getHeight()
+		this._context = this._canvas.getContext('2d')
+		document.body.insertBefore(this._canvas, document.body.childNodes[0])
  	}
 
 
-	update_canvas_size(width, height) {
-		this.canvas.width = width
-		this.canvas.height = height
-		this.context = this.canvas.getContext('2d')
+	//TODO check if this function is ever used
+	_updateCanvasSize(width, height) {
+		this._canvas.width = width
+		this._canvas.height = height
+		this._context = this._canvas.getContext('2d')
 	}
 
 
-	game_loop() {
-		if (g_running) {
-			this.update()
-			if (this.change === true) {
-				this.renderer.drawWholeScreen(this.camera.getChange(), 
-					this.map.getMaps(), this.map.getImgsLvl0(), this.selector)
-				this.change = false
-			}
+	_gameLoop() {
+		if (g_running === false)
+			return;
+
+		this._update()
+		if (this._change === true) {
+			this._renderer.drawWholeScreen()
+			this._change = false
 		}
 	}
 
 
-	update() {
-		let ih = this._input_handler
+	_update() {
+		let ih = this._inputHandler
     	let keycode = ih.getKeyCode()
 
 		// camera movement
-		if (this.camera.move(keycode) === true)
-			this.change = true
+		if (this._camera.move(keycode) === true)
+			this._change = true
 
 
-    	/* Handle screen resize */
+    	// Handle screen resize 
 		if (ih.isScreenResized()) {
-			this.screen.get_fullscreen()
-			this.context = this.canvas.getContext('2d')
+			this._screen.getFullScreen()
+			this._context = this._canvas.getContext('2d')
 			ih.setScreenResize(false)
-			this.change = true
+			this._change = true
 		}
 
 
 		let zoomLvl = ih.getZoomLevel() 
-		if(this.camera.getZoomLevel() != zoomLvl){
-			this.camera.setZoomLevel(zoomLvl)
-			this.change = true
+		if(this._camera.getZoomLevel() != zoomLvl){
+			this._camera.setZoomLevel(zoomLvl)
+			this._change = true
 		}
 
-		/* Handle left mouse click */
+		// Handle left mouse click 
 		if (ih.getMouseClick() != this._last_mouse_click_event) {
 			this._last_mouse_click_event = ih.getMouseClick()
 			// check if the click was in the map or in the game menu
 			//if (this.game_menu.clicked_menu(this._last_mouse_click_event)) {
 			//	this.game_menu.handle_click(this._last_mouse_click_event) 
 			//} else { // make building
-			var map_tiles = this.screen_2_map_coords(this._last_mouse_click_event)
+			var map_tiles = this.screen2MapCoords(this._last_mouse_click_event)
 			if (map_tiles != -1) {
-				this.map.build_building(map_tiles[0], map_tiles[1])
-				this.change = true
+				this._map.build_building(map_tiles[0], map_tiles[1])
+				this._change = true
 			}
 		}
 
-		/* Handle mouse scroll (tile selection) */
+		// Handle mouse scroll (tile selection)
 		if (ih.getMouseHover() != this._last_mouse_scroll_event) {
 			this._last_mouse_scroll_event = ih.getMouseHover()
-			var map_tiles = this.screen_2_map_coords(this._last_mouse_scroll_event)
+			var map_tiles = this.screen2MapCoords(this._last_mouse_scroll_event)
 			if (map_tiles != -1) {
-				this.selector.setSelector(map_tiles[0], map_tiles[1])
-				this.change = true
+				this._selector.setSelector(map_tiles[0], map_tiles[1])
+				this._change = true
 			}
 		}
-	}//end update
+
+	}//end of update()
 
 
 	/* Translates screen coordinates to on map coordinates
@@ -135,22 +130,21 @@ class World {
 	 - Takes as input a click event
 	 - Outputs the cell in the map that was clicked
 	*/
-	screen_2_map_coords(e) {
+	screen2MapCoords(e) {
 		/*  Solve the drawing functions for tileX, tileY
 			These are the 2 drawing functions:
 			screenX = (tileX - tileY) * unittileWidth / 2 + changeX;
 			screenY = (tileY + tileX) * unittileHeight / 2 + changeY;
 		*/
 
-		if (this.map.map_lvl0[0][0] == undefined)
-			// || this.map.length != this.map.height)
-			return -1
+		var mapWidth = this._map.getWidth()
+		var mapHeight = this._map.getHeight()
 
-		var cameraChange = this.camera.getChange()
+		var cameraChange = this._camera.getChange()
 		var changeX = cameraChange.changeX
 		var changeY = cameraChange.changeY
 
-		var zoomLevel = this.camera.getZoomLevel()
+		var zoomLevel = this._camera.getZoomLevel()
 
 		// adjustX=-40 has been set empirically to correct the tile choice
 		var adjustX = -40 / zoomLevel
@@ -166,11 +160,11 @@ class World {
 				))
 
 		if (tilex < 0 || tiley < 0 ||
-			tilex >= this.map.width || tiley >= this.map.height)
+			tilex >= mapWidth || tiley >= mapHeight)
 			return -1
 
 		if (tilex == undefined || tiley == undefined ||
-			isNaN(tilex) || isNaN(tiley))
+				isNaN(tilex) || isNaN(tiley))
 			return -1
 
 		return [tiley, tilex]
@@ -178,8 +172,52 @@ class World {
 			tiley: tiley,
 			tilex: tilex
 		};*/
-	}  //end screen_2_map_coords
 
+	}  //end screen2MapCoords
+
+	
+	getImageManager(){
+		return this._imageManager
+	}
+
+
+	getCamera(){
+		return this._camera
+	}
+
+
+	getMap(){
+		return this._map
+	}
+
+
+	getSelector(){
+		return this._selector
+	}
+
+
+	setChange(change){
+		this._change = change
+	}
+
+
+	getChange(){
+		return this._change
+	}
+	
+	getCanvas(){
+		return this._canvas
+	}
+
+	
+	getContext(){
+		return this._context
+	}
+	
+	
+	getScreen(){
+		return this._screen
+	}
 
 } // end of World class
 

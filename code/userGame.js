@@ -1,18 +1,39 @@
+/**
+ * This file is to be manipulated by the users of JIvE
+ * to contain the game and the menu logic
+ */
+
+
+/**
+ * This is the main entry point
+ */
 function main() {
 
-	//don't show the map anymore the map 
-	document.getElementById('map').style.display = 'none';	
+	// don't show the map anymore
+	document.getElementById('map').style.display = 'none';
 	document.getElementById('menu').style.display = "none";
 	document.getElementById('ui').style.display = "block";
 
 	// start the game	
-	init_world()
+	initWorld()
+};
+
+
+function initWorld() {
+	// Initialise the world
+	var world = new World(0, 0) // (0,0) means full screen
+
+	// Load images to the world
+	var im = world.getImageManager()
+	im.load(g_level0_images)
+	im.load(g_selector_images)
+
+	// Start the world
+	world.start()
 };
 
 
 var town = null;
-
-
 function chooseMap(){
 
 	document.getElementById('map').style.display = 'block';
@@ -58,7 +79,7 @@ function chooseMap(){
 		"unlistedAreasAlpha": 0,
 		"unlistedAreasOutlineAlpha": 0
 	},
-	"smallMap": {},
+	//"smallMap": {},
 
 	// Listeners
 	"listeners": [{
@@ -69,8 +90,6 @@ function chooseMap(){
 		main();
 	}
 	}],
-
-
 	"imagesSettings": {
 		"alpha": 1,
 		"color": "rgba(129,129,129,1)",
@@ -93,7 +112,7 @@ function chooseMap(){
 		"panControlEnabled": false,
 		"right": 38,
 		"bottom": 30,
-		"minZoomLevel": 0.25,
+		"minZoomLevel": 1,
 		"gridHeight": 100,
 		"gridAlpha": 0.1,
 		"gridBackgroundAlpha": 0,
@@ -104,8 +123,3 @@ function chooseMap(){
 	});
 }
 
-
-function init_world() {
-	var world = new World(0, 0) // (0,0) means full screen
-	world.start()
-};

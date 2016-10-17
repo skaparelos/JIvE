@@ -1,24 +1,32 @@
 class Screen {
 	constructor(width, height){
-		this.width = width
-		this.height = height
-		this.FPS = 50
-		this.period = 1000 / this.FPS // in millisec
+		this._width = width
+		this._height = height
+		this._FPS = 50
+		this._period = 1000 / this._FPS // in millisec
 		if (width == 0 && height == 0)
-			this.get_fullscreen()
+			this.getFullScreen()
 	}
 
-	get_fullscreen() {
-		this.width = document.body.clientWidth
-		this.height = document.body.clientHeight
+
+	getFullScreen() {
+		this._width = document.body.clientWidth
+		this._height = document.body.clientHeight
 	}
+
 	
-	get_width(){
-		return this.width
+	getWidth(){
+		return this._width
 	}
+
 	
-	get_height(){
-		return this.height
+	getHeight(){
+		return this._height
+	}
+
+
+	getPeriod(){
+		return this._period
 	}
 
 }

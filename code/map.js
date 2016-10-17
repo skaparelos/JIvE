@@ -7,9 +7,6 @@ class Selector{
 	constructor(){
 		this.tileX = 0
 		this.tileY = 0
-		//TODO change the images stuff
-		this.img =  new cImage(-1, g_selector)
-		this.imgNon = new cImage(-1, g_non_selector)
 	}
 
 	setSelector(tileY, tileX){
@@ -49,7 +46,15 @@ class MapCell{
 	}
 }
 
+MapCell.TYPES = {
+	EMPTY : 0,
+	NON_WALKABLE : 1,
+	SPRITE : 2	
+}
 
+/**
+ *
+ */
 class Map{
 	constructor(){
 		/* map_lvl0 holds only the background. Anything placed in this map
@@ -62,10 +67,6 @@ class Map{
 		/* width and height of both maps (in number of tiles) */
 		this.width = 0
 		this.height = 0
-
-		/* images needed for each map */
-		//TODO need to remove the graphics from the data
-		this.images_lvl0 = []
 
 		/* the available buildings for the game and their images */
 		this.buildings = g_buildings
@@ -102,12 +103,6 @@ class Map{
 	}
 
 
-	//TODO remove this
-	getImgsLvl0(){
-		return this.images_lvl0
-	}
-	
-
 	/**
 	 * The user selects a building type from the game_menu
 	 * that is passed as a parameter, along with the position in the map.
@@ -124,7 +119,7 @@ class Map{
 			this.map_lvl1[tiley][tilex].entity = building;
 			*/
 		}
-	} // end of ()
+	} // end of build_building()
 
 
 	/**
@@ -146,13 +141,6 @@ class Map{
 		console.log('map width = ' + this.width + ' height = ' + this.height)
 		g_level0_map = []
 
-		/* 1.1) load level 0 map images */
-		var l = g_level0_images.length
-		for (var i = 0; i < l; i++)
-			this.images_lvl0.push(new cImage(g_level0_images[i][0],
-				g_level0_images[i][1]))
-		g_level0_images = []
-
 		/* 2.0) Load map_lvl1 */
 		for (var i = 0; i < this.height; i++) { // row
 			this.map_lvl1[i] = []
@@ -172,7 +160,7 @@ class Map{
 		for (var i = 0; i < this.buildings.length; i++)
 			this.building_images.push(
 				new cImage(-1, this.buildings[i].img_normal_path))
-			g_buildings = []
+		g_buildings = []
 
 		/* 4.0) set maximum scroll based on the map size */
 		this.max_changeX = (this.width * (g_unit_tile_width / 2))

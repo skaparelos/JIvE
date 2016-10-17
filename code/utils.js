@@ -30,3 +30,10 @@ Utils.keyboardKeys =  {
 	MINUS_firefox: 173
 };
 
+
+var fake_event = {
+  clientX: -1,
+  clientY: -1
+}
+
+
