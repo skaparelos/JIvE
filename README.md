@@ -3,13 +3,15 @@ A Javascript Isometric Game Engine (JIvE)
 
 Written using VanillaJS.
 
-Currently Supported:
+## Currently Supported:
 - map scroll
 - tile selection
 - use tiles of any size
 - load maps from tiled (to some extent)
 - zoom in, zoom out
 
+## How to use it
+//TODO write some tutorials..
 
 Current:
 ![alt tag](https://github.com/skaparelos/JIvE/blob/master/screenshots/3-menu-added-houses.png)
