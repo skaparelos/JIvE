@@ -42,8 +42,9 @@ function initWorld() {
 	layer0.load(g_level0_map, false)
 	world.getMap().addLayer(layer0)
 
+	//TODO fix layer1
 	//var layer1 = new MapLayer()
-	//layer1.load(g_level1_map)
+	//layer1.load(g_level1_map, true)
 	//world.getMap().addLayer(layer1)
 
 	// Load images to the world

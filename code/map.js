@@ -35,22 +35,36 @@ class Selector{
 class MapCell{
 	constructor(type){
 		/* TODO	do we need the id? */
-		this.id = 0
+		this._id = 0
 
 		/*  (This helps path finding)
 			Types:
 			0 -> nothing is here
 			1 -> non-walkable surface. i.e. either building or tree or etc..
 			2 -> sprites */
-		this.type = type
+		this._type = type
 
 		/* This should hold the building instance or the sprite instance */
-		this.entity = null
+		this._entity = null
+	}
+
+
+	getMapCell(){
+		return {
+			id: this.id,
+			type: this._type,
+			entity: this._entity
+		}
 	}
 
 
 	getEntity(){
-		return this.entity
+		return this._entity
+	}
+
+
+	getType(){
+		return this._type
 	}
 
 }
@@ -77,6 +91,7 @@ MapCell.TYPES = {
 class MapLayer{
 	constructor(){
 		this._map = []
+		this._hasMapCell = false
 	}
 
 
@@ -84,12 +99,15 @@ class MapLayer{
 	 *	If withMapCell is true, then that layer will have a map cell
 	 */ 
 	load(map, withMapCell){
-		if (withMapCell === false)
+		if (withMapCell === false){
 			this._map = map
+			this._hasMapCell = false
+		}
 
 		if (withMapCell === true){
 			var mapWidth = map[0].length
 			var mapHeight = map.length
+			this._hasMapCell = true
 
 			for (var i = 0; i < mapHeight; i++) {
 				this._map[i] = []
@@ -100,8 +118,15 @@ class MapLayer{
 		}
 	}
 
+	/**
+	 *  Returns true if the current map layer has map cells or not
+	 *  This is used in order to know how to access the mapLayer
+	 */
+	hasMapCell(){
+		return this._hasMapCell
+	}
 
-	getLayer(){
+	getLayerMap(){
 		return this._map
 	}
 
@@ -130,10 +155,11 @@ class Map{
 	addLayer(mapLayer){
 		this._map.push(mapLayer)
 
-		// we do the width and height update everytime since we do not
-		// know the total number of layers in advance  
-		this._width = mapLayer.getLayer()[0].length
-		this._height = mapLayer.getLayer().length
+		// we update the width and height everytime since we do not
+		// know the total number of layers in advance (these should be the same
+		// for each layer) 
+		this._width = mapLayer.getLayerMap()[0].length
+		this._height = mapLayer.getLayerMap().length
 		console.log('map width = ' + this._width + ' height = ' + this._height)
 
 		// Set maximum scroll based on the map size

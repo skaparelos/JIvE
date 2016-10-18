@@ -132,31 +132,53 @@ class Renderer{
 	 *  Draws the map levels
 	 */
 	drawMaps(fourEdges){
-		var start_row = fourEdges.start_row
-		var end_row = fourEdges.end_row
-		var start_col = fourEdges.start_col
-		var end_col = fourEdges.end_col
+		var startRow = fourEdges.start_row
+		var endRow = fourEdges.end_row
+		var startCol = fourEdges.start_col
+		var endCol = fourEdges.end_col
 	
-		//TODO optimise this to get them whenever there is a change
+		//TODO optimise this to get them whenever the layers is a change
 		var mapLayers = this._map.getMapLayers()
 		var totalLayers = mapLayers.length
 
 		for (var layer = 0; layer < totalLayers; layer++){
-			var mapLayer = mapLayers[layer].getLayer()
-			for (var row = start_row; row < end_row; row++) { // row
-				for (var col = start_col; col < end_col; col++) { // column
+			var mapLayer = mapLayers[layer].getLayerMap()
+			var hasMapCell = mapLayers[layer].hasMapCell()
+			for (var row = startRow; row < endRow; row++) { // row
+				for (var col = startCol; col < endCol; col++) { // column
 
-					var val = mapLayer[row][col]
-					var img = this._imageManager.get(val)	
-					var imgWidth = img.getWidth()
-					var imgHeight = img.getHeight()
+					// This means we are drawing background
+					if (hasMapCell === false){
+						var val = mapLayer[row][col]
+						var img = this._imageManager.get(val)	
+						var imgWidth = img.getWidth()
+						var imgHeight = img.getHeight()
 
-					var coords = this._drawingCoords(row, col, imgWidth, imgHeight)
+						var coords = this._drawingCoords(row, col, imgWidth, 
+							imgHeight, false)
 
-					// draw the image	
-					img.draw(this._ctx, coords.x, coords.y, coords.width,
-						coords.height)
-
+						// draw the image
+						img.draw(this._ctx, coords.x, coords.y, coords.width,
+							coords.height)
+					}
+	
+					// That means that we are not drawing background
+					if (hasMapCell === true){	
+						var mapCell = mapLayer[row][col].getMapCell()
+						if (mapCell.type !== MapCell.TYPES.EMPTY &&
+							mapCell.entity !== null){
+							
+							//var img = mapCell.entity.getImage()
+							//img.draw(...)
+							//var imgWidth = img.getWidth()
+							//var imgHeight = img.getHeight()
+							//var coords = this._drawingCoords(row, col, imgWidth,
+							//	imgHeight, true)
+							//img.draw(this._ctx, coords.x, coords.y, coords.width,
+							//	coords.height)
+						}
+						
+					}
 				}
 			}
 		}
@@ -172,7 +194,8 @@ class Renderer{
 		//}else{  
 		//	img = this._imageManager.get("non-selector")
 		//}
-		//TODO use the non-selector as well
+		//TODO use the non-selector as well. let the use decide the 
+		// number of layers to base his choice on
 		img = this._imageManager.get("selector")
 		var coords = this._drawingCoords(row, col, img.getWidth(), img.getHeight())	
 		img.draw(this._ctx, coords.x, coords.y, coords.width, coords.height)
@@ -181,7 +204,7 @@ class Renderer{
 
 
 	// TODO optimise this is called extremely often!!	
-	_drawingCoords(row, col, imgWidth, imgHeight){
+	_drawingCoords(row, col, imgWidth, imgHeight, entity){
 		var change = this._camera.getChange()
 		var changeX = change.changeX
 		var changeY = change.changeY
@@ -201,6 +224,14 @@ class Renderer{
 		var widthZoom = Math.floor(imgWidth / zoomLevel)
 		var heightZoom = Math.floor(imgHeight / zoomLevel)
 
+		// If we are not drawing background, make this adjustment
+		if (entity === true){
+			screenX = Math.round(screenX - imgWidth / (zoomLevel * 2)
+					+ g_unit_tile_width / (zoomLevel * 2))
+			screenY = Math.round(screenY - imgHeight / zoomLevel 
+					+ g_unit_tile_height / zoomLevel)
+		}
+		
 		return{
 			x: screenX,
 			y: screenY,
