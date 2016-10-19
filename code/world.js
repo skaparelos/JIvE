@@ -95,14 +95,14 @@ class World {
 
 	_update() {
 		let ih = this._inputHandler
-    	let keycode = ih.getKeyCode()
+		let keycode = ih.getKeyCode()
 
 		// camera movement
 		if (this._camera.move(keycode) === true)
 			this._change = true
 
 
-    	// Handle screen resize 
+		// Handle screen resize 
 		if (ih.isScreenResized()) {
 			this._screen.getFullScreen()
 			this._context = this._canvas.getContext('2d')

@@ -68,7 +68,7 @@ function initWorld() {
 	//im.load(g_selector_images, onImagesLoaded)
 	im.load(g_selector_images, function(){
 		//start the world
-		//world.start()
+		world.start()
 	})
 
 	var em = new EventEmitter()
@@ -78,8 +78,8 @@ function initWorld() {
 		console.log("e.x = " + e.x)
 	})
 	
-	var e = new Event('mousedown');
-	em.emit("mousedown", {x: 10, y: 20, domEvent: e})
+	//var e = new Event('mousedown');
+	em.emit("mousedown", {x: 10, y: 20}) //, domEvent: e})
 	
 
 	// Start the world
