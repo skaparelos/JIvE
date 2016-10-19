@@ -36,6 +36,7 @@ class Camera{
 
 	/**
 	 *  Returns the change in the X and Y axes
+	 *  i.e. how much has the camera moved
 	 */
 	getChange(){
 		return {

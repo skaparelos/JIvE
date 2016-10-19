@@ -7,13 +7,15 @@ class ImageManager {
 	constructor(){
 		this._images = {}
 		
-		// imgsLoaded holds the number of images that have been loaded
+		// holds the number of images that have been loaded
 		this._imgsLoaded = 0
-		// imgs2Load holds the number of images that have not been loaded yet
+
+		// holds the number of images that have not been identified
+		// for loading but have not been loaded yet
 		this._imgs2Load = 0
 
-		// if all images have been loaded this is equal to true
-		// The user needs to make sure that no images are yet to be loaded
+		// If all images from those identified for loading have been loaded 
+		// then, this is equal to true.
 		this._loaded = false
 	}
 
@@ -21,6 +23,8 @@ class ImageManager {
 	/**
 	 * This function is called to load images.
 	 * The user can set a callback to be called once the images have been loaded
+	 *
+	 * @imgs     a dictionary of the form { "imageNickName" : "path" }
 	 * @callback This is the callback function that will be called once 
      *           the image manager is done loading.
      *  
@@ -63,7 +67,12 @@ class ImageManager {
 		return this._images[key];
 	}
 
-	
+
+	/**
+	 *  Can be used to check whether images have been loaded.
+	 *  Notice that in most cases it is better to use a callback function
+	 *  when you are using the load() function (see above)
+	 */	
 	isDoneLoading(){
 		return this._loaded
 	}
@@ -72,4 +81,5 @@ class ImageManager {
 	clear(){
 		this._images = {}
 	}
+
 }

@@ -137,7 +137,7 @@ class Renderer{
 		var startCol = fourEdges.start_col
 		var endCol = fourEdges.end_col
 	
-		//TODO optimise this to get them whenever the layers is a change
+		//TODO optimise this to get them whenever is a change
 		var mapLayers = this._map.getMapLayers()
 		var totalLayers = mapLayers.length
 
@@ -196,12 +196,13 @@ class Renderer{
 		//}else{  
 		//	img = this._imageManager.get("non-selector")
 		//}
+		// TODO isn't that something the user has to do?
+		// this shouldn't be here
 		//TODO use the non-selector as well. let the use decide the 
 		// number of layers to base his choice on
 		img = this._imageManager.get("selector")
 		var coords = this._drawingCoords(row, col, img.width, img.height)	
 		this._ctx.drawImage(img, coords.x, coords.y, coords.width, coords.height)
-
 	
 	} // end of drawMaps() 
 

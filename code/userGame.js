@@ -35,17 +35,17 @@ function _userUpdate(){
 
 function onImagesLoaded(){
 	//world.start()
-	console.log(im.get("2").width)
-	console.log(im.get("1").width)
+	//console.log(im.get("2").width)
+	//console.log(im.get("1").width)
 
 }
 
-var world;
-var im;
+//var world;
+//var im;
 
 function initWorld() {
 	// Initialise the world
-	world = new World(0, 0) // (0,0) means full screen
+	var world = new World(0, 0) // (0,0) means full screen
 
 	// Set the userUpdate function 
 	world.setUserUpdateFunction(_userUpdate)
@@ -61,14 +61,29 @@ function initWorld() {
 	//world.getMap().addLayer(layer1)
 
 	// Load images to the world
-	im = world.getImageManager()
+	var im = world.getImageManager()
 	im.load(g_level0_images)
 	im.load(g_random_images)
 	// put the callback in the last one, otherwise it might not work
-	im.load(g_selector_images, onImagesLoaded)
+	//im.load(g_selector_images, onImagesLoaded)
+	im.load(g_selector_images, function(){
+		//start the world
+		//world.start()
+	})
+
+	var em = new EventEmitter()
+
+	em.on("mousedown", function(e){
+		console.log("fired!")
+		console.log("e.x = " + e.x)
+	})
+	
+	var e = new Event('mousedown');
+	em.emit("mousedown", {x: 10, y: 20, domEvent: e})
+	
 
 	// Start the world
-	world.start()
+	//world.start()
 }
 
 
