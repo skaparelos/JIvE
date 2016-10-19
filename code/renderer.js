@@ -151,15 +151,17 @@ class Renderer{
 					if (hasMapCell === false){
 						var val = mapLayer[row][col]
 						var img = this._imageManager.get(val)	
-						var imgWidth = img.getWidth()
-						var imgHeight = img.getHeight()
+						var imgWidth = img.width
+						var imgHeight = img.height
 
 						var coords = this._drawingCoords(row, col, imgWidth, 
 							imgHeight, false)
 
 						// draw the image
-						img.draw(this._ctx, coords.x, coords.y, coords.width,
-							coords.height)
+						this._ctx.drawImage(img, coords.x, coords.y, 
+								coords.width, coords.height)
+						//img.draw(this._ctx, coords.x, coords.y, coords.width,
+						//	coords.height)
 					}
 	
 					// That means that we are not drawing background
@@ -197,8 +199,9 @@ class Renderer{
 		//TODO use the non-selector as well. let the use decide the 
 		// number of layers to base his choice on
 		img = this._imageManager.get("selector")
-		var coords = this._drawingCoords(row, col, img.getWidth(), img.getHeight())	
-		img.draw(this._ctx, coords.x, coords.y, coords.width, coords.height)
+		var coords = this._drawingCoords(row, col, img.width, img.height)	
+		this._ctx.drawImage(img, coords.x, coords.y, coords.width, coords.height)
+
 	
 	} // end of drawMaps() 
 
@@ -226,9 +229,9 @@ class Renderer{
 
 		// If we are not drawing background, make this adjustment
 		if (entity === true){
-			screenX = Math.round(screenX - imgWidth / (zoomLevel * 2)
+			screenX = Math.floor(screenX - imgWidth / (zoomLevel * 2)
 					+ g_unit_tile_width / (zoomLevel * 2))
-			screenY = Math.round(screenY - imgHeight / zoomLevel 
+			screenY = Math.floor(screenY - imgHeight / zoomLevel 
 					+ g_unit_tile_height / zoomLevel)
 		}
 		

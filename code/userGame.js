@@ -14,7 +14,7 @@ function main() {
 	document.getElementById('menu').style.display = "none";
 	document.getElementById('ui').style.display = "block";
 
-	// start the game	
+	// start the game
 	initWorld()
 };
 
@@ -24,15 +24,28 @@ function main() {
  * take place. This function is called every Screen.FPS times per second
  * (default set to 50).
  * 
- * Write all object updates in this function
+ * This function should return true if a screen redraw needs to take place
+ * false otherwise.
+ *
+ * Write all object updates in this functioun
  */
 function _userUpdate(){
+	return false
 }
 
+function onImagesLoaded(){
+	//world.start()
+	console.log(im.get("2").width)
+	console.log(im.get("1").width)
+
+}
+
+var world;
+var im;
 
 function initWorld() {
 	// Initialise the world
-	var world = new World(0, 0) // (0,0) means full screen
+	world = new World(0, 0) // (0,0) means full screen
 
 	// Set the userUpdate function 
 	world.setUserUpdateFunction(_userUpdate)
@@ -48,10 +61,12 @@ function initWorld() {
 	//world.getMap().addLayer(layer1)
 
 	// Load images to the world
-	var im = world.getImageManager()
+	im = world.getImageManager()
 	im.load(g_level0_images)
-	im.load(g_selector_images)
-	
+	im.load(g_random_images)
+	// put the callback in the last one, otherwise it might not work
+	im.load(g_selector_images, onImagesLoaded)
+
 	// Start the world
 	world.start()
 }

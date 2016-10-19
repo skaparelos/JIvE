@@ -41,6 +41,7 @@ var g_level0_images = {
 	"2" : "dirt.png"
 }
 
+
 var g_random_images = {
 	"blue-house" : "house_blue.png",
 	"green-house" : "house_green.png",

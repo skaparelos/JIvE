@@ -34,6 +34,13 @@ class World {
 
 		this._userUpdateFunc = null
 
+		// These are used to notify the user when an event happened, so he
+		// can add functionality to his code
+		this._leftMouseClicked = false
+		this._rightMouseClicked = false
+		this._mouseHovered = false
+		this._keyPressed = false
+
 	}
 
 
@@ -104,6 +111,7 @@ class World {
 		}
 
 
+		// Handle zoom level
 		let zoomLevel = ih.getZoomLevel() 
 		if(this._camera.getZoomLevel() !== zoomLevel){
 			this._camera.setZoomLevel(zoomLevel)
@@ -130,13 +138,16 @@ class World {
 			this._last_mouse_scroll_event = ih.getMouseHover()
 			var map_tiles = this.screen2MapCoords(this._last_mouse_scroll_event)
 			if (map_tiles != -1) {
+				//TODO this behaviour should be set by the user not in the game engine
 				this._selector.setSelector(map_tiles[0], map_tiles[1])
 				this._change = true
 			}
 		}
 
+		// call user's update function everytime this update function is called
 		if (this._userUpdateFunc !== null){
-			this._userUpdateFunc()
+			if (this._userUpdateFunc() === true)
+				this._change = true
 		}
 
 	}//end of update()
@@ -239,6 +250,19 @@ class World {
 
 	setUserUpdateFunction(func){
 		this._userUpdateFunc = func
+	}
+
+
+	leftMouseClicked(){
+		return this._leftMouseClicked
+	}
+
+	rightMouseClicked(){
+		return this._rightMouseClicked
+	}
+
+	mouseHovered(){
+		return this._mouseHovered
 	}
 
 } // end of World class
