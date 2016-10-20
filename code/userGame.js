@@ -14,6 +14,10 @@ function main() {
 	document.getElementById('menu').style.display = "none";
 	document.getElementById('ui').style.display = "block";
 
+
+	// setup the in-game menu
+	setUIMenu()
+
 	// start the game
 	initWorld()
 };
@@ -41,11 +45,24 @@ function onImagesLoaded(){
 }
 
 
+function onUIClick(e){
+	console.log("click ui")
+	e.target.getAttribute('id')
+}
+
+
+function setUIMenu(){
+	var ui = document.getElementById('ui')
+	ui.addEventListener('mouseup', this.onUIClick.bind(this), false);
+}
+
+
 var world;
 var im;
 
 
 function initWorld() {
+
 	// Initialise the world
 	world = new World(0, 0) // (0,0) means full screen
 

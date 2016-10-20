@@ -16,8 +16,7 @@
 class InputHandler{
 	constructor(camera){
 
-		// the three things we will add event listeners on:
-		this._ui = document.getElementById('ui')
+		// the two things we will add event listeners on:
 		this._docBody = document.body
 		this._window = window
 
@@ -56,15 +55,6 @@ class InputHandler{
 		// Window
 		this._window.addEventListener('resize', this._windowResize.bind(this));
 		
-		// get which in-menu button was pressed
-		this._ui.addEventListener('mouseup', this._uiMenu.bind(this), false);
-
-	}
-
-	//TODO see maybe remove this
-	_uiMenu(e){
-		console.log(e.target.getAttribute('id'));
-		//e.target.src = "imgs/house_red.png";
 	}
 
 

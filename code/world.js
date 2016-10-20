@@ -1,4 +1,4 @@
-// Game state
+// @global Game state
 var g_running = true
 
 class World extends EventEmitter {
@@ -121,7 +121,6 @@ class World extends EventEmitter {
 			}
 		}
 			
-
 		// Handle left mouse click 
 		if (ih.getLeftMouseClick() !== this._previousLeftMouseClick) {
 			this._previousLeftMouseClick = ih.getLeftMouseClick()
