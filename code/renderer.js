@@ -31,7 +31,6 @@ class Renderer{
 	/**
 	 *  Update the screen size in case it changes
 	 */
-	//TODO when a change is made update this 
 	updateScreen(screenWidth, screenHeight){
 		this._screenWidth = screenWidth
 		this._screenHeight = screenHeight
@@ -46,7 +45,6 @@ class Renderer{
 	drawWholeScreen(){
 		this.clearWholeScreen()
 		var fourEdges = this.screen2mapViewport()
-		let zoomLevel = this._camera.getZoomLevel()
 		this.drawMaps(fourEdges)
 		// TODO draw entities (e.g. Units)
 	}
@@ -69,7 +67,6 @@ class Renderer{
 	 *  so that the screen only shows a portion of the map.
 	 */
 	screen2mapViewport(){
-		this.clearWholeScreen()
 
 		/*
 			Check the 4 edges of the screen to see which tiles are there.
@@ -83,47 +80,44 @@ class Renderer{
 		var mapW = this._mapWidth
 		var world = this._world
 		
-		var start_i = 0
-		var start_j = 0
-		var end_i = mapH
-		var end_j = mapW
-
-		// res[0] -> tiley
-		// res[1] -> tilex
+		var start_row = 0
+		var start_col = 0
+		var end_row = mapH
+		var end_col = mapW
 
 		fake_event.clientX = 0
 		fake_event.clientY = 0
 		var res = world.screen2MapCoords(fake_event)
 		if (res != -1) {
-			start_j = res[1]
+			start_col = res.tileX
 		}
 
 		fake_event.clientX = this._screenWidth
 		fake_event.clientY = 0
 		res = world.screen2MapCoords(fake_event)
 		if (res != -1) {
-			start_i = res[0]
+			start_row = res.tileY
 		}
 
 		fake_event.clientX = 0
 		fake_event.clientY = this._screenHeight
 		res = world.screen2MapCoords(fake_event)
 		if (res != -1) {
-			end_i = (res[0] + 2 > mapH) ? mapH : res[0]+2
+			end_row = (res.tileY + 2 > mapH) ? mapH : res.tileY + 2
 		}
 
 		fake_event.clientX = this._screenWidth
 		fake_event.clientY = this._screenHeight
 		res = world.screen2MapCoords(fake_event)
 		if (res != -1) {
-			end_j = (res[1] + 1 > mapW) ? mapW : res[1] + 1
+			end_col = (res.tileX + 1 > mapW) ? mapW : res.tileX + 1
 		}
 
 		return {
-			start_row:  start_i,
-			end_row: end_i,
-			start_col: start_j,
-			end_col: end_j
+			start_row:  start_row,
+			end_row: end_row,
+			start_col: start_col,
+			end_col: end_col
 		};
 	}
 
@@ -132,6 +126,7 @@ class Renderer{
 	 *  Draws the map levels
 	 */
 	drawMaps(fourEdges){
+
 		var startRow = fourEdges.start_row
 		var endRow = fourEdges.end_row
 		var startCol = fourEdges.start_col
@@ -160,8 +155,6 @@ class Renderer{
 						// draw the image
 						this._ctx.drawImage(img, coords.x, coords.y, 
 								coords.width, coords.height)
-						//img.draw(this._ctx, coords.x, coords.y, coords.width,
-						//	coords.height)
 					}
 	
 					// That means that we are not drawing background
@@ -186,23 +179,26 @@ class Renderer{
 		}
 
 		/* draw tile selector */
-		var sel = this._selector.getSelector()
-		var row = sel.tileY
-		var col = sel.tileX
-		var img = null
+		if (this._selector.isHidden() === false){
+			var sel = this._selector.getSelectorPos()
+			var row = sel.tileY
+			var col = sel.tileX
+			var img = null
 
-		//if (mapLvl1[row][col].type == MapCell.TYPES.EMPTY){
-		//	img = this._imageManager.get("selector")
-		//}else{  
-		//	img = this._imageManager.get("non-selector")
-		//}
-		// TODO isn't that something the user has to do?
-		// this shouldn't be here
-		//TODO use the non-selector as well. let the use decide the 
-		// number of layers to base his choice on
-		img = this._imageManager.get("selector")
-		var coords = this._drawingCoords(row, col, img.width, img.height)	
-		this._ctx.drawImage(img, coords.x, coords.y, coords.width, coords.height)
+			//if (mapLvl1[row][col].type == MapCell.TYPES.EMPTY){
+			//	img = this._imageManager.get("selector")
+			//}else{  
+			//	img = this._imageManager.get("non-selector")
+			//}
+			// TODO isn't that something the user has to do?
+			// this shouldn't be here
+			//TODO use the non-selector as well. let the use decide the 
+			// number of layers to base his choice on
+	
+			img = this._imageManager.get("selector")
+			var coords = this._drawingCoords(row, col, img.width, img.height)	
+			this._ctx.drawImage(img, coords.x, coords.y, coords.width, coords.height)
+		}
 	
 	} // end of drawMaps() 
 

@@ -12,6 +12,10 @@ class Screen {
 	getFullScreen() {
 		this._width = document.body.clientWidth
 		this._height = document.body.clientHeight
+		return {
+			width: this._width,
+			height: this._height
+		}
 	}
 
 	

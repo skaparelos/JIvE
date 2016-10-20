@@ -7,6 +7,34 @@
  */
 
 /** *************************\
+*          Buttons           *
+\***************************/
+
+var g_init_zoom_level = 2
+// Camera Settings
+const g_camera_settings = {
+	"scrollingSpeed" : 30,
+	"initialZoomLevel" : 2,
+	"UP" : [
+		Utils.keyboardKeys.UP, // the up arrow
+		Utils.keyboardKeys.W   // w 
+	],
+	"DOWN" : [
+		Utils.keyboardKeys.DOWN, // the down arrow
+		Utils.keyboardKeys.S
+	],
+	"LEFT" : [
+		Utils.keyboardKeys.LEFT, // the left arrow
+		Utils.keyboardKeys.A
+	],
+	"RIGHT" : [
+		Utils.keyboardKeys.RIGHT, // the right arrow,
+		Utils.keyboardKeys.D
+	]
+}
+
+
+/***************************\
 *          Tiles            *
 \***************************/
 
@@ -16,14 +44,12 @@ const g_unit_tile_width = 128
 /* UNIT TILE HEIGHT (smallest possible height) */
 const g_unit_tile_height = 64
 
-// Initial zoom level
-var g_init_zoom_level = 2
 
-
-/** *************************\
+/***************************\
 *           Images          *
 \***************************/
-/* !!! Images must be in the folder "imgs" !!! */
+/* !!! Images must be in the folder "imgs" */
+
 
 /* images to use for tile selection */
 var g_selector_images = {
@@ -48,9 +74,11 @@ var g_random_images = {
 	"red-house" : "house_red.png"
 }
 
-/** *************************\
+
+/***************************\
 *        Buildings          *
 \***************************/
+
 
 var g_buildings = [
     { 'id': '0', 'width_tiles': '1', 'height_tiles': '1',

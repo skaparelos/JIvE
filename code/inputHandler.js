@@ -15,6 +15,7 @@
  */
 class InputHandler{
 	constructor(camera){
+
 		// the three things we will add event listeners on:
 		this._ui = document.getElementById('ui')
 		this._docBody = document.body
@@ -22,37 +23,45 @@ class InputHandler{
 
 		this._camera = camera
 
-		// up, down, left, right 
-		this._keycode = [0, 0, 0, 0];
-		this._zoomLevel = this._camera.getZoomLevel()
+		// holds the key pressed
+		this._keyAction = {}
 
+		// holds the mouse buttons pressed
+		this._mouseAction = {}
+	
+		// Mouse Events
+		this._mouseScrollEvent = null
+		this._leftMouseClickEvent = null
+
+		// Window Event
 		this._screenResize = false
-		this._mouse_scroll_event = null
-		this._mouse_click_event = null
 
-		// attach event listeners
-		this._docBody.addEventListener('keydown', 
-						this._keyDown.bind(this), false); 
+		// set event listener
+		this._attachEventListeners()
+ 	}
 
-		this._docBody.addEventListener('keyup', 
-						this._keyUp.bind(this), false);
 
-		this._docBody.addEventListener('contextmenu', 
-						this._rightClick.bind(this), false);
+	_attachEventListeners(){
 
-		this._docBody.addEventListener('mousedown',
-						this._mouseDown.bind(this), false);
+		// Keyboard
+		this._docBody.addEventListener('keydown', this._keyDown.bind(this), false); 
+		this._docBody.addEventListener('keyup', this._keyUp.bind(this), false);
+	
+		// Mouse
+		this._docBody.addEventListener('contextmenu', this._rightClick.bind(this), false);
+		this._docBody.addEventListener('mousedown', this._mouseDown.bind(this), false);	
+		this._docBody.addEventListener('mouseup', this._mouseUp.bind(this), false);
+		this._docBody.addEventListener('mousemove', this._mouseHover.bind(this), false);
 
-		this._docBody.addEventListener('mousemove',
-						this._mouseHover.bind(this), false);
-
+		// Window
 		this._window.addEventListener('resize', this._windowResize.bind(this));
 		
 		// get which in-menu button was pressed
 		this._ui.addEventListener('mouseup', this._uiMenu.bind(this), false);
- 	}
 
+	}
 
+	//TODO see maybe remove this
 	_uiMenu(e){
 		console.log(e.target.getAttribute('id'));
 		//e.target.src = "imgs/house_red.png";
@@ -63,46 +72,17 @@ class InputHandler{
 	 * key pressed
 	 */
 	_keyDown(e){
-		/* Map scrolling */
-		let keys = Utils.keyboardKeys;
-		if (e.keyCode == keys.UP || e.keyCode == keys.W) this._keycode[0] = 1
-		if (e.keyCode == keys.DOWN || e.keyCode == keys.S) this._keycode[1] = 1
-		if (e.keyCode == keys.LEFT || e.keyCode == keys.A) this._keycode[2] = 1
-		if (e.keyCode == keys.RIGHT || e.keyCode == keys.D) this._keycode[3] = 1
-
-		/* zoom level */
-		// zoom out
-		if (e.keyCode == keys.MINUS || e.keyCode == keys.MINUS_firefox) {
-			if (this._zoomLevel < 4)
-				this._zoomLevel += 1
-		}
-		// zoom in
-		if (e.keyCode == keys.PLUS || e.keyCode == keys.PLUS_firefox) {
-			if (this._zoomLevel > 1)
-				this._zoomLevel -= 1
-		}
-
-		/* Game pause & resume */
-		if (e.keyCode == keys.P) {
-			if (g_running == true)
-				g_running = false
-			else
-				g_running = true
-    	}
-  	}// end of keyDown
+		this._keyAction[e.keyCode] = true
+	}
 
 
 	/**
 	 * key no longer pressed 
 	 */
 	_keyUp(e){
-		let keys = Utils.keyboardKeys;
-		if (e.keyCode == keys.UP || e.keyCode == keys.W)   this._keycode[0] = 0
-		if (e.keyCode == keys.DOWN || e.keyCode == keys.S) this._keycode[1] = 0
-		if (e.keyCode == keys.LEFT || e.keyCode == keys.A) this._keycode[2] = 0
-		if (e.keyCode == keys.RIGHT || e.keyCode == keys.D)this._keycode[3] = 0
+		this._keyAction[e.keyCode] = false
 	}
-  
+	
 
 	/**
 	 * overwrites the right click functionality
@@ -115,22 +95,27 @@ class InputHandler{
 
 
 	/**
-	 * mouse button pressed
+	 *  mouse button pressed
 	 */
 	_mouseDown(e){
+		this._mouseAction[e.button] = true
 		switch (e.which) {
+
 			case 1: // left click
-				this._mouse_click_event = e
+				this._leftMouseClickEvent = e
 				break;
-			case 2: 
-				// middle mouse button 
-				break;
-			case 3: 
-				// right click has its own event listener (see above) 
-				break;
-			default:
-				break;
+			case 2:  break;	// middle mouse button
+			case 3:  break; // right click has its own event listener (see above)
+			default: break;
     	}
+	}
+
+
+	/**
+	 *  mouse button no longer pressed
+	 */
+	_mouseUp(e){
+		this._mouseAction[e.button] = false
 	}
 
 
@@ -138,7 +123,7 @@ class InputHandler{
 	 * mouse hovering
 	 */
 	_mouseHover(e){
-		this._mouse_scroll_event = e	
+		this._mouseScrollEvent = e	
 	}
 
 
@@ -151,34 +136,35 @@ class InputHandler{
 	}
 
 
-	getKeyCode(){
-		return this._keycode
+	getKeyAction(){
+		return this._keyAction
+	}
+
+
+	getMouseAction(){
+		return this._mouseAction
+	}
+
+	getMouseHover(){
+		return this._mouseScrollEvent 
+	}
+
+
+	getLeftMouseClick(){
+		return this._leftMouseClickEvent
 	}
 
 
 	isScreenResized(){
-		return this._screenResize 
+		let temp = this._screenResize
+		this._screenResize = false
+		return temp
 	}
 
 
 	setScreenResize(value){
 		this._screenResize = value
 	}
-
-
-	getMouseClick(){
-		return this._mouse_click_event
-	}
-
-
-	getMouseHover(){
-		return this._mouse_scroll_event 
-	}
-
-	getZoomLevel(){
-		return this._zoomLevel
-	}
-
 
 } // end of InputHandler
 

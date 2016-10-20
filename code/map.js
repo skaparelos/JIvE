@@ -5,20 +5,37 @@
 
 class Selector{
 	constructor(){
-		this.tileX = 0
-		this.tileY = 0
+		this._tileX = 0
+		this._tileY = 0
+		// set to "true" if you don't want it to be drawn
+		this._isHidden = false
 	}
 
-	setSelector(tileY, tileX){
-		this.tileX = tileX
-		this.tileY = tileY
+
+	/**
+	 *  Set the position of the selector
+	 */
+	setSelectorPos(tileY, tileX){
+		this._tileY = tileY
+		this._tileX = tileX
 	}
 
-	getSelector(){
+
+	getSelectorPos(){
 		return {
-			tileX: this.tileX,
-			tileY: this.tileY
+			tileX: this._tileX,
+			tileY: this._tileY
 		}
+	}
+
+	
+	isHidden(){
+		return this._isHidden
+	}
+
+
+	setHidden(hidden){
+		this._hidden = hidden
 	}
 }
 
@@ -118,6 +135,7 @@ class MapLayer{
 		}
 	}
 
+
 	/**
 	 *  Returns true if the current map layer has map cells or not
 	 *  This is used in order to know how to access the mapLayer
@@ -125,6 +143,7 @@ class MapLayer{
 	hasMapCell(){
 		return this._hasMapCell
 	}
+
 
 	getLayerMap(){
 		return this._map

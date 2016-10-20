@@ -1,8 +1,9 @@
 // Game state
 var g_running = true
 
-class World {
+class World extends EventEmitter {
 	constructor (width, height){
+		super()
 		this._screen = new Screen(width, height)
 		this._map = new Map()
 		this._camera = new Camera(g_init_zoom_level)
@@ -23,23 +24,15 @@ class World {
 		// perhaps I need to add update() methods to several classes
 		//this.game_menu = new GameMenu(this._screen)
 
-		// checks whether a map change has happened since last draw 
+		// checks whether a map change has happened since last draw so that a
+		// redraw is needed 
 		this._change = true
 
-		// checks for a change in the menu (e.g. a click)
-		//this.game_menu_change = true
+		this._previousLeftMouseClick = null
+		this._previousMouseScroll = null
 
-		this._last_mouse_click_event = null
-		this._last_mouse_scroll_event = null
-
+		// the user's set update function. this is a callback
 		this._userUpdateFunc = null
-
-		// These are used to notify the user when an event happened, so he
-		// can add functionality to his code
-		this._leftMouseClicked = false
-		this._rightMouseClicked = false
-		this._mouseHovered = false
-		this._keyPressed = false
 
 	}
 
@@ -57,8 +50,10 @@ class World {
 
 	start() {
 		this.init()
+
 		// draw map without an event trigger
 		this._change = true
+
 		// call the game loop function period times per second
 		setInterval(this._gameLoop.bind(this), this._screen.getPeriod())
 	}
@@ -73,11 +68,24 @@ class World {
  	}
 
 
-	//TODO check if this function is ever used
+	/**
+	 *  updates the canvas size
+	 */
 	_updateCanvasSize(width, height) {
 		this._canvas.width = width
 		this._canvas.height = height
 		this._context = this._canvas.getContext('2d')
+	}
+
+
+	/**
+	 *  gets the new screen size and notifies the components in need
+	 */
+	_screenResize(){
+		var size = this._screen.getFullScreen()
+		this._updateCanvasSize(size.width, size.height)
+		this._renderer.updateScreen(size.width, size.height)
+		this._change = true
 	}
 
 
@@ -95,53 +103,35 @@ class World {
 
 	_update() {
 		let ih = this._inputHandler
-		let keycode = ih.getKeyCode()
+		let keyAction = ih.getKeyAction()
 
 		// camera movement
-		if (this._camera.move(keycode) === true)
+		if (this._camera.move(keyAction) === true)
 			this._change = true
-
 
 		// Handle screen resize 
 		if (ih.isScreenResized()) {
-			this._screen.getFullScreen()
-			this._context = this._canvas.getContext('2d')
-			ih.setScreenResize(false)
-			this._change = true
+			this._screenResize()
 		}
 
-
-		// Handle zoom level
-		let zoomLevel = ih.getZoomLevel() 
-		if(this._camera.getZoomLevel() !== zoomLevel){
-			this._camera.setZoomLevel(zoomLevel)
-			this._change = true
+		// Handle keydown
+		for (var key in keyAction){
+			if (keyAction[key] === true){
+				this.emit("keydown", {keyCode: key});
+			}
 		}
+			
 
 		// Handle left mouse click 
-		if (ih.getMouseClick() !== this._last_mouse_click_event) {
-			this._last_mouse_click_event = ih.getMouseClick()
-			// check if the click was in the map or in the game menu
-			//if (this.game_menu.clicked_menu(this._last_mouse_click_event)) {
-			//	this.game_menu.handle_click(this._last_mouse_click_event) 
-			//} else { // make building
-			var map_tiles = this.screen2MapCoords(this._last_mouse_click_event)
-			if (map_tiles != -1) {
-				//TODO register a left click function by the user
-				//this._map.build_building(map_tiles[0], map_tiles[1])
-				this._change = true
-			}
+		if (ih.getLeftMouseClick() !== this._previousLeftMouseClick) {
+			this._previousLeftMouseClick = ih.getLeftMouseClick()
+			this.emit("leftmouseclick", this._previousLeftMouseClick)
 		}
 
-		// Handle mouse scroll (tile selection)
-		if (ih.getMouseHover() !== this._last_mouse_scroll_event) {
-			this._last_mouse_scroll_event = ih.getMouseHover()
-			var map_tiles = this.screen2MapCoords(this._last_mouse_scroll_event)
-			if (map_tiles != -1) {
-				//TODO this behaviour should be set by the user not in the game engine
-				this._selector.setSelector(map_tiles[0], map_tiles[1])
-				this._change = true
-			}
+		// Handle mouse movement
+		if (ih.getMouseHover() !== this._previousMouseScroll) {
+			this._previousMouseScroll = ih.getMouseHover()
+			this.emit("mousemove", this._previousMouseScroll)
 		}
 
 		// call user's update function everytime this update function is called
@@ -150,15 +140,19 @@ class World {
 				this._change = true
 		}
 
-	}//end of update()
+	}// end of update()
 
 
-	/* Translates screen coordinates to on map coordinates
-	 - Runs in O(1)
-	 - Takes as input a click event
-	 - Outputs the cell in the map that was clicked
+	/**
+	 * Translates screen coordinates to on map coordinates
+	 * Runs in O(1).
+	 * 
+	 * @param e A click event.
+	 *
+	 * Outputs the cell in the map that was clicked
 	*/
 	screen2MapCoords(e) {
+
 		/*  Solve the drawing functions for tileX, tileY
 			These are the 2 drawing functions:
 			screenX = (tileX - tileY) * unittileWidth / 2 + changeX;
@@ -195,74 +189,60 @@ class World {
 				isNaN(tilex) || isNaN(tiley))
 			return -1
 
-		return [tiley, tilex]
-		/*return {
-			tiley: tiley,
-			tilex: tilex
-		};*/
+		//return [tiley, tilex]
+		return {
+			tileY: tiley,
+			tileX: tilex
+		}
 
 	}  //end screen2MapCoords
 
+
+
+	/*** The following functions can be used by the user to develop his/her game: ***/
 	
+	/**
+	 * Get the image manager to load the custom images
+	 */
 	getImageManager(){
 		return this._imageManager
 	}
 
-
-	getCamera(){
-		return this._camera
-	}
-
-
+	/**
+	 *  Get the map to load each map layer
+	 */
 	getMap(){
 		return this._map
 	}
 
 
+	/**
+	 *  Get the selector to set where the mouse is pointing at in the map
+	 */
 	getSelector(){
 		return this._selector
 	}
 
-
+	/**
+	 *  set this to true whenever a change in the game needs to be reflected
+	 *  in the screen by redrawing (e.g. if a movement takes place)
+	 */
 	setChange(change){
 		this._change = change
 	}
 
 
-	getChange(){
-		return this._change
-	}
-	
-	getCanvas(){
-		return this._canvas
-	}
-
-	
-	getContext(){
-		return this._context
-	}
-	
-	
-	getScreen(){
-		return this._screen
+	setCameraZoomLevel(level){
+		this._camera.setZoomLevel(zoomLevel)
+		this._change = true
 	}
 
 
+	/**
+	 *  set your update function
+	 */
 	setUserUpdateFunction(func){
 		this._userUpdateFunc = func
-	}
-
-
-	leftMouseClicked(){
-		return this._leftMouseClicked
-	}
-
-	rightMouseClicked(){
-		return this._rightMouseClicked
-	}
-
-	mouseHovered(){
-		return this._mouseHovered
 	}
 
 } // end of World class

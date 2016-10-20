@@ -40,12 +40,14 @@ function onImagesLoaded(){
 
 }
 
-//var world;
-//var im;
+
+var world;
+var im;
+
 
 function initWorld() {
 	// Initialise the world
-	var world = new World(0, 0) // (0,0) means full screen
+	world = new World(0, 0) // (0,0) means full screen
 
 	// Set the userUpdate function 
 	world.setUserUpdateFunction(_userUpdate)
@@ -61,7 +63,7 @@ function initWorld() {
 	//world.getMap().addLayer(layer1)
 
 	// Load images to the world
-	var im = world.getImageManager()
+	im = world.getImageManager()
 	im.load(g_level0_images)
 	im.load(g_random_images)
 	// put the callback in the last one, otherwise it might not work
@@ -71,19 +73,44 @@ function initWorld() {
 		world.start()
 	})
 
-	var em = new EventEmitter()
+	//var em = new EventEmitter()
 
-	em.on("mousedown", function(e){
+	/*em.on("mousedown", function(e){
 		console.log("fired!")
 		console.log("e.x = " + e.x)
-	})
+	})*/
 	
 	//var e = new Event('mousedown');
-	em.emit("mousedown", {x: 10, y: 20}) //, domEvent: e})
+	//em.emit("mousedown", {x: 10, y: 20}) //, domEvent: e})
+
+	//world.on("mouseclick", function (){
+	//	console.log("clicked!!");
+	//});
+
+	//world.on("mousemove", this.onMouseMove.bind(this));
 	
+	world.on("mousemove", function(e){
+		var tiles = world.screen2MapCoords(e)
+		if (tiles === -1) return;
+		world.getSelector().setSelectorPos(tiles.tileY, tiles.tileX)
+		world.setChange(true)
+	});
+
+	world.on("keydown", function(e){
+		//console.log("pressed:"+ e.keyCode);
+	});
+	
+	//world.on("zoomchange", //TODO let the user set a camera and update it
+	//don't include it by default in the world.js file
 
 	// Start the world
 	//world.start()
+}
+
+
+function onMouseMove(e){
+	var tiles = world.screen2MapCoords(e)
+	world.getSelector().setSelectorPos(tiles.tileY, tiles.tileX)	
 }
 
 
