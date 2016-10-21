@@ -37,6 +37,7 @@ function _userUpdate(){
 	return false
 }
 
+
 function onImagesLoaded(){
 	//world.start()
 	//console.log(im.get("2").width)
@@ -53,6 +54,7 @@ function onUIClick(e){
 
 function setUIMenu(){
 	var ui = document.getElementById('ui')
+	// for UI you may use DOM listeners
 	ui.addEventListener('mouseup', this.onUIClick.bind(this), false);
 }
 
@@ -117,7 +119,7 @@ function initWorld() {
 		//console.log("pressed:"+ e.keyCode);
 	});
 	
-	//world.on("zoomchange", //TODO let the user set a camera and update it
+	//world.on("zoomchange", 
 	//don't include it by default in the world.js file
 
 	// Start the world

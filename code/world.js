@@ -6,7 +6,7 @@ class World extends EventEmitter {
 		super()
 		this._screen = new Screen(width, height)
 		this._map = new Map()
-		this._camera = new Camera(g_init_zoom_level)
+		this._camera = new Camera()
 		this._inputHandler = new InputHandler(this._camera)
 
 		// canvas stuff
@@ -16,13 +16,6 @@ class World extends EventEmitter {
 
 		this._imageManager = new ImageManager()
 		this._selector = new Selector()
-
-		// setup an in-game menu 
-		//TODO create this in game menu class and put
-		// event listeners for the menu (we should have this separate than the
-		// input handler. Input handler handles the basic stuff
-		// perhaps I need to add update() methods to several classes
-		//this.game_menu = new GameMenu(this._screen)
 
 		// checks whether a map change has happened since last draw so that a
 		// redraw is needed 

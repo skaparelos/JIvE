@@ -10,26 +10,28 @@
 *          Buttons           *
 \***************************/
 
-var g_init_zoom_level = 2
 // Camera Settings
 const g_camera_settings = {
 	"scrollingSpeed" : 30,
 	"initialZoomLevel" : 2,
+	"allowChangeInZoomLevel" : true,
+
+	// you can add more or delete 	
 	"UP" : [
 		Utils.keyboardKeys.UP, // the up arrow
-		Utils.keyboardKeys.W   // w 
+		Utils.keyboardKeys.W   // w
 	],
 	"DOWN" : [
 		Utils.keyboardKeys.DOWN, // the down arrow
-		Utils.keyboardKeys.S
+		Utils.keyboardKeys.S     // s
 	],
 	"LEFT" : [
 		Utils.keyboardKeys.LEFT, // the left arrow
-		Utils.keyboardKeys.A
+		Utils.keyboardKeys.A     // a
 	],
 	"RIGHT" : [
-		Utils.keyboardKeys.RIGHT, // the right arrow,
-		Utils.keyboardKeys.D
+		Utils.keyboardKeys.RIGHT, // the right arrow
+		Utils.keyboardKeys.D      // d
 	]
 }
 

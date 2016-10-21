@@ -63,7 +63,7 @@ class Renderer{
      *  |           |
 	 *  E-----------E
 	 *
-	 *  imagine that the map is bigger is bigger than the screen
+	 *  imagine that the map is bigger than the screen
 	 *  so that the screen only shows a portion of the map.
 	 */
 	screen2mapViewport(){
