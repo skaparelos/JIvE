@@ -1,5 +1,17 @@
 class Utils{
 	
+	static measureFunctionSpeed(callback){
+		start = new Date().getTime();
+
+		let maxCount = 500
+		for (var n = 0; n < maxCount; n++) {
+  			callback();
+		}
+
+		elapsed = new Date().getTime() - start;
+		console.log("Time Elapsed: " + elapsed);
+	}
+	
 }
 
 
@@ -73,4 +85,6 @@ var fake_event = {
   clientX: -1,
   clientY: -1
 }
+
+
 

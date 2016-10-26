@@ -10,13 +10,17 @@
 *          Buttons           *
 \***************************/
 
+// Set to true for debugging information
+var g_DEBUG = true;
+
+
 // Camera Settings
 const g_camera_settings = {
-	"scrollingSpeed" : 30,
+	"scrollingSpeed" : 50,
 	"initialZoomLevel" : 2,
 	"allowChangeInZoomLevel" : true,
 
-	// you can add more or delete 	
+	// you can add more or delete
 	"UP" : [
 		Utils.keyboardKeys.UP, // the up arrow
 		Utils.keyboardKeys.W   // w

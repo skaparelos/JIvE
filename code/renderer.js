@@ -1,7 +1,7 @@
 
 class Renderer{
 	constructor(world, ctx, screenWidth, screenHeight, camera, 
-			imageManager, map, selector){
+			imageManager, map, selector, can1, can2, ctx2){
 		this._world = world
 
 		this._ctx = ctx
@@ -42,13 +42,14 @@ class Renderer{
 	}
 
 
-	drawWholeScreen(){
-		this.clearWholeScreen()
+	drawWholeScreen(){	
 		var fourEdges = this.screen2mapViewport()
+		this.clearWholeScreen()
 		this.drawMaps(fourEdges)
 		// TODO draw entities (e.g. Units)
 	}
 
+	
 
 	/**
 	 *  This function finds which parts of the map are shown to the player
@@ -199,7 +200,7 @@ class Renderer{
 			var coords = this._drawingCoords(row, col, img.width, img.height)	
 			this._ctx.drawImage(img, coords.x, coords.y, coords.width, coords.height)
 		}
-	
+
 	} // end of drawMaps() 
 
 

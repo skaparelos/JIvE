@@ -27,6 +27,14 @@ class World extends EventEmitter {
 		// the user's set update function. this is a callback
 		this._userUpdateFunc = null
 
+
+		this._then = Date.now()
+		// DEBUG
+		if(g_DEBUG === true){
+			this.__FPS = 0
+			this.__startTime = -1;
+		}
+
 	}
 
 
@@ -47,8 +55,14 @@ class World extends EventEmitter {
 		// draw map without an event trigger
 		this._change = true
 
+		// DEBUG
+		if (g_DEBUG === true){
+			this.__startTime = Date.now();
+		}
+
 		// call the game loop function period times per second
-		setInterval(this._gameLoop.bind(this), this._screen.getPeriod())
+		//setInterval(this._gameLoop.bind(this), this._screen.getPeriod())
+		this._gameLoop()
 	}
 
 
@@ -81,15 +95,69 @@ class World extends EventEmitter {
 		this._change = true
 	}
 
-
+	
+	/* using setInterval */
+	/*
 	_gameLoop() {
 		if (g_running === false)
 			return;
 
 		this._update()
 		if (this._change === true) {
+
+			// DEBUG
+			if (g_DEBUG === true){
+				this.__FPS += 1
+			}
+
 			this._renderer.drawWholeScreen()
 			this._change = false
+		}
+		
+	
+		//
+		if (g_DEBUG === true){
+			var elapsed = new Date().getTime() - this.__startTime
+			if (elapsed > 1000){
+				console.log("FPS: " + this.__FPS)
+								this.__FPS = 0 
+				this.__startTime = new Date().getTime()
+			}
+		}
+
+	}
+	*/
+	
+
+
+	/* Using requestAnimationFrame */
+	_gameLoop(){
+		if (g_running === false)
+			return;
+
+		this._update()
+		this._renderer.drawWholeScreen()
+    	requestAnimationFrame(this._gameLoop.bind(this))
+			
+
+		var now = Date.now();
+		var elapsed = now - this._then;
+		var fpsInterval = 25
+
+		if (elapsed > fpsInterval) {
+
+
+        	this._then = now - (elapsed % fpsInterval);
+
+			if (g_DEBUG === true){
+				this.__FPS += 1
+				var elapsed = Date.now() - this.__startTime
+				if (elapsed > 1000){
+					console.log("FPS: " + this.__FPS)
+					this.__FPS = 0 
+					this.__startTime = Date.now()
+				}
+			}
 		}
 	}
 
@@ -214,6 +282,7 @@ class World extends EventEmitter {
 	getSelector(){
 		return this._selector
 	}
+
 
 	/**
 	 *  set this to true whenever a change in the game needs to be reflected
