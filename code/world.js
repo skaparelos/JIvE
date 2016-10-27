@@ -4,7 +4,10 @@ var g_running = true
 class World extends EventEmitter {
 	constructor (width, height){
 		super()
+
 		this._screen = new Screen(width, height)
+		this._period = this._screen.getPeriod()
+
 		this._map = new Map()
 		this._camera = new Camera()
 		this._inputHandler = new InputHandler(this._camera)
@@ -27,8 +30,9 @@ class World extends EventEmitter {
 		// the user's set update function. this is a callback
 		this._userUpdateFunc = null
 
-
+		// used to control how often is requestAnimFrame called
 		this._then = Date.now()
+
 		// DEBUG
 		if(g_DEBUG === true){
 			this.__FPS = 0
@@ -60,9 +64,12 @@ class World extends EventEmitter {
 			this.__startTime = Date.now();
 		}
 
-		// call the game loop function period times per second
-		//setInterval(this._gameLoop.bind(this), this._screen.getPeriod())
-		this._gameLoop()
+		if (g_game_settings["useReqAnimFrame"] === true){
+			this._gameLoopReqAnim()
+		}else{
+			// call the game loop function period times per second
+			setInterval(this._gameLoopsetInterval.bind(this), this._period)
+		}
 	}
 
 
@@ -96,9 +103,12 @@ class World extends EventEmitter {
 	}
 
 	
-	/* using setInterval */
-	/*
-	_gameLoop() {
+	/**
+	 * Game loop that uses setInterval 
+	 * this does less updates per second, only whenever there is a change
+	 * TODO see if I need to have two gameLoops
+	 */
+	_gameLoopsetInterval() {
 		if (g_running === false)
 			return;
 
@@ -109,65 +119,74 @@ class World extends EventEmitter {
 			if (g_DEBUG === true){
 				this.__FPS += 1
 			}
+			// END DEBUG
 
 			this._renderer.drawWholeScreen()
 			this._change = false
 		}
 		
-	
-		//
+		// DEBUG
 		if (g_DEBUG === true){
-			var elapsed = new Date().getTime() - this.__startTime
+			var elapsed = Date.now() - this.__startTime
 			if (elapsed > 1000){
 				console.log("FPS: " + this.__FPS)
-								this.__FPS = 0 
-				this.__startTime = new Date().getTime()
+				this.__FPS = 0 
+				this.__startTime = Date.now()
 			}
 		}
+		// END DEBUG
 
 	}
-	*/
 	
 
-
 	/* Using requestAnimationFrame */
-	_gameLoop(){
+	_gameLoopReqAnim(){
 		if (g_running === false)
 			return;
 
-		this._update()
-		this._renderer.drawWholeScreen()
-    	requestAnimationFrame(this._gameLoop.bind(this))
-			
+		// reqAnimFrame is capped to 60FPS. In order to control FPS, we call
+		// the drawing function every _period (see the if below)
+    	requestAnimationFrame(this._gameLoopReqAnim.bind(this)) 
 
 		var now = Date.now();
 		var elapsed = now - this._then;
-		var fpsInterval = 25
 
-		if (elapsed > fpsInterval) {
-
-
-        	this._then = now - (elapsed % fpsInterval);
+		if (elapsed >= this._period) {
+			
+			// TODO maybe this needs a beter explanation
+			// elapsed/10 so that if FPS = 60 and elapsed = 16.6ms
+			// then this will be called 60 times per second and 
+			// over one second we will have 1.66 * 60 = 100
+			// then 100*scrollingSpeed will give us the desired number
+			// of pixels to scroll per minute
+			// 
+			// The end result is that if we change FPS the scrolling speed
+			// remains the same, while if we don't include this, then the 
+			// scrolling speed is frame dependent
+			this._update(elapsed/10)
+			this._renderer.drawWholeScreen()	
+        	this._then = now - (elapsed % this._period);
 
 			if (g_DEBUG === true){
 				this.__FPS += 1
-				var elapsed = Date.now() - this.__startTime
-				if (elapsed > 1000){
+				var _elapsed = Date.now() - this.__startTime
+
+				if (_elapsed >= 1000){
 					console.log("FPS: " + this.__FPS)
 					this.__FPS = 0 
 					this.__startTime = Date.now()
 				}
 			}
-		}
+		} 
 	}
 
 
-	_update() {
+	_update(dt) {
 		let ih = this._inputHandler
 		let keyAction = ih.getKeyAction()
 
 		// camera movement
-		if (this._camera.move(keyAction) === true)
+		if (this._camera.move(keyAction, dt) === true)
 			this._change = true
 
 		// Handle screen resize 

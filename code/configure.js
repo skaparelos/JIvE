@@ -6,21 +6,40 @@
  *
  */
 
+/***************************\
+*     Game Settings         *
+\***************************/
+
+const g_game_settings = {
+	// Set to true for debugging information
+	// if you are not sure about this, set it to false
+	"DEBUG" : true,
+	
+	// max 60, min 30 (not checked)
+	// as you increase FPS, the game will run faster
+	// as more updates will occur during one second
+	"FPS" :  40,  
+
+	// use requestAnimationFrame 
+	// if set to false, we use setInterval instead.
+	// if unsure set this to true
+	"useReqAnimFrame": true,
+}
+
+const g_DEBUG = g_game_settings["DEBUG"]
+
+
 /** *************************\
 *          Buttons           *
 \***************************/
 
-// Set to true for debugging information
-var g_DEBUG = true;
-
-
 // Camera Settings
 const g_camera_settings = {
-	"scrollingSpeed" : 50,
+	"scrollingSpeed" : 20,
 	"initialZoomLevel" : 2,
 	"allowChangeInZoomLevel" : true,
 
-	// you can add more or delete
+	// you can add more buttons or you can delete
 	"UP" : [
 		Utils.keyboardKeys.UP, // the up arrow
 		Utils.keyboardKeys.W   // w
@@ -58,7 +77,7 @@ const g_unit_tile_height = 64
 
 
 /* images to use for tile selection */
-var g_selector_images = {
+const g_selector_images = {
 	"selector" : "selector.png",
 	"non-selector" : "non_selector.png"
 }
@@ -68,13 +87,13 @@ var g_selector_images = {
  * Load the level 0 images. This should be background tiles
  * Just write the character - name correspondence used in the map below
  */
-var g_level0_images = {
+const g_level0_images = {
 	"1" : "green.png",
 	"2" : "dirt.png"
 }
 
 
-var g_random_images = {
+const g_random_images = {
 	"blue-house" : "house_blue.png",
 	"green-house" : "house_green.png",
 	"red-house" : "house_red.png"

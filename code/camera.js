@@ -22,11 +22,12 @@ class Camera{
 		return false
 	}
 
+
 	/**
 	 *  Moves the camera if it can and returns true if a movement really 
 	 *  happened, false otherwise.
 	 */
-	move(keyAction){
+	move(keyAction, dt){
 		let keys = Utils.keyboardKeys
 
 		/*
@@ -46,10 +47,10 @@ class Camera{
 			var dx = 0
 			var dy = 0
 			  
-			if (UP) dy = this._scrollingSpeed
-			if (DOWN) dy = -this._scrollingSpeed
-			if (LEFT) dx = this._scrollingSpeed
-			if (RIGHT) dx = -this._scrollingSpeed
+			if (UP) dy    =  this._scrollingSpeed * dt
+			if (DOWN) dy  = -this._scrollingSpeed * dt
+			if (LEFT) dx  =  this._scrollingSpeed * dt
+			if (RIGHT) dx = -this._scrollingSpeed * dt
 
 			// update tiles the drawing position of each tile
 			this._changeX += dx
