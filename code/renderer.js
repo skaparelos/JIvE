@@ -1,7 +1,7 @@
 
 class Renderer{
 	constructor(world, ctx, screenWidth, screenHeight, camera, 
-			imageManager, map, selector, can1, can2, ctx2){
+			imageManager, map, selector, spriteSheet){
 		this._world = world
 
 		this._ctx = ctx
@@ -25,6 +25,8 @@ class Renderer{
 		this._mapHeight = map.getHeight()
 
 		this._selector = selector
+
+		this._spriteSheet = spriteSheet
 	}
 
 
@@ -154,8 +156,10 @@ class Renderer{
 							imgHeight, false)
 
 						// draw the image
-						this._ctx.drawImage(img, coords.x, coords.y, 
-								coords.width, coords.height)
+						//this._ctx.drawImage(img, coords.x, coords.y, 
+						//		coords.width, coords.height)
+						this._spriteSheet.drawFrame(val + "", this._ctx, coords.x, coords.y, coords.width, coords.height)
+					
 					}
 	
 					// That means that we are not drawing background

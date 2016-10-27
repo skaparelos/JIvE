@@ -91,7 +91,13 @@ const g_level0_images = {
 const g_random_images = {
 	"blue-house" : "house_blue.png",
 	"green-house" : "house_green.png",
-	"red-house" : "house_red.png"
+	"red-house" : "house_red.png",
+	"tileset1" : "tileset1.png"
+}
+
+const g_tileset1_frames = {
+	"2" : [0, 0, 128, 64, 0, 0],
+	"1" : [128, 0, 128, 64, 0, 0]
 }
 
 
@@ -111,6 +117,10 @@ var g_buildings = [
 		'img_normal_path': 'house_green.png', 'hp': '300' }
 ]
 
+
+var tileset = {
+	//"name" : [x, y, width, height, anchorX, anchorY],
+}
 
 /** *************************\
 *         Maps              *

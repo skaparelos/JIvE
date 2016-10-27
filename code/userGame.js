@@ -85,12 +85,23 @@ function initWorld() {
 	im = world.getImageManager()
 	im.load(g_level0_images)
 	im.load(g_random_images)
+
 	// put the callback in the last one, otherwise it might not work
-	//im.load(g_selector_images, onImagesLoaded)
 	im.load(g_selector_images, function(){
-		//start the world
+
+		// get spriteSheet
+		var spriteSheet = world.getSpriteSheet()
+		spriteSheet.load(im.get("tileset1"), g_tileset1_frames) 
+
+		// once images have been loaded, start the world
 		world.start()
 	})
+
+
+
+	
+	// alternatively:
+	// im.load(g_selector_images, onImagesLoaded)
 
 	//var em = new EventEmitter()
 
@@ -184,9 +195,9 @@ function chooseMap(){
 	"listeners": [{
 	"event": "clickMapObject",
 	"method": function(event) {
-		document.getElementById("placeholder").innerHTML =  event.mapObject.title;
-		town = event.mapObject.title;
-		main();
+		document.getElementById("placeholder").innerHTML = event.mapObject.title
+		town = event.mapObject.title
+		main()
 	}
 	}],
 	"imagesSettings": {

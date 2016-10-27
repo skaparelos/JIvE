@@ -20,6 +20,8 @@ class World extends EventEmitter {
 		this._imageManager = new ImageManager()
 		this._selector = new Selector()
 
+		this._spriteSheet = new SpriteSheet()
+
 		this._previousLeftMouseClick = null
 		this._previousMouseScroll = null
 
@@ -51,7 +53,8 @@ class World extends EventEmitter {
 	init(){
 		this._renderer = new Renderer(this, this._context, 
 			this._screen.getWidth(), this._screen.getHeight(),
-			this._camera, this._imageManager, this._map, this._selector)
+			this._camera, this._imageManager, this._map, this._selector,
+			this._spriteSheet)
 	}
 
 
@@ -244,6 +247,11 @@ class World extends EventEmitter {
 	 */
 	getImageManager(){
 		return this._imageManager
+	}
+
+	
+	getSpriteSheet(){
+		return this._spriteSheet
 	}
 
 	/**

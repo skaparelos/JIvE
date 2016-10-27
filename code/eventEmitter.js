@@ -17,7 +17,8 @@ class EventEmitter{
 
 	
 	emit(eventName, event){
-		if (this._events[eventName] === undefined || this._events[eventName].length === 0)
+		if (this._events[eventName] === undefined 
+			|| this._events[eventName].length === 0)
 			return ;
 
 		for (var callback of this._events[eventName]) { 
