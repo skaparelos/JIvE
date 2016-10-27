@@ -47,9 +47,9 @@ class Camera{
 			var dx = 0
 			var dy = 0
 			  
-			if (UP) dy    =  this._scrollingSpeed * dt
-			if (DOWN) dy  = -this._scrollingSpeed * dt
-			if (LEFT) dx  =  this._scrollingSpeed * dt
+			if (UP)    dy =  this._scrollingSpeed * dt
+			if (DOWN)  dy = -this._scrollingSpeed * dt
+			if (LEFT)  dx =  this._scrollingSpeed * dt
 			if (RIGHT) dx = -this._scrollingSpeed * dt
 
 			// update tiles the drawing position of each tile
@@ -57,6 +57,7 @@ class Camera{
 			this._changeY += dy
 			return true
 		}
+
 		return false
 	}
 
@@ -86,7 +87,7 @@ class Camera{
 		if (this._allowChangeInZoom)
 			this._zoomLevel = value
 		else
-			console.log("change in the zoom level is not allowed. Check the configuration file")
+			console.log("changing the zoom level is not allowed. Check the configuration file")
 	}	
 
 }

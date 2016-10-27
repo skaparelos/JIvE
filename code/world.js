@@ -20,10 +20,6 @@ class World extends EventEmitter {
 		this._imageManager = new ImageManager()
 		this._selector = new Selector()
 
-		// checks whether a map change has happened since last draw so that a
-		// redraw is needed 
-		this._change = true
-
 		this._previousLeftMouseClick = null
 		this._previousMouseScroll = null
 
@@ -33,11 +29,17 @@ class World extends EventEmitter {
 		// used to control how often is requestAnimFrame called
 		this._then = Date.now()
 
+		// deltaTime can be used to make a game frame independent
+		// keeps the time it took between the last two frame updates
+		// measured in ms
+		this._deltaTime = -1
+
 		// DEBUG
 		if(g_DEBUG === true){
 			this.__FPS = 0
 			this.__startTime = -1;
 		}
+		// END DEBUG
 
 	}
 
@@ -56,20 +58,13 @@ class World extends EventEmitter {
 	start() {
 		this.init()
 
-		// draw map without an event trigger
-		this._change = true
-
 		// DEBUG
 		if (g_DEBUG === true){
 			this.__startTime = Date.now();
 		}
+		// END DEBUG
 
-		if (g_game_settings["useReqAnimFrame"] === true){
-			this._gameLoopReqAnim()
-		}else{
-			// call the game loop function period times per second
-			setInterval(this._gameLoopsetInterval.bind(this), this._period)
-		}
+		this._gameLoopReqAnim()
 	}
 
 
@@ -99,46 +94,9 @@ class World extends EventEmitter {
 		var size = this._screen.getFullScreen()
 		this._updateCanvasSize(size.width, size.height)
 		this._renderer.updateScreen(size.width, size.height)
-		this._change = true
 	}
 
 	
-	/**
-	 * Game loop that uses setInterval 
-	 * this does less updates per second, only whenever there is a change
-	 * TODO see if I need to have two gameLoops
-	 */
-	_gameLoopsetInterval() {
-		if (g_running === false)
-			return;
-
-		this._update()
-		if (this._change === true) {
-
-			// DEBUG
-			if (g_DEBUG === true){
-				this.__FPS += 1
-			}
-			// END DEBUG
-
-			this._renderer.drawWholeScreen()
-			this._change = false
-		}
-		
-		// DEBUG
-		if (g_DEBUG === true){
-			var elapsed = Date.now() - this.__startTime
-			if (elapsed > 1000){
-				console.log("FPS: " + this.__FPS)
-				this.__FPS = 0 
-				this.__startTime = Date.now()
-			}
-		}
-		// END DEBUG
-
-	}
-	
-
 	/* Using requestAnimationFrame */
 	_gameLoopReqAnim(){
 		if (g_running === false)
@@ -148,10 +106,10 @@ class World extends EventEmitter {
 		// the drawing function every _period (see the if below)
     	requestAnimationFrame(this._gameLoopReqAnim.bind(this)) 
 
-		var now = Date.now();
-		var elapsed = now - this._then;
+		var now = Date.now()
+		this._deltaTime = now - this._then
 
-		if (elapsed >= this._period) {
+		if (this._deltaTime >= this._period) {
 			
 			// TODO maybe this needs a beter explanation
 			// elapsed/10 so that if FPS = 60 and elapsed = 16.6ms
@@ -163,20 +121,22 @@ class World extends EventEmitter {
 			// The end result is that if we change FPS the scrolling speed
 			// remains the same, while if we don't include this, then the 
 			// scrolling speed is frame dependent
-			this._update(elapsed/10)
-			this._renderer.drawWholeScreen()	
-        	this._then = now - (elapsed % this._period);
+			this._update(this._deltaTime/10)
+			this._renderer.drawWholeScreen()
+        	this._then = now - (this._deltaTime % this._period)	
 
+			// DEBUG
 			if (g_DEBUG === true){
 				this.__FPS += 1
-				var _elapsed = Date.now() - this.__startTime
+				var elapsed = Date.now() - this.__startTime
 
-				if (_elapsed >= 1000){
+				if (elapsed >= 1000){
 					console.log("FPS: " + this.__FPS)
 					this.__FPS = 0 
 					this.__startTime = Date.now()
 				}
 			}
+			// END DEBUG
 		} 
 	}
 
@@ -186,8 +146,7 @@ class World extends EventEmitter {
 		let keyAction = ih.getKeyAction()
 
 		// camera movement
-		if (this._camera.move(keyAction, dt) === true)
-			this._change = true
+		this._camera.move(keyAction, dt)
 
 		// Handle screen resize 
 		if (ih.isScreenResized()) {
@@ -213,10 +172,10 @@ class World extends EventEmitter {
 			this.emit("mousemove", this._previousMouseScroll)
 		}
 
-		// call user's update function everytime this update function is called
+		// call user's update function everytime 
+		// this update function is called
 		if (this._userUpdateFunc !== null){
-			if (this._userUpdateFunc() === true)
-				this._change = true
+			this._userUpdateFunc(this._deltaTime)
 		}
 
 	}// end of update()
@@ -303,15 +262,6 @@ class World extends EventEmitter {
 	}
 
 
-	/**
-	 *  set this to true whenever a change in the game needs to be reflected
-	 *  in the screen by redrawing (e.g. if a movement takes place)
-	 */
-	setChange(change){
-		this._change = change
-	}
-
-
 	setCameraZoomLevel(level){
 		this._camera.setZoomLevel(zoomLevel)
 		this._change = true
@@ -323,6 +273,11 @@ class World extends EventEmitter {
 	 */
 	setUserUpdateFunction(func){
 		this._userUpdateFunc = func
+	}
+
+	
+	getDeltaTime(){
+		return this._deltaTime
 	}
 
 } // end of World class

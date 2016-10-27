@@ -1,4 +1,5 @@
-class BaseEntity {
+// TODO extends eventEmitter so that we can add events like onclick
+class BaseEntity extends EventEmitter {
 	constructor(x, y){
 		this._id = id
 		this._tileX = x

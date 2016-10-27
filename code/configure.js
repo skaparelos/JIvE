@@ -16,15 +16,9 @@ const g_game_settings = {
 	"DEBUG" : true,
 	
 	// max 60, min 30 (not checked)
-	// as you increase FPS, the game will run faster
-	// as more updates will occur during one second
-	"FPS" :  40,  
-
-	// use requestAnimationFrame 
-	// if set to false, we use setInterval instead.
-	// if unsure set this to true
-	"useReqAnimFrame": true,
+	"FPS" :  40
 }
+
 
 const g_DEBUG = g_game_settings["DEBUG"]
 
@@ -35,11 +29,12 @@ const g_DEBUG = g_game_settings["DEBUG"]
 
 // Camera Settings
 const g_camera_settings = {
-	"scrollingSpeed" : 20,
+	"scrollingSpeed" : 15,
 	"initialZoomLevel" : 2,
 	"allowChangeInZoomLevel" : true,
 
-	// you can add more buttons or you can delete
+	// which keys to use for which movement
+	// you may add or delete keys 
 	"UP" : [
 		Utils.keyboardKeys.UP, // the up arrow
 		Utils.keyboardKeys.W   // w

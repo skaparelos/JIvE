@@ -33,7 +33,7 @@ function main() {
  *
  * Write all object updates in this functioun
  */
-function _userUpdate(){
+function _userUpdate(dt){
 	return false
 }
 
@@ -112,7 +112,6 @@ function initWorld() {
 		var tiles = world.screen2MapCoords(e)
 		if (tiles === -1) return;
 		world.getSelector().setSelectorPos(tiles.tileY, tiles.tileX)
-		world.setChange(true)
 	});
 
 	world.on("keydown", function(e){
