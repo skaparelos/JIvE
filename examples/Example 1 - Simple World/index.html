@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>JIvE - Javascript Isometric Engine</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="../../src/renderer.js"></script>
+	<script src="../../src/inputHandler.js"></script>
+	<script src="../../src/camera.js"></script>
+	<script src="../../src/screen.js"></script>
+	<script src="../../src/utils.js"></script>
+	<script src="../../src/spriteSheet.js"></script>
+	<script src="../../src/building.js"></script>
+	<script src="../../src/eventEmitter.js"></script>
+	<script src="../../src/imageManager.js"></script>
+	<script src="../../src/map.js"></script>
+	<script src="../../src/world.js"></script>
+	<script src="js/configure.js"></script>
+	<script src="js/userGame.js"></script>
+
+
+	<script type="text/javascript" src="https://www.amcharts.com/lib/3/ammap.js"></script>
+	<script type="text/javascript" src="https://www.amcharts.com/lib/3/maps/js/greeceLow.js"></script>
+
+</head>
+
+
+<body>
+
+
+	<div id="menu">
+		<button class="button menuButton" onclick="main()">Play</button>
+		<button class="button menuButton" onclick="chooseMap()" style="width:70px; height:70px;">Choose Region</button>
+	</div>
+
+	<div id="ui" style="display:none;">
+		<img src="imgs/simcity_menu.png" style="width:100%;height:100%;">
+	 </div>
+
+
+	<div id="map" style="display:none; width: 100%; height: 788px;">
+	</div>
+
+
+	<div id="placeholder" style="display:none;">
+	</div>
+
+
+
+</body>
+
+</html>
+
