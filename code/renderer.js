@@ -131,9 +131,9 @@ class Renderer{
 	drawMaps(fourEdges){
 
 		var startRow = fourEdges.start_row
-		var endRow = fourEdges.end_row
+		var endRow   = fourEdges.end_row
 		var startCol = fourEdges.start_col
-		var endCol = fourEdges.end_col
+		var endCol   = fourEdges.end_col
 	
 		//TODO optimise this to get them whenever is a change
 		var mapLayers = this._map.getMapLayers()
@@ -142,29 +142,34 @@ class Renderer{
 		for (var layer = 0; layer < totalLayers; layer++){
 			var mapLayer = mapLayers[layer].getLayerMap()
 			var hasMapCell = mapLayers[layer].hasMapCell()
+
 			for (var row = startRow; row < endRow; row++) { // row
 				for (var col = startCol; col < endCol; col++) { // column
 
 					// This means we are drawing background
 					if (hasMapCell === false){
 						var val = mapLayer[row][col]
-						var img = this._imageManager.get(val)	
-						var imgWidth = img.width
-						var imgHeight = img.height
-
+						var dim = this._spriteSheet.getFrameDimensions(val + "")
+						var imgWidth = dim.width
+						var imgHeight = dim.height
+						//var img = this._imageManager.get(val + "")	
+						//var imgWidth = img.width
+						//var imgHeight = img.height
 						var coords = this._drawingCoords(row, col, imgWidth, 
 							imgHeight, false)
 
 						// draw the image
 						//this._ctx.drawImage(img, coords.x, coords.y, 
 						//		coords.width, coords.height)
-						this._spriteSheet.drawFrame(val + "", this._ctx, coords.x, coords.y, coords.width, coords.height)
+						this._spriteSheet.drawFrame(val + "", coords.x, 
+							coords.y, coords.width, coords.height)
 					
 					}
 	
 					// That means that we are not drawing background
-					if (hasMapCell === true){	
+					if (hasMapCell === true){
 						var mapCell = mapLayer[row][col].getMapCell()
+
 						if (mapCell.type !== MapCell.TYPES.EMPTY &&
 							mapCell.entity !== null){
 							

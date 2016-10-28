@@ -2,6 +2,7 @@
 var g_running = true
 
 class World extends EventEmitter {
+
 	constructor (width, height){
 		super()
 
@@ -19,8 +20,7 @@ class World extends EventEmitter {
 
 		this._imageManager = new ImageManager()
 		this._selector = new Selector()
-
-		this._spriteSheet = new SpriteSheet()
+		this._spriteSheet = new SpriteSheet(this._imageManager, this._context)
 
 		this._previousLeftMouseClick = null
 		this._previousMouseScroll = null
@@ -99,7 +99,7 @@ class World extends EventEmitter {
 		this._renderer.updateScreen(size.width, size.height)
 	}
 
-	
+
 	/* Using requestAnimationFrame */
 	_gameLoopReqAnim(){
 		if (g_running === false)
@@ -162,7 +162,7 @@ class World extends EventEmitter {
 				this.emit("keydown", {keyCode: key});
 			}
 		}
-			
+
 		// Handle left mouse click 
 		if (ih.getLeftMouseClick() !== this._previousLeftMouseClick) {
 			this._previousLeftMouseClick = ih.getLeftMouseClick()

@@ -13,7 +13,7 @@
 const g_game_settings = {
 	// Set to true for debugging information
 	// if you are not sure about this, set it to false
-	"DEBUG" : true,
+	"DEBUG" : false,
 	
 	// max 60, min 30 (not checked)
 	"FPS" :  40
@@ -95,11 +95,30 @@ const g_random_images = {
 	"tileset1" : "tileset1.png"
 }
 
+/*	
+*  var frames = {
+*  	"spriteName" : [x, y, width, height, anchorX, anchorY],
+*		" ... " : [ ...]
+*	}
+*/
+
 const g_tileset1_frames = {
 	"2" : [0, 0, 128, 64, 0, 0],
 	"1" : [128, 0, 128, 64, 0, 0]
 }
 
+
+const g_basic_tilesets = {
+	"first_tileset" :  "tileset.png"
+}
+
+const g_first_tileset_frames = {
+	"red-house" : [0, 0, 128, 110, 0, 0],
+	"green-house" : [128, 0, 128, 110, 0, 0],
+	"blue-house" : [256, 0, 128, 110, 0, 0],
+	"2" : [0, 110, 128, 64, 0, 0],
+	"1" : [128, 110, 128, 64, 0, 0]	
+}
 
 /***************************\
 *        Buildings          *

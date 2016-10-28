@@ -83,22 +83,22 @@ function initWorld() {
 
 	// Load images to the world
 	im = world.getImageManager()
-	im.load(g_level0_images)
-	im.load(g_random_images)
+	im.load(g_selector_images)
+	//im.load(g_level0_images)
+	//im.load(g_random_images)
 
 	// put the callback in the last one, otherwise it might not work
-	im.load(g_selector_images, function(){
+	im.load(g_basic_tilesets, function(){
 
 		// get spriteSheet
 		var spriteSheet = world.getSpriteSheet()
-		spriteSheet.load(im.get("tileset1"), g_tileset1_frames) 
+		spriteSheet.load("first_tileset", g_first_tileset_frames) 
 
 		// once images have been loaded, start the world
+		// TODO do this using a counter or something to make sure all images 
+		// have been loaded
 		world.start()
 	})
-
-
-
 	
 	// alternatively:
 	// im.load(g_selector_images, onImagesLoaded)

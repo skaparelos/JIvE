@@ -1,37 +1,66 @@
 class SpriteSheet{
-	constructor(){
+	constructor(imageManager, ctx){
 		this._frames = {}
+		this._imageManager = imageManager
+		this._ctx = ctx
 	}
 
 
 	/**
-	 *  This function takes a spritesheet image and the coordinates 
+	 *  This function takes the name of a spritesheet image and the coordinates 
 	 *  of each image in the sprite sheet. 
-	 *  frames is an dictionary of that form:
 	 *
-	 *  spriteName is the name of the sprite. e.g. "red_tile", "blue_tile"
+	 *  @param imageName - the name of the spritesheet image
+	 *  @param frames - a dictionary of that form:
 	 *  var frames = {
 	 *  	"spriteName" : [x, y, width, height, anchorX, anchorY],
 	 *		" ... " : [ ...]
 	 *	}
+	 *  spriteName is the name of the sprite in the sprite sheet. 
+	 *  e.g. "red_tile", "blue_tile" 
+	 *
+	 *  
 	 */
-	load(image, frames){
-		for (let i in frames){
+	load(imageName, frames){
+		for (var i in frames){
 			this._frames[i] = frames[i]
-			// TODO keep this only once, not for every frame
-			this._frames[i].push(image)
+			this._frames[i].push(imageName)
 		}
 	}
 
 
-	drawFrame(frameName, ctx, x, y, width, height){
+	getFrameDimensions(frameName){
 		var f = this._frames[frameName]
-		ctx.drawImage(f[SpriteSheet.IMAGE], f[SpriteSheet.X], f[SpriteSheet.Y],
+		return {
+			width: f[SpriteSheet.WIDTH],
+			height: f[SpriteSheet.HEIGHT]
+		}
+	}
+
+
+	/**
+	 *  Takes as input the name of the image to draw. it automatically finds
+	 *  the spritesheet image where that sprite exists and draws the correct
+	 *  portion
+	 *  
+	 *  @param frameName - the name of the sprite
+	 *  @param x - the x coordinate to draw
+	 *  @param y - the y coordinate to draw
+	 *  @param width - the width of the image
+	 *  @param height - the height of the image
+	 *
+	 */
+	drawFrame(frameName, x, y, width, height){
+		var f = this._frames[frameName]
+		var img = this._imageManager.get(f[SpriteSheet.IMAGE_NAME])
+		
+		this._ctx.drawImage(img, f[SpriteSheet.X], f[SpriteSheet.Y],
 			f[SpriteSheet.WIDTH], f[SpriteSheet.HEIGHT], x, y, width, height)
 	}
 
 
 	clear(){
+		this._frames = {}
 	}
 }
 
@@ -41,4 +70,4 @@ SpriteSheet.WIDTH = 2
 SpriteSheet.HEIGHT = 3
 SpriteSheet.ANCHOR_X = 4
 SpriteSheet.ANCHOR_Y = 5
-SpriteSheet.IMAGE = 6
+SpriteSheet.IMAGE_NAME = 6
