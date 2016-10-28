@@ -17,6 +17,8 @@ class ImageManager {
 		// If all images from those identified for loading have been loaded 
 		// then, this is equal to true.
 		this._loaded = false
+
+		this._imagesPath = g_game_settings["IMAGES_DIR"]
 	}
 
 
@@ -59,7 +61,7 @@ class ImageManager {
 			}
 		}
 
-		img.src = 'imgs/' + path
+		img.src = this._imagesPath + path
 	} 
 
 
