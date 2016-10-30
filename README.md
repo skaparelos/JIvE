@@ -3,7 +3,8 @@ A Javascript Isometric Game Engine (JIvE)
 
 Written using VanillaJS in ECMAScript 6
 
-Make sure to visit the Github [Wiki](https://github.com/skaparelos/JIvE/wiki) to see more examples
+## Tutorials
+Make sure to visit the Github [Wiki](https://github.com/skaparelos/JIvE/wiki) to see [tutorials](https://github.com/skaparelos/JIvE/wiki/Tutorials) on how to use JIvE.
 
 ## Currently Supported:
 - map scroll

@@ -81,30 +81,6 @@ const g_selector_images = {
 }
 
 
-/**
- * Load the level 0 images. This should be background tiles
- * Just write the character - name correspondence used in the map below
- */
-const g_level0_images = {
-	"1" : "green.png",
-	"2" : "dirt.png"
-}
-
-
-const g_random_images = {
-	"blue-house" : "house_blue.png",
-	"green-house" : "house_green.png",
-	"red-house" : "house_red.png",
-	"tileset1" : "tileset1.png"
-}
-
-/*	
-*  var frames = {
-*  	"spriteName" : [x, y, width, height, anchorX, anchorY],
-*		" ... " : [ ...]
-*	}
-*/
-
 const g_tileset1_frames = {
 	"2" : [0, 0, 128, 64, 0, 0],
 	"1" : [128, 0, 128, 64, 0, 0]
@@ -127,22 +103,7 @@ const g_first_tileset_frames = {
 *        Buildings          *
 \***************************/
 
-
-var g_buildings = [
-    { 'id': '0', 'width_tiles': '1', 'height_tiles': '1',
-		'img_normal_path': 'house_blue.png', 'hp': '100' },
-
-    { 'id': '1', 'width_tiles': '1', 'height_tiles': '1',
-		'img_normal_path': 'house_red.png', 'hp': '200' },
-
-    { 'id': '2', 'width_tiles': '1', 'height_tiles': '1',
-		'img_normal_path': 'house_green.png', 'hp': '300' }
-]
-
-
-var tileset = {
-	//"name" : [x, y, width, height, anchorX, anchorY],
-}
+// nothing here
 
 /** *************************\
 *         Maps              *

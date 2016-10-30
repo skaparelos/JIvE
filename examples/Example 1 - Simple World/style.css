@@ -3,19 +3,16 @@ html {
 	overflow: hidden
 }
 
-
 body {
 	margin: 0px;
 	padding: 0px;
 	height: 100%;
 }
 
-
 canvas {
 	border: 1px solid #d3d3d3;
 	background-color: #f1f1f1;
 }
-
 
 #menu {
 	position: fixed;
@@ -24,7 +21,6 @@ canvas {
 	top: 45%;
 	left: 45%;
 }
-
 
 #ui #top {
 	border-bottom: 1px solid rgba(255, 255, 255, 0.4);
@@ -38,8 +34,7 @@ canvas {
 	text-shadow: black 0px 0px 4px;
 }
 
-
-/*#ui #bottom{
+#ui #bottom{
 	background-color: rgba(0, 0, 0, 0.3);
 	border-bottom: 1px solid rgba(255, 255, 255, 0.4);
 	height: 50px;
@@ -52,21 +47,8 @@ canvas {
 	background-position: right 20px bottom 20px;
 	text-shadow: black 0px 0px 4px;
 	border-radius: 25px;
-}*/
-
-
-#middle{
-	position:fixed;
-	left:30%;
-	top:30%;
-	
 }
 
-
-#ui{
-	position:fixed;
-	bottom:0px;	
-}
 
 .button {
 	background-color: #4CAF50; /* Green */
@@ -81,7 +63,6 @@ canvas {
 	cursor: pointer;
 }
 
-
 .menuButton {
 	width: 100px;
 	height: 100px;
@@ -91,20 +72,9 @@ canvas {
 	font-size: 16px;
 }
 
-
 .menuButton:hover {
 	background-color: #4CAF50;
 	color: white;
-}
-
-#placeholder {
-  width: 100%;
-  height: 20px;
-  position: fixed;
-  top: 0px;
-  border: 3px solid #fff;
-  opacity: 0.9;
-  background: #ccc;
 }
 
 .button1 {
@@ -119,13 +89,11 @@ canvas {
 	color: white;
 }
 
-
 .button2{
 	background-color: red; 
 	color: yellow; 
 	border: 2px solid #4CA320;
 }
-
 
 .myButton{
 	border:none;
@@ -133,34 +101,9 @@ canvas {
 	height: 50px;
 }
 
-
 .myButton:hover{   
 	width: 60px;
 	height: 60px;
 }
 
 
-.circle { 
-	width: 40px; 
-	height: 40px; 
-	background: linear-gradient(to top, #c6cacd, #eef1f3);
-	border-radius: 50px; 
-}
-
-
-.city{
-	background-image: url("imgs/simcity_menu.png");
-	background-repeat: no-repeat;
-	position:fixed;
-	bottom:30%;
-}
-
-
-/*#hideamd{ 
-	position:absolute;
-	width: 100px;
-	height: 50px;
-	background-color: #505050;
-	top: 15px;
-	left: 20px;
-}*/
