@@ -1,7 +1,7 @@
 /**
  * The ImageManager class is responsible for loading and accessing 
  * many images using a nickname. e.g. load an image 'house_blue_64x32_2.png'
- * and nickname it 'blue'
+ * and nickname it 'blue-house'
  */
 class ImageManager {
 	constructor(){

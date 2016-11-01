@@ -14,13 +14,11 @@
  * - We only need one instance of this class.
  */
 class InputHandler{
-	constructor(camera){
+	constructor(){
 
 		// the two things we will add event listeners on:
 		this._docBody = document.body
 		this._window = window
-
-		this._camera = camera
 
 		// holds the key pressed
 		this._keyAction = {}
@@ -43,17 +41,17 @@ class InputHandler{
 	_attachEventListeners(){
 
 		// Keyboard
-		this._docBody.addEventListener('keydown', this._keyDown.bind(this), false); 
-		this._docBody.addEventListener('keyup', this._keyUp.bind(this), false);
+		this._docBody.addEventListener('keydown', this._keyDown.bind(this), false) 
+		this._docBody.addEventListener('keyup', this._keyUp.bind(this), false)
 	
 		// Mouse
-		this._docBody.addEventListener('contextmenu', this._rightClick.bind(this), false);
-		this._docBody.addEventListener('mousedown', this._mouseDown.bind(this), false);	
-		this._docBody.addEventListener('mouseup', this._mouseUp.bind(this), false);
-		this._docBody.addEventListener('mousemove', this._mouseHover.bind(this), false);
+		this._docBody.addEventListener('contextmenu', this._rightClick.bind(this), false)
+		this._docBody.addEventListener('mousedown', this._mouseDown.bind(this), false)
+		this._docBody.addEventListener('mouseup', this._mouseUp.bind(this), false)
+		this._docBody.addEventListener('mousemove', this._mouseHover.bind(this), false)
 
 		// Window
-		this._window.addEventListener('resize', this._windowResize.bind(this));
+		this._window.addEventListener('resize', this._windowResize.bind(this))
 		
 	}
 
@@ -79,8 +77,6 @@ class InputHandler{
 	 */
 	_rightClick(e){
 		e.preventDefault()
-		console.log("right click!");
-		return false
 	}
 
 

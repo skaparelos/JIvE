@@ -14,7 +14,6 @@ function main() {
 	document.getElementById('menu').style.display = "none";
 	document.getElementById('ui').style.display = "block";
 
-
 	// setup the in-game menu
 	setUIMenu()
 

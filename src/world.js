@@ -11,7 +11,7 @@ class World extends EventEmitter {
 
 		this._map = new Map()
 		this._camera = new Camera()
-		this._inputHandler = new InputHandler(this._camera)
+		this._inputHandler = new InputHandler()
 
 		// canvas stuff
 		this._canvas = null
@@ -114,17 +114,7 @@ class World extends EventEmitter {
 
 		if (this._deltaTime >= this._period) {
 			
-			// TODO maybe this needs a beter explanation
-			// elapsed/10 so that if FPS = 60 and elapsed = 16.6ms
-			// then this will be called 60 times per second and 
-			// over one second we will have 1.66 * 60 = 100
-			// then 100*scrollingSpeed will give us the desired number
-			// of pixels to scroll per minute
-			// 
-			// The end result is that if we change FPS the scrolling speed
-			// remains the same, while if we don't include this, then the 
-			// scrolling speed is frame dependent
-			this._update(this._deltaTime/10)
+			this._update(this._deltaTime)
 			this._renderer.drawWholeScreen()
         	this._then = now - (this._deltaTime % this._period)	
 
@@ -148,8 +138,19 @@ class World extends EventEmitter {
 		let ih = this._inputHandler
 		let keyAction = ih.getKeyAction()
 
+		// TODO maybe this needs a beter explanation
+		// elapsed/10 so that if FPS = 60 and elapsed = 16.6ms
+		// then this will be called 60 times per second and 
+		// over one second we will have 1.66 * 60 = 100
+		// then 100*scrollingSpeed will give us the desired number
+		// of pixels to scroll per minute
+		// 
+		// The end result is that if we change FPS the scrolling speed
+		// remains the same, while if we don't include this, then the 
+		// scrolling speed is frame dependent
+
 		// camera movement
-		this._camera.move(keyAction, dt)
+		this._camera.move(keyAction, dt/10)
 
 		// Handle screen resize 
 		if (ih.isScreenResized()) {
@@ -159,20 +160,22 @@ class World extends EventEmitter {
 		// Handle keydown
 		for (var key in keyAction){
 			if (keyAction[key] === true){
-				this.emit("keydown", {keyCode: key});
+				this.emit("keydown", {keyCode: key})
 			}
 		}
 
-		// Handle left mouse click 
-		if (ih.getLeftMouseClick() !== this._previousLeftMouseClick) {
-			this._previousLeftMouseClick = ih.getLeftMouseClick()
-			this.emit("leftmouseclick", this._previousLeftMouseClick)
+		// Handle left mouse click
+		var leftClick = ih.getLeftMouseClick()
+		if (leftClick !== this._previousLeftMouseClick) {
+			this._previousLeftMouseClick = leftClick
+			this.emit("leftmouseclick", leftClick)
 		}
 
 		// Handle mouse movement
-		if (ih.getMouseHover() !== this._previousMouseScroll) {
-			this._previousMouseScroll = ih.getMouseHover()
-			this.emit("mousemove", this._previousMouseScroll)
+		var mouseHover = ih.getMouseHover()
+		if (mouseHover !== this._previousMouseScroll) {
+			this._previousMouseScroll = mouseHover
+			this.emit("mousemove", mouseHover)
 		}
 
 		// call user's update function everytime 
@@ -195,31 +198,31 @@ class World extends EventEmitter {
 	screen2MapCoords(e) {
 
 		/*  Solve the drawing functions for tileX, tileY
-			These are the 2 drawing functions:
-			screenX = (tileX - tileY) * unittileWidth / 2 + changeX;
-			screenY = (tileY + tileX) * unittileHeight / 2 + changeY;
+			These are the 2 drawing equations:
+			screenX = (tileX - tileY) * unittileWidth / zoomLevel / 2 + camX;
+			screenY = (tileY + tileX) * unittileHeight / zoomLevel / 2 + camY;
 		*/
 
+		// TODO set these once, they won't change
 		var mapWidth = this._map.getWidth()
 		var mapHeight = this._map.getHeight()
 
-		var cameraChange = this._camera.getChange()
-		var changeX = cameraChange.changeX
-		var changeY = cameraChange.changeY
-
+		var cameraPos = this._camera.getPos()
+		var camX = cameraPos.x
+		var camY = cameraPos.y
 		var zoomLevel = this._camera.getZoomLevel()
 
 		// adjustX=-40 has been set empirically to correct the tile choice
 		var adjustX = -40 / zoomLevel
 
 		var tilex = Math.floor(zoomLevel * (
-				((e.clientX - changeX + adjustX) / g_unit_tile_width) +
-				((e.clientY - changeY) / g_unit_tile_height)
+				((e.clientX - camX + adjustX) / g_unit_tile_width) +
+				((e.clientY - camY) / g_unit_tile_height)
 				))
 
 		var tiley = Math.floor(zoomLevel * (
-				((e.clientY - changeY) / g_unit_tile_height) -
-				((e.clientX - changeX + adjustX) / g_unit_tile_width)
+				((e.clientY - camY) / g_unit_tile_height) -
+				((e.clientX - camX + adjustX) / g_unit_tile_width)
 				))
 
 		if (tilex < 0 || tiley < 0 ||
@@ -230,7 +233,6 @@ class World extends EventEmitter {
 				isNaN(tilex) || isNaN(tiley))
 			return -1
 
-		//return [tiley, tilex]
 		return {
 			tileY: tiley,
 			tileX: tilex
@@ -280,6 +282,11 @@ class World extends EventEmitter {
 	 *  set your update function
 	 */
 	setUserUpdateFunction(func){
+		if (typeof callback !== "function"){
+			console.log("The callback must be a function")
+			return;
+		}
+
 		this._userUpdateFunc = func
 	}
 

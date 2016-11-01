@@ -17,6 +17,12 @@ canvas {
 }
 
 
+.xstats {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
 #menu {
 	position: fixed;
 	height: 200px;
@@ -24,6 +30,7 @@ canvas {
 	top: 45%;
 	left: 45%;
 }
+
 
 
 #ui #top {

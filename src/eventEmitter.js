@@ -5,8 +5,10 @@ class EventEmitter{
 
 
 	on(eventName, callback) {
-		if (typeof callback !== "function")
+		if (typeof callback !== "function"){
 			console.log("The callback must be a function")
+			return;
+		}
 
 		if (!this._events[eventName]) {
 			this._events[eventName] = []

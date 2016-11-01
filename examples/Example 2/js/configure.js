@@ -13,10 +13,10 @@
 const g_game_settings = {
 	// Set to true for debugging information
 	// if you are not sure about this, set it to false
-	"DEBUG" : false,
+	"DEBUG" : true,
 	
 	// max 60, min 30 (not checked)
-	"FPS" :  40,
+	"FPS" :  30,
 
 	// the directory where we should look for images
 	"IMAGES_DIR" : "imgs/"

@@ -51,7 +51,6 @@ class Renderer{
 		// TODO draw entities (e.g. Units)
 	}
 
-	
 
 	/**
 	 *  This function finds which parts of the map are shown to the player
@@ -215,9 +214,9 @@ class Renderer{
 
 	// TODO optimise this is called extremely often!!	
 	_drawingCoords(row, col, imgWidth, imgHeight, entity){
-		var change = this._camera.getChange()
-		var changeX = change.changeX
-		var changeY = change.changeY
+		var cameraPos = this._camera.getPos()
+		var camX = cameraPos.x
+		var camY = cameraPos.y
 
 		//TODO remove this from here and update it when it is needed
 		var zoomLevel = this._camera.getZoomLevel()
@@ -227,8 +226,8 @@ class Renderer{
 		var initY = (row + col) * g_unit_tile_height / 2
 
 		// screen coordinates
-		var screenX = Math.floor(initX / zoomLevel + changeX)
-		var screenY = Math.floor(initY / zoomLevel + changeY)
+		var screenX = Math.floor(initX / zoomLevel + camX)
+		var screenY = Math.floor(initY / zoomLevel + camY)
 
 		// calculate the new tile width & height based on the zoom level
 		var widthZoom = Math.floor(imgWidth / zoomLevel)
@@ -236,8 +235,10 @@ class Renderer{
 
 		// If we are not drawing background, make this adjustment
 		if (entity === true){
+
 			screenX = Math.floor(screenX - imgWidth / (zoomLevel * 2)
 					+ g_unit_tile_width / (zoomLevel * 2))
+
 			screenY = Math.floor(screenY - imgHeight / zoomLevel 
 					+ g_unit_tile_height / zoomLevel)
 		}

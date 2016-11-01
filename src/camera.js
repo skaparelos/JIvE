@@ -1,14 +1,18 @@
+// More like Viewport rather than camera.
 class Camera{
 	constructor(zoomLevel){
-		this._changeX = 0
-		this._changeY = 0
+		
+		// Set the viewport to the origin	
+		this._x = 0
+		this._y = 0
+
 		this._scrollingSpeed = g_camera_settings["scrollingSpeed"]
 		this._zoomLevel = g_camera_settings["initialZoomLevel"]
 		this._allowChangeInZoom = g_camera_settings["allowChangeInZoomLevel"]
 
-		this._upButtons = g_camera_settings["UP"]
-		this._downButtons = g_camera_settings["DOWN"]
-		this._leftButtons = g_camera_settings["LEFT"]
+		this._upButtons    = g_camera_settings["UP"]
+		this._downButtons  = g_camera_settings["DOWN"]
+		this._leftButtons  = g_camera_settings["LEFT"]
 		this._rightButtons = g_camera_settings["RIGHT"]
 	}
 
@@ -52,24 +56,23 @@ class Camera{
 			if (LEFT)  dx =  this._scrollingSpeed * dt
 			if (RIGHT) dx = -this._scrollingSpeed * dt
 
-			// update tiles the drawing position of each tile
-			this._changeX += dx
-			this._changeY += dy
-			return true
+			// update the position of the viewpoer 
+			this._x += dx
+			this._y += dy
+
 		}
 
-		return false
+		return this
 	}
 
 
 	/**
-	 *  Returns the change in the X and Y axes
-	 *  i.e. how much has the camera moved
+	 *  Returns the position of the viewport
 	 */
-	getChange(){
+	getPos(){
 		return {
-			changeX: this._changeX,
-			changeY: this._changeY
+			x: this._x,
+			y: this._y
 		};
 	}
 
@@ -88,6 +91,8 @@ class Camera{
 			this._zoomLevel = value
 		else
 			console.log("changing the zoom level is not allowed. Check the configuration file")
+
+		return this
 	}	
 
 }
