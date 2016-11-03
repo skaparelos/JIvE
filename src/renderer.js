@@ -2,6 +2,7 @@
 class Renderer{
 	constructor(world, ctx, screenWidth, screenHeight, camera, 
 			imageManager, map, selector, spriteSheet){
+
 		this._world = world
 
 		this._ctx = ctx
@@ -21,12 +22,13 @@ class Renderer{
 		// we need the map to be able to access the map levels directly
 		// rather than passing them as parameters. This should be faster
 		this._map = map
-		this._mapWidth = map.getWidth()
-		this._mapHeight = map.getHeight()
 
 		this._selector = selector
 
 		this._spriteSheet = spriteSheet
+	
+		this._setEvents()
+	
 	}
 
 
@@ -36,6 +38,31 @@ class Renderer{
 	updateScreen(screenWidth, screenHeight){
 		this._screenWidth = screenWidth
 		this._screenHeight = screenHeight
+	
+		// update events in case of a change in the size	
+		this._setEvents()
+	}
+
+
+	/**
+	 *
+	 *  four events that are used to identify the bounds of the visible map
+	 *  portion to the user
+	 *  
+	 *  Imagine this is the screen:
+	 *
+	 *  E-----------E
+	 *  |           |
+	 *  |           |
+     *  |           |
+	 *  E-----------E
+	 */
+	_setEvents(){
+		this._eventLeftUp = {clientX : 0, clientY : 0}
+		this._eventRightUp = {clientX : this._screenWidth, clientY : 0}
+		this._eventLeftDown = {clientX : 0, clientY : this._screenHeight}
+		this._eventRightDown = {clientX : this._screenWidth, clientY : this._screenHeight}
+
 	}
 
 
@@ -44,83 +71,16 @@ class Renderer{
 	}
 
 
-	drawWholeScreen(){	
-		var fourEdges = this.screen2mapViewport()
+	drawWholeScreen(){
+
+		// identify what portion of the map is visible to the user
+		var fourEdges = this._map.identifyVisibleMapBounds(this._camera, 
+				this._eventLeftUp, this._eventLeftDown, this._eventRightUp, 
+				this._eventRightDown)
+
 		this.clearWholeScreen()
 		this.drawMaps(fourEdges)
 		// TODO draw entities (e.g. Units)
-	}
-
-
-	/**
-	 *  This function finds which parts of the map are shown to the player
-	 *  and returns them.
-	 *  It does so by calculating the 4 edges of the screen and finding the
-	 *  their corresponding map cells.
-	 * 
-	 *  e.g. screen with four Edges (E)
-	 *  E-----------E
-	 *  |           |
-	 *  |           |
-     *  |           |
-	 *  E-----------E
-	 *
-	 *  imagine that the map is bigger than the screen
-	 *  so that the screen only shows a portion of the map.
-	 */
-	screen2mapViewport(){
-
-		/*
-			Check the 4 edges of the screen to see which tiles are there.
-			Then draw the tiles that can appear on the screen and nothing more
-
-			This is a big reduction:
-			in a 200x200 map we drop from 40.000 iterations to about 1000. 
-		*/
-
-		var mapH = this._mapHeight
-		var mapW = this._mapWidth
-		var world = this._world
-		
-		var start_row = 0
-		var start_col = 0
-		var end_row = mapH
-		var end_col = mapW
-
-		fake_event.clientX = 0
-		fake_event.clientY = 0
-		var res = world.screen2MapCoords(fake_event)
-		if (res != -1) {
-			start_col = res.tileX
-		}
-
-		fake_event.clientX = this._screenWidth
-		fake_event.clientY = 0
-		res = world.screen2MapCoords(fake_event)
-		if (res != -1) {
-			start_row = res.tileY
-		}
-
-		fake_event.clientX = 0
-		fake_event.clientY = this._screenHeight
-		res = world.screen2MapCoords(fake_event)
-		if (res != -1) {
-			end_row = (res.tileY + 2 > mapH) ? mapH : res.tileY + 2
-		}
-
-		fake_event.clientX = this._screenWidth
-		fake_event.clientY = this._screenHeight
-		res = world.screen2MapCoords(fake_event)
-		if (res != -1) {
-			end_col = (res.tileX + 1 > mapW) ? mapW : res.tileX + 1
-		}
-
-		return {
-			start_row:  start_row,
-			end_row: end_row,
-			start_col: start_col,
-			end_col: end_col
-		};
 	}
 
 
@@ -151,9 +111,7 @@ class Renderer{
 						var dim = this._spriteSheet.getFrameDimensions(val + "")
 						var imgWidth = dim.width
 						var imgHeight = dim.height
-						//var img = this._imageManager.get(val + "")	
-						//var imgWidth = img.width
-						//var imgHeight = img.height
+
 						var coords = this._drawingCoords(row, col, imgWidth, 
 							imgHeight, false)
 

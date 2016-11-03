@@ -1,9 +1,12 @@
 class Screen {
+
 	constructor(width, height){
 		this._width = width
 		this._height = height
+
 		this._FPS = g_game_settings["FPS"]
 		this._period = 1000 / this._FPS // in millisec
+
 		if (width == 0 && height == 0)
 			this.getFullScreen()
 	}

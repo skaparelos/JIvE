@@ -14,6 +14,7 @@
  * - We only need one instance of this class.
  */
 class InputHandler{
+
 	constructor(){
 
 		// the two things we will add event listeners on:

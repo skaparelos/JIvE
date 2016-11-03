@@ -66,6 +66,7 @@ class Camera{
 	}
 
 
+
 	/**
 	 *  Returns the position of the viewport
 	 */

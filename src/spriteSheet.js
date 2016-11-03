@@ -1,4 +1,5 @@
 class SpriteSheet{
+
 	constructor(imageManager, ctx){
 		this._frames = {}
 		this._imageManager = imageManager
@@ -29,6 +30,12 @@ class SpriteSheet{
 	}
 
 
+	/**
+	 *  Returns the dimensions of a frame (that is of sprite within a larger
+	 *  image) e.g. if u have loaded a spritesheet with houses
+	 *  you can get the dimensions of the 'blue-house'
+	 *
+	 */
 	getFrameDimensions(frameName){
 		var f = this._frames[frameName]
 		return {

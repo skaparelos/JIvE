@@ -187,60 +187,6 @@ class World extends EventEmitter {
 	}// end of update()
 
 
-	/**
-	 * Translates screen coordinates to on map coordinates
-	 * Runs in O(1).
-	 * 
-	 * @param e A click event.
-	 *
-	 * Outputs the cell in the map that was clicked
-	*/
-	screen2MapCoords(e) {
-
-		/*  Solve the drawing functions for tileX, tileY
-			These are the 2 drawing equations:
-			screenX = (tileX - tileY) * unittileWidth / zoomLevel / 2 + camX;
-			screenY = (tileY + tileX) * unittileHeight / zoomLevel / 2 + camY;
-		*/
-
-		// TODO set these once, they won't change
-		var mapWidth = this._map.getWidth()
-		var mapHeight = this._map.getHeight()
-
-		var cameraPos = this._camera.getPos()
-		var camX = cameraPos.x
-		var camY = cameraPos.y
-		var zoomLevel = this._camera.getZoomLevel()
-
-		// adjustX=-40 has been set empirically to correct the tile choice
-		var adjustX = -40 / zoomLevel
-
-		var tilex = Math.floor(zoomLevel * (
-				((e.clientX - camX + adjustX) / g_unit_tile_width) +
-				((e.clientY - camY) / g_unit_tile_height)
-				))
-
-		var tiley = Math.floor(zoomLevel * (
-				((e.clientY - camY) / g_unit_tile_height) -
-				((e.clientX - camX + adjustX) / g_unit_tile_width)
-				))
-
-		if (tilex < 0 || tiley < 0 ||
-			tilex >= mapWidth || tiley >= mapHeight)
-			return -1
-
-		if (tilex == undefined || tiley == undefined ||
-				isNaN(tilex) || isNaN(tiley))
-			return -1
-
-		return {
-			tileY: tiley,
-			tileX: tilex
-		}
-
-	}  //end screen2MapCoords
-
-
 
 	/*** The following functions can be used by the user to develop his/her game: ***/
 	
@@ -279,7 +225,7 @@ class World extends EventEmitter {
 
 
 	/**
-	 *  set your update function
+	 *  set the user's update function
 	 */
 	setUserUpdateFunction(func){
 		if (typeof callback !== "function"){
@@ -293,6 +239,11 @@ class World extends EventEmitter {
 	
 	getDeltaTime(){
 		return this._deltaTime
+	}
+
+
+	screen2MapCoords(e){
+		return this._map.screen2MapCoords(e, this._camera)
 	}
 
 } // end of World class
