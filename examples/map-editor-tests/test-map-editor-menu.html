@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+
+<style>
+
+  html{ 
+    width:100%; 
+    height:100%; 
+  }
+
+  body{ 
+    background:#612122; 
+    font:16px sans-serif; 
+    width:100%; height:100%; 
+    color:#FFFFFF; 
+    overflow: hidden; 
+  }
+
+  #hub{ 
+    position:absolute; 
+    top:0; 
+    left:0; 
+    height:100%; 
+    width:100%; 
+  }
+
+
+</style>
+
+
+<style>
+button.accordion {
+    background-color: black;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+}
+
+button.accordion.active{
+  background-color: black;
+}
+
+button.accordion:hover {
+    background-color: #ddd;
+}
+
+div.accordion-panel {
+    padding: 0 18px;
+    display: none;
+    height: 30px;
+    background-color: white;
+    color: black;
+}
+
+div.accordion-panel.show {
+    display: block;
+}
+
+</style>
+
+</head>
+  
+<body>
+
+
+<div id="hub"></div>
+
+<script>
+
+
+// create a style for menu items
+var menuItemStyle = document.createElement('style');
+menuItemStyle.type = 'text/css';
+menuItemStyle.innerHTML = '.menuitemstyle { position: relative; background-color: green; width:100%; height:30px; text-align:left;}';
+document.getElementsByTagName('head')[0].appendChild(menuItemStyle);
+
+
+function createDraggableMenu(){
+
+  // make the menu box where we will add items
+  var divMenu = document.createElement('div');
+  divMenu.setAttribute("id", "divMenu");
+  divMenu.setAttribute('draggable', true);
+  divMenu.style.cssText = 'position:absolute; background-color:blue; top:10px; left:50%; width:300px; height:300px;';
+
+  // all items are added under the hub
+  var hub = document.getElementById("hub")
+  hub.appendChild(divMenu)
+
+  return divMenu
+}
+
+function addMenuItem(menu, name, top){
+  var divMenuItem = document.createElement('button');
+  //divMenuItem.setAttribute("id", "divMenuItem");
+  divMenuItem.className = 'accordion';
+  divMenuItem.style.top = top + 'px';
+  divMenuItem.innerHTML = name;
+  menu.appendChild(divMenuItem);
+
+  return divMenuItem
+}
+
+
+function addContentToItem(menuItem, contentHTML){
+  var content = document.createElement('div');
+  //content.setAttribute("id", "content");
+  content.className = 'accordion-panel';
+  content.innerHTML = contentHTML
+  menuItem.appendChild(content)
+}
+
+
+
+var divMenu = createDraggableMenu()
+
+divMenu.addEventListener("dragstart", function(e){
+    var style = window.getComputedStyle(e.target, null);
+    e.dataTransfer.setData("text/plain",
+      (parseInt(style.getPropertyValue("left"),10) - e.clientX) + ',' + (parseInt(style.getPropertyValue("top"),10) - e.clientY));
+}, false);
+
+document.body.addEventListener('dragover', function(e){
+  e.preventDefault();
+},false); 
+
+document.body.addEventListener("drop", function(e){
+  var offset = e.dataTransfer.getData("text/plain").split(',');
+  var divMenu = document.getElementById("divMenu");
+  divMenu.style.left = e.clientX + parseInt(offset[0],10) + "px"
+  divMenu.style.top  = e.clientY + parseInt(offset[0],10) + "px"
+}, false);
+
+
+// add items
+var item = addMenuItem(divMenu, "item 1", 10);
+addContentToItem(divMenu, "hello world")
+
+item = addMenuItem(divMenu, "item 2", 30);
+addContentToItem(divMenu, "hello world 2")
+
+item = addMenuItem(divMenu, "item 3", 50);
+addContentToItem(divMenu, "hello world 3")
+
+hub.appendChild(divMenu);
+
+
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+    acc[i].onclick = function(){
+        this.classList.toggle("active");
+        this.nextElementSibling.classList.toggle("show");
+  }
+}
+
+
+</script>
+
+</body>
+</html>
+

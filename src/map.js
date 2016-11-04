@@ -4,9 +4,11 @@
  */
 
 class Selector{
+
 	constructor(){
 		this._tileX = 0
 		this._tileY = 0
+
 		// set to "true" if you don't want it to be drawn
 		this._isHidden = false
 	}
@@ -44,13 +46,17 @@ class Selector{
 
 
 /**
- *  A map cell represents the contents of the level1 map
- *  The level0 map only consists of background tiles, that do not carry any
- *  extra information, however, level1 map cells carry a lot of information
- *  and this class is made to contain it. 
+ *  A map cell represents the contents of each cell in a map
+ *
+ *  TODO
+ *  at the moment not all layers have mapCells. particularly the background 
+ *  layer does not need one
+ *  
  */
 class MapCell{
+
 	constructor(type){
+
 		/* TODO	do we need the id? */
 		this._id = 0
 
@@ -98,6 +104,12 @@ MapCell.TYPES = {
 
 
 /**
+ * TODO: It is not clear yet, wheter a map layer consists of map cells 
+ * (see above class) or not. Since map cells carry more information we should
+ * only use them when necessary, otherwise just carry integers to denote
+ * tile and terrain. However, it could be better (need to look at this) if each
+ * map layer consisted solely of mapcells. 
+ *
  * A map layer represents a layer. e.g. background is one layer
  * non-moving objects can be a second layer (e.g. buildings and trees)
  * sprites might be a third layer. etc..
@@ -106,6 +118,7 @@ MapCell.TYPES = {
  * from Map class (since they are all the same)
  */ 
 class MapLayer{
+
 	constructor(){
 		this._map = []
 		this._hasMapCell = false
@@ -116,6 +129,7 @@ class MapLayer{
 	 *	If withMapCell is true, then that layer will have a map cell
 	 */ 
 	load(map, withMapCell){
+
 		if (withMapCell === false){
 			this._map = map
 			this._hasMapCell = false
@@ -164,6 +178,7 @@ class MapLayer{
  *
  */
 class Map{
+
 	constructor(){
 		this._width = 0
 		this._height = 0

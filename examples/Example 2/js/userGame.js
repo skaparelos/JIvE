@@ -14,6 +14,10 @@ function main() {
 	document.getElementById('menu').style.display = "none";
 	document.getElementById('ui').style.display = "block";
 
+	var sheet = document.createElement('style')
+	sheet.innerHTML = "div {border: 2px solid blue; background-color: red;}";
+	document.body.appendChild(sheet);
+
 	// setup the in-game menu
 	setUIMenu()
 

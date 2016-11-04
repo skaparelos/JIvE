@@ -108,9 +108,9 @@ class Renderer{
 					// This means we are drawing background
 					if (hasMapCell === false){
 						var val = mapLayer[row][col]
-						var dim = this._spriteSheet.getFrameDimensions(val + "")
-						var imgWidth = dim.width
-						var imgHeight = dim.height
+						var imgDim = this._spriteSheet.getFrameDimensions(val + "")
+						var imgWidth = imgDim.width
+						var imgHeight = imgDim.height
 
 						var coords = this._drawingCoords(row, col, imgWidth, 
 							imgHeight, false)

@@ -127,17 +127,21 @@ class InputHandler{
 		return this._keyAction
 	}
 
+
 	getMouseAction(){
 		return this._mouseAction
 	}
+
 
 	getMouseHover(){
 		return this._mouseScrollEvent 
 	}
 
+
 	getLeftMouseClick(){
 		return this._leftMouseClickEvent
 	}
+
 
 	isScreenResized(){
 		let temp = this._screenResize
@@ -145,9 +149,10 @@ class InputHandler{
 		return temp
 	}
 
+
 	setScreenResize(value){
 		this._screenResize = value
 	}
 
-} // end of InputHandler
+} // end of InputHandler class
 

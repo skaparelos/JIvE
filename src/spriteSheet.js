@@ -17,7 +17,10 @@ class SpriteSheet{
 	 *  	"spriteName" : [x, y, width, height, anchorX, anchorY],
 	 *		" ... " : [ ...]
 	 *	}
-	 *  spriteName is the name of the sprite in the sprite sheet. 
+	 *
+	 *  spriteName is the name of the sprite in the sprite sheet.
+	 *  e.g. if u have a spriteSheet image names "tiles", then you would name
+	 *  each frame like this:
 	 *  e.g. "red_tile", "blue_tile" 
 	 *
 	 *  
@@ -66,6 +69,10 @@ class SpriteSheet{
 	}
 
 
+	/**
+	 *  Deletes the loaded spriteSheets
+	 *
+	 */
 	clear(){
 		this._frames = {}
 	}
