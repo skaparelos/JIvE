@@ -51,6 +51,9 @@ class World extends EventEmitter {
 	 *  some input regarding the size of the maps etc..
 	 */
 	init(){
+
+		document.body.insertBefore(this._canvas, document.body.childNodes[0])
+
 		this._renderer = new Renderer(this, this._context, 
 			this._screen.getWidth(), this._screen.getHeight(),
 			this._camera, this._imageManager, this._map, this._selector,
@@ -76,7 +79,7 @@ class World extends EventEmitter {
 		this._canvas.width = this._screen.getWidth()
 		this._canvas.height = this._screen.getHeight()
 		this._context = this._canvas.getContext('2d')
-		document.body.insertBefore(this._canvas, document.body.childNodes[0])
+		//document.body.insertBefore(this._canvas, document.body.childNodes[0])
  	}
 
 

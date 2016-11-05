@@ -65,6 +65,31 @@ class ImageManager {
 	} 
 
 
+	/**
+	 *  This function is used to load images by loading them using a 'browse'
+	 *  menu.
+	 *  
+	 *  This function was created to be used with the online map editor. It 
+	 *  could have other functionality as well, but this is what it is mainly 
+	 *  used for right now.
+	 */
+	load2MapEditor(key, path, callback){
+		var img = new Image()
+		var that = this
+
+		img.onload = function(){
+			that._images[key] = img
+			
+			if(callback !== undefined)
+				callback()
+		}
+
+		img.src = path
+
+		return img
+	}
+
+
 	get(key){
 		return this._images[key];
 	}

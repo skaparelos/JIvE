@@ -6,26 +6,26 @@
 
 <style>
 
-  html{ 
-    width:100%; 
-    height:100%; 
-  }
+	html{ 
+		width:100%; 
+		height:100%; 
+	}
 
-  body{ 
-    background:#612122; 
-    font:16px sans-serif; 
-    width:100%; height:100%; 
-    color:#FFFFFF; 
-    overflow: hidden; 
-  }
+	body{ 
+		background:#612122; 
+		font:16px sans-serif; 
+		width:100%; height:100%; 
+		color:#FFFFFF; 
+		overflow: hidden; 
+	}
 
-  #hub{ 
-    position:absolute; 
-    top:0; 
-    left:0; 
-    height:100%; 
-    width:100%; 
-  }
+	#hub{ 
+		position:absolute; 
+		top:0; 
+		left:0; 
+		height:100%; 
+		width:100%; 
+	}
 
 
 </style>
@@ -33,40 +33,40 @@
 
 <style>
 button.accordion {
-    padding: 18px;
-    background-color: black;
-    color: #444;
-    cursor: pointer;
-    width: 100%;
-    border: none;
-    text-align: left;
-    outline: none;
-    font-size: 15px;
-    transition: 0.2s;
+		padding: 18px;
+		background-color: black;
+		color: #444;
+		cursor: pointer;
+		width: 100%;
+		border: none;
+		text-align: left;
+		outline: none;
+		font-size: 15px;
+		transition: 0.2s;
 }
 
 button.accordion.active{
-  background-color: black;
+	background-color: black;
 }
 
 button.accordion:hover {
-    background-color: #ddd;
+		background-color: #ddd;
 }
 
 div.accordion-panel {
-    padding-top: 5px;
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-bottom: 5px;
-    display: none;
-    max-height: 300px;
-    background-color: white;
-    color: black;
-    overflow-y: scroll;
+		padding-top: 5px;
+		padding-left: 5px;
+		padding-right: 5px;
+		padding-bottom: 5px;
+		display: none;
+		max-height: 300px;
+		background-color: white;
+		color: black;
+		overflow-y: scroll;
 }
 
 div.accordion-panel.show {
-    display: block;
+		display: block;
 }
 
 </style>
@@ -75,129 +75,232 @@ div.accordion-panel.show {
 <style>
 
 .floatedImg{
-    float: left;
+		float: left;
+		cursor: pointer;
 }
 
 </style>
 
+<style>
 
+.menu{
+	position:absolute; 
+	background-color:blue; 
+	width:400px; 
+	height:100px;
+}
+
+/* each item in a menu gets this style */
+.menuitemstyle{ 
+	position: relative; 
+	background-color: green; 
+	width:100%; 
+	height:30px; 
+	text-align:left;
+}
+
+</style>
+
+<style>
+input[type="file"] {
+    display: none;
+}
+.custom-file-upload {
+    display: inline-block;
+    padding-right: 10px;
+    text-align: center;
+    content: url("imgs/plus.png");
+    width: 64px;
+    height: 64px;
+}
+</style>
 </head>
-  
+	
 <body>
 
-<p> you can drag the menu around! </p>
-<div id="hub"></div>
+<div id="hub">
+	<p> This, as it is, might only work correctly with Chrome. Dragging doesn't work on Firefox, while Safari.. oh safari. </p>
+	<p> you can drag the menu around! </p>
+
+	<br>
+
+	<p> Add extra menu item: 	
+		<input id="menu-value" type="text"><br> 
+		<button onclick="addSubMenu()">add</button>
+	</p>
+	
+
+</div>
 
 <script>
 
+var menus = [];
 
+/*
 // create a CSS style for menu items
 var menuItemStyle = document.createElement('style');
-menuItemStyle.type = 'text/css';
+// see this line from git.
 menuItemStyle.innerHTML = '.menuitemstyle { position: relative; background-color: green; width:100%; height:30px; text-align:left;}';
 document.getElementsByTagName('head')[0].appendChild(menuItemStyle);
+*/
 
-// this is a draggable menu.
-function createMainMenu(menuName){
 
-  // make the menu box where we will add items
-  var mainMenu = document.createElement('div');
-  mainMenu.setAttribute("id", menuName);
-  mainMenu.setAttribute('draggable', true);
-  mainMenu.style.cssText = 'position:absolute; background-color:blue; top:50px; left:50px; width:300px; height:100px;';
+function createMainMenu(menuName, top, left){
 
-  // all main menus are added under the hub
-  var hub = document.getElementById("hub")
-  hub.appendChild(mainMenu)
+	// make the menu box where we will add items
+	var mainMenu = document.createElement('div');
+	mainMenu.setAttribute("id", menuName);
+	mainMenu.setAttribute('draggable', true);
+	mainMenu.className = "menu"
+	mainMenu.style.top = top + "px"
+	mainMenu.style.left = left + "px"
+	//mainMenu.style.cssText = 'position:absolute; background-color:blue; top:100px; left:400px; width:300px; height:100px;';
 
-  return mainMenu
+	// all main menus are added under the hub
+	var hub = document.getElementById("hub")
+	hub.appendChild(mainMenu)
+
+	// add the menu to the array of menus
+	menus[mainMenu.id] = []
+	menus[mainMenu.id].push(mainMenu)
+
+	return mainMenu
 }
 
 
-function createSubMenu(parentMenu, subMenuName, top){
-  var subMenu = document.createElement('button');
-  subMenu.setAttribute("id", subMenuName + "-submenu");
-  subMenu.className = 'accordion';
-  subMenu.style.top = top + 'px';
-  subMenu.innerHTML = subMenuName;
-  parentMenu.appendChild(subMenu);
+function createSubMenu(parentMenu, subMenuName){
+	var subMenu = document.createElement('button');
+	subMenu.setAttribute("id", subMenuName + "-submenu");
+	subMenu.className = 'accordion';
+	subMenu.innerHTML = subMenuName;
+	parentMenu.appendChild(subMenu);
 
-  // the panel is the place where any contents will be added for the submenu
-  // IMPORTANT NOTE: the panel is not placed within the button but after it
-  // otherwise, it would be collapsed everytime we click it contents!!
-  // Thus, add it to 'parentMenu', NOT to 'subMenu'
-  var subMenuPanel = document.createElement('div');
-  subMenuPanel.setAttribute("id", subMenuName + "-submenu-panel");
-  subMenuPanel.className = 'accordion-panel';
-  parentMenu.appendChild(subMenuPanel)
+	// the panel is the place where any contents will be added for the submenu
+	// IMPORTANT NOTE: the panel is not placed within the button but after it
+	// otherwise, it would be collapsed everytime we click it contents!!
+	// Thus, add it to 'parentMenu', NOT to 'subMenu'
+	var subMenuPanel = document.createElement('div');
+	subMenuPanel.setAttribute("id", subMenuName + "-submenu-panel");
+	subMenuPanel.className = 'accordion-panel';
+	parentMenu.appendChild(subMenuPanel)
 
-  return {
-    menu: subMenu,
-    panel: subMenuPanel
-  }
+	var ret = {
+		menu: subMenu,
+		panel: subMenuPanel
+	}
+	menus[parentMenu.id].push(ret)
+
+	return ret
 }
 
 
 function addHTML2panel(panel, htmlCode){
-  panel.innerHTML += htmlCode;
+	panel.innerHTML += htmlCode;
 }
 
 function addImage(path){
-  return "<input class='floatedImg' type='image' src='imgs/" + path + "' />"
+	return "<input class='floatedImg' type='image' src='imgs/" + path + "' />"
 }
 
+function addAddImage(num){
+	return 	'<label class="custom-file-upload floatedImg"> <input id="browse' + num + '" type="file" onchange="previewFiles(this)" multiple> + Add </label>' 
+}
 
 // create a menu and add it to the hub
-var objectMenu = createMainMenu("objectMenu")
-hub.appendChild(objectMenu);
+var objectMenu = createMainMenu("objectMenu", 300, 300)
 
 // add items to the 'terrain' subMenu
-var terrain = createSubMenu(objectMenu, "Terrain", 10);
+var terrain = createSubMenu(objectMenu, "Terrain");
 var terrainPanel = terrain.panel;
+addHTML2panel(terrainPanel, addAddImage(1));
 addHTML2panel(terrainPanel, addImage("dirt.png"));
 addHTML2panel(terrainPanel, addImage("green.png"));
 
 // add items to the 'trees' subMenu
-var trees = createSubMenu(objectMenu, "Trees", 50);
+var trees = createSubMenu(objectMenu, "Trees");
 var treesPanel = trees.panel;
+addHTML2panel(treesPanel, addAddImage(2));
 addHTML2panel(treesPanel, addImage("tree.png"));
 
 // add items to the 'buildings' subMenu
-var buildings = createSubMenu(objectMenu, "Buildings", 30);
+var buildings = createSubMenu(objectMenu, "Buildings");
 var buildingsPanel = buildings.panel;
+addHTML2panel(buildingsPanel, addAddImage(3));
 addHTML2panel(buildingsPanel, addImage("house_green.png"));
 addHTML2panel(buildingsPanel, addImage("house_red.png"));
 addHTML2panel(buildingsPanel, addImage("house_blue.png"));
 
 
 objectMenu.addEventListener("dragstart", function(e){
-    var style = window.getComputedStyle(e.target, null);
-    e.dataTransfer.setData("text/plain",
-      (parseInt(style.getPropertyValue("left"),10) - e.clientX) + ',' + (parseInt(style.getPropertyValue("top"),10) - e.clientY));
 }, false);
 
-
 document.body.addEventListener('dragover', function(e){
-  e.preventDefault();
+	e.preventDefault();
 },false); 
 
-
 document.body.addEventListener("drop", function(e){
-  var offset = e.dataTransfer.getData("text/plain").split(',');
-  var objectMenu = document.getElementById("objectMenu");
-  objectMenu.style.left = e.clientX + parseInt(offset[0],10) + "px"
-  objectMenu.style.top  = e.clientY + parseInt(offset[0],10) + "px"
+	var objectMenu = document.getElementById("objectMenu");
+	objectMenu.style.left = e.clientX + "px"
+	objectMenu.style.top  = e.clientY + "px"
 }, false);
 
 // add an event listener for to allow for collapsing/uncollapsing
 var acc = document.getElementsByClassName("accordion");
 for (var i = 0; i < acc.length; i++) {
-    acc[i].onclick = function(){
-        this.classList.toggle("active");
-        this.nextElementSibling.classList.toggle("show");
-  }
+		acc[i].onclick = function(){
+				this.classList.toggle("active");
+				this.nextElementSibling.classList.toggle("show");
+	}
 }
 
+
+function addSubMenu(){
+  var itemValue = document.querySelector('#menu-value').value;
+
+  if (itemValue !== ""){
+  	var submenu = document.getElementById("choose-submenu")
+  	submenu.innerHTML += '<input type="radio" name="radio-item" value="' + itemValue + '"> ' + itemValue + '<br>';
+  	createSubMenu(objectMenu, itemValue, 50);
+	}
+}
+
+
+// function taken from https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
+function previewFiles(that) {
+
+	var files = that.files
+	var str = that.parentNode.parentNode.id
+
+	function readAndPreview(file) {
+
+		// Make sure `file.name` matches our extensions criteria
+		if ( /\.(jpe?g|png|gif)$/i.test(file.name) ) {
+			var reader = new FileReader();
+
+			reader.addEventListener("load", function () {
+
+				//var image = worldImageManager.load2MapEditor(file.name, this.result, imageLoaded);
+				var panelName = str.split("-")[0]
+				var panel = document.getElementById(panelName + "-submenu-panel")
+
+				var image = new Image();
+				image.height = 200;
+				image.title = file.name;
+				image.src = this.result;
+				addHTML2panel(panel, "<input class='floatedImg' type='image' src='" + image.src + "' />");
+			}, false);
+
+			reader.readAsDataURL(file);
+		}
+
+	}
+
+
+	if (files) {
+		[].forEach.call(files, readAndPreview);
+	}
+
+}
 
 </script>
 

@@ -21,13 +21,22 @@
 </head>
 
 
-<body>
+<body onload="main();">
 
 
+
+<label for="number1">Tile width: </label>    
+<input type="number" id="tile_width" value="0" min="0">
+
+<label for="number1">Tile Height: </label>    
+<input type="number" id="tile_height" value="0" min="0">
+
+<input id="browse" type="file" onchange="previewFiles()" multiple>
+
+<div id="preview"></div>
 
 
 
 </body>
 
 </html>
-
