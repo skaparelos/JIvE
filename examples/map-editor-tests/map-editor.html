@@ -86,25 +86,19 @@ div.accordion-panel.show {
 .menu{
 	position:absolute; 
 	background-color:blue; 
-	width:400px; 
+	width:410px; 
 	height:100px;
 }
 
-/* each item in a menu gets this style */
-.menuitemstyle{ 
-	position: relative; 
-	background-color: green; 
-	width:100%; 
-	height:30px; 
-	text-align:left;
-}
 
 </style>
 
 <style>
+
 input[type="file"] {
     display: none;
 }
+
 .custom-file-upload {
     display: inline-block;
     padding-right: 10px;
@@ -134,7 +128,6 @@ input[type="file"] {
 
 <script>
 
-var menus = [];
 
 /*
 // create a CSS style for menu items
@@ -148,9 +141,9 @@ document.getElementsByTagName('head')[0].appendChild(menuItemStyle);
 function createMainMenu(menuName, top, left){
 
 	// make the menu box where we will add items
-	var mainMenu = document.createElement('div');
-	mainMenu.setAttribute("id", menuName);
-	mainMenu.setAttribute('draggable', true);
+	var mainMenu = document.createElement('div')
+	mainMenu.setAttribute("id", menuName)
+	mainMenu.setAttribute('draggable', true)
 	mainMenu.className = "menu"
 	mainMenu.style.top = top + "px"
 	mainMenu.style.left = left + "px"
@@ -160,19 +153,20 @@ function createMainMenu(menuName, top, left){
 	var hub = document.getElementById("hub")
 	hub.appendChild(mainMenu)
 
-	// add the menu to the array of menus
-	menus[mainMenu.id] = []
-	menus[mainMenu.id].push(mainMenu)
-
 	return mainMenu
 }
 
 
 function createSubMenu(parentMenu, subMenuName){
-	var subMenu = document.createElement('button');
-	subMenu.setAttribute("id", subMenuName + "-submenu");
+	var subMenu = document.createElement('button')
+	subMenu.setAttribute("id", subMenuName + "-submenu")
 	subMenu.className = 'accordion';
 	subMenu.innerHTML = subMenuName;
+	subMenu.onclick = function(){
+				this.classList.toggle("active");
+				this.nextElementSibling.classList.toggle("show");
+	}
+
 	parentMenu.appendChild(subMenu);
 
 	// the panel is the place where any contents will be added for the submenu
@@ -188,7 +182,6 @@ function createSubMenu(parentMenu, subMenuName){
 		menu: subMenu,
 		panel: subMenuPanel
 	}
-	menus[parentMenu.id].push(ret)
 
 	return ret
 }
@@ -208,6 +201,7 @@ function addAddImage(num){
 
 // create a menu and add it to the hub
 var objectMenu = createMainMenu("objectMenu", 300, 300)
+
 
 // add items to the 'terrain' subMenu
 var terrain = createSubMenu(objectMenu, "Terrain");
@@ -230,28 +224,30 @@ addHTML2panel(buildingsPanel, addImage("house_green.png"));
 addHTML2panel(buildingsPanel, addImage("house_red.png"));
 addHTML2panel(buildingsPanel, addImage("house_blue.png"));
 
+enableDragging()
 
-objectMenu.addEventListener("dragstart", function(e){
-}, false);
 
-document.body.addEventListener('dragover', function(e){
-	e.preventDefault();
-},false); 
 
-document.body.addEventListener("drop", function(e){
-	var objectMenu = document.getElementById("objectMenu");
-	objectMenu.style.left = e.clientX + "px"
-	objectMenu.style.top  = e.clientY + "px"
-}, false);
+function enableDragging(){
+	document.body.addEventListener('dragover', function(e){
+		e.preventDefault();
+	},false); 
+
+	document.body.addEventListener("drop", function(e){
+		var menu = document.getElementById(e.srcElement.lastChild.id);
+		menu.style.left = e.clientX + "px";
+		menu.style.top  = e.clientY + "px";
+	}, false);
+}
 
 // add an event listener for to allow for collapsing/uncollapsing
-var acc = document.getElementsByClassName("accordion");
+/*var acc = document.getElementsByClassName("accordion");
 for (var i = 0; i < acc.length; i++) {
 		acc[i].onclick = function(){
 				this.classList.toggle("active");
 				this.nextElementSibling.classList.toggle("show");
 	}
-}
+}*/
 
 
 function addSubMenu(){
@@ -269,7 +265,8 @@ function addSubMenu(){
 function previewFiles(that) {
 
 	var files = that.files
-	var str = that.parentNode.parentNode.id
+	var panelName = that.parentNode.parentNode.id 
+	var panel = document.getElementById(panelName)
 
 	function readAndPreview(file) {
 
@@ -280,8 +277,6 @@ function previewFiles(that) {
 			reader.addEventListener("load", function () {
 
 				//var image = worldImageManager.load2MapEditor(file.name, this.result, imageLoaded);
-				var panelName = str.split("-")[0]
-				var panel = document.getElementById(panelName + "-submenu-panel")
 
 				var image = new Image();
 				image.height = 200;
@@ -294,7 +289,6 @@ function previewFiles(that) {
 		}
 
 	}
-
 
 	if (files) {
 		[].forEach.call(files, readAndPreview);

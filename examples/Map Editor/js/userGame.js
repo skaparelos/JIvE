@@ -12,52 +12,223 @@ var world;
 var worldImageManager;
 var worldSpriteSheetManager;
 
+/**
+ *  Entry point
+ */
 function main() {
 	world = new World(0, 0)
 	worldImageManager = world.getImageManager();
 	worldSpriteSheetManager = world.getSpriteSheet();
+
+	enableDragging()
+	addMenus()
+	setupWorld()
 }
 
-function imageLoaded(){
-	console.log("image loaded!!")
-}
 
+function setupWorld(){
 
-// function taken from https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
-function previewFiles() {
+	// Load the map layers
+	var layer0 = new MapLayer()
+	layer0.load(g_level0_map, false)
+	world.getMap().addLayer(layer0)
 
-  var preview = document.querySelector('#preview');
-  var files   = document.querySelector('input[type=file]').files;
+	// Load images to the world
+	im = world.getImageManager()
+	im.load(g_selector_images)
 
-  function readAndPreview(file) {
+	// put the callback in the last one, otherwise it might not work
+	im.load(g_basic_tilesets, function(){
 
-    // Make sure `file.name` matches our extensions criteria
-    if ( /\.(jpe?g|png|gif)$/i.test(file.name) ) {
-      var reader = new FileReader();
+		// get spriteSheet
+		var spriteSheet = world.getSpriteSheet()
+		spriteSheet.load("first_tileset", g_first_tileset_frames) 
 
-      reader.addEventListener("load", function () {
-
-		var tileWidth = document.querySelector('#tile_width');
-      	var tileWidth = document.querySelector('#tile_height');
-
-		var img = worldImageManager.load2MapEditor(file.name, this.result, imageLoaded);
-
-        //var image = new Image();
-        //image.height = 200;
-        //image.title = file.name;
-        //image.src = this.result;
-        preview.appendChild(img);
-      }, false);
-
-      reader.readAsDataURL(file);
-    }
-
-  }
-
-  if (files) {
-    [].forEach.call(files, readAndPreview);
-  }
+		// once images have been loaded, start the world
+		world.start()
+	})
+	
+	world.on("mousemove", function(e){
+		var tiles = world.screen2MapCoords(e)
+		if (tiles === -1) return;
+		world.getSelector().setSelectorPos(tiles.tileY, tiles.tileX)
+	});
 
 }
 
+
+function addMenus(){
+
+	// create a menu and add it to the hub
+	var objectMenu = createMainMenu("objectMenu", 300, 300)
+
+	// add items to the 'terrain' subMenu
+	var terrain = createSubMenu(objectMenu, "Terrain");
+	var terrainPanel = terrain.panel;
+	addHTML2panel(terrainPanel, addAddImage(1));
+	addHTML2panel(terrainPanel, addImage("dirt.png"));
+	addHTML2panel(terrainPanel, addImage("green.png"));
+
+	// add items to the 'trees' subMenu
+	var trees = createSubMenu(objectMenu, "Trees");
+	var treesPanel = trees.panel;
+	addHTML2panel(treesPanel, addAddImage(2));
+	addHTML2panel(treesPanel, addImage("tree.png"));
+
+	// add items to the 'buildings' subMenu
+	var buildings = createSubMenu(objectMenu, "Buildings");
+	var buildingsPanel = buildings.panel;
+	addHTML2panel(buildingsPanel, addAddImage(3));
+	addHTML2panel(buildingsPanel, addImage("house_green.png"));
+	addHTML2panel(buildingsPanel, addImage("house_red.png"));
+	addHTML2panel(buildingsPanel, addImage("house_blue.png"));
+}
+
+
+/**
+ *  
+ */
+function createMainMenu(menuName, top, left){
+
+	// make the menu box where we will add items
+	var mainMenu = document.createElement('div')
+	mainMenu.setAttribute("id", menuName)
+	mainMenu.setAttribute('draggable', true)
+	mainMenu.className = "menu"
+	mainMenu.style.top = top + "px"
+	mainMenu.style.left = left + "px"
+	//mainMenu.style.cssText = 'position:absolute; background-color:blue; top:100px; left:400px; width:300px; height:100px;';
+
+	// all main menus are added under the hub
+	var hub = document.getElementById("hub")
+	hub.appendChild(mainMenu)
+
+	return mainMenu
+}
+
+
+/**
+ *
+ */
+function createSubMenu(parentMenu, subMenuName){
+
+	var subMenu = document.createElement('button')
+	subMenu.setAttribute("id", subMenuName + "-submenu")
+	subMenu.className = 'accordion';
+	subMenu.innerHTML = subMenuName;
+
+	// allow the submenu to collapse/show
+	subMenu.onclick = function(){
+		this.classList.toggle("active");
+		this.nextElementSibling.classList.toggle("show");
+	}
+	parentMenu.appendChild(subMenu);
+
+	// the panel is the place where any contents will be added for the submenu
+	// IMPORTANT NOTE: the panel is not placed within the button but after it
+	// otherwise, it would be collapsed everytime we click it contents!!
+	// Thus, add it to 'parentMenu', NOT to 'subMenu'
+	var subMenuPanel = document.createElement('div');
+	subMenuPanel.setAttribute("id", subMenuName + "-submenu-panel");
+	subMenuPanel.className = 'accordion-panel';
+	parentMenu.appendChild(subMenuPanel)
+
+	var ret = {
+		menu: subMenu,
+		panel: subMenuPanel
+	}
+
+	return ret
+}
+
+
+function addHTML2panel(panel, htmlCode){
+	panel.innerHTML += htmlCode;
+}
+
+
+function addImage(path){
+	return "<input class='floatedImg' type='image' src='imgs/" + path + "' />"
+}
+
+
+/**
+ *  Adds an 'addImage' button, that can be used to load pictures from the pc.
+ */
+function addAddImage(num){
+	return 	'<label class="custom-file-upload floatedImg"> <input id="browse' + num + '" type="file" onchange="previewFiles(this)" multiple> + Add </label>' 
+}
+
+
+/**
+ *  Add event listeners for dragging and droping.
+ */
+function enableDragging(){
+
+	document.body.addEventListener('dragover', function(e){
+		e.preventDefault();
+	},false); 
+
+	document.body.addEventListener("drop", function(e){
+		var menu = document.getElementById(e.srcElement.lastChild.id);
+		menu.style.left = e.clientX + "px";
+		menu.style.top  = e.clientY + "px";
+	}, false);
+}
+
+
+/**
+ *  Adds dynamicaly an extra submenu to a menu.
+ *  e.g. u might have menu with 'buildings, trees, terrain'
+ *  and u might want to add a new submenu called 'UFOs'
+ *  this function adds one dynamically
+ */
+function addSubMenu(){
+	var itemValue = document.querySelector('#menu-value').value;
+
+	if (itemValue !== ""){
+		var submenu = document.getElementById("choose-submenu")
+		submenu.innerHTML += '<input type="radio" name="radio-item" value="' + itemValue + '"> ' + itemValue + '<br>';
+		createSubMenu(objectMenu, itemValue, 50);
+	}
+}
+
+
+/**
+ *  function taken from:
+ *  https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
+ */
+function previewFiles(that) {
+
+	var files = that.files
+	var panelName = that.parentNode.parentNode.id 
+	var panel = document.getElementById(panelName)
+
+	function readAndPreview(file) {
+
+		// Make sure `file.name` matches our extensions criteria
+		if ( /\.(jpe?g|png|gif)$/i.test(file.name) ) {
+			var reader = new FileReader();
+
+			reader.addEventListener("load", function () {
+
+				//var image = worldImageManager.load2MapEditor(file.name, this.result, imageLoaded);
+
+				var image = new Image();
+				image.height = 200;
+				image.title = file.name;
+				image.src = this.result;
+				addHTML2panel(panel, "<input class='floatedImg' type='image' src='" + image.src + "' />");
+			}, false);
+
+			reader.readAsDataURL(file);
+		}
+
+	}
+
+	if (files) {
+		[].forEach.call(files, readAndPreview);
+	}
+
+}
 

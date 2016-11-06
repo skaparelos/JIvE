@@ -46,7 +46,7 @@ class Camera{
 		let LEFT  = this._checkButtonPressed(keyAction, this._leftButtons)
 		let RIGHT = this._checkButtonPressed(keyAction, this._rightButtons)
 
-    	if (DOWN || UP || LEFT || RIGHT){
+		if (DOWN || UP || LEFT || RIGHT){
     
 			var dx = 0
 			var dy = 0
