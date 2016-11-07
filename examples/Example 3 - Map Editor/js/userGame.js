@@ -8,18 +8,43 @@ var world;
 var worldImageManager;
 var worldSpriteSheetManager;
 
+// the name we gave to the html element to add the menu
+const menuNameHTML = "hub"
 
 /**
  * This is the main entry point
  */
 function main() {
-	world = new World(0, 0)
+
+	var dim = setupMenu()
+	world = new World(dim.width, dim.height)
 	worldImageManager = world.getImageManager();
 	worldSpriteSheetManager = world.getSpriteSheet();
 
-	enableDragging()
+	//enableDragging()
 	addMenus()
 	setupWorld()
+}
+
+
+function setupMenu(){
+	
+	// set the size of the menu on the side
+	var menuSpace = 400; // px
+	var screenWidth = document.body.clientWidth
+	var screenHeight = document.body.clientHeight
+
+	// locate the position of the menu
+	var hub = document.getElementById(menuNameHTML)
+	hub.style.right = 0 + "px";
+	hub.style.width = menuSpace + "px";
+	hub.style.height = 100 + "%";
+	hub.style.top = 0 + "px";
+
+	return {
+		width: screenWidth - menuSpace,
+		height: screenHeight
+	}
 }
 
 
@@ -48,7 +73,7 @@ function setupWorld(){
 	world.on("mousemove", function(e){
 		var tiles = world.screen2MapCoords(e)
 		if (tiles === -1) return;
-		//world.getSelector().setSelectorPos(tiles.tileY, tiles.tileX)
+		world.getSelector().setSelectorPos(tiles.tileY, tiles.tileX)
 	});
 
 }
@@ -57,28 +82,32 @@ function setupWorld(){
 function addMenus(){
 
 	// create a menu and add it to the hub
-	var objectMenu = createMainMenu("objectMenu", 50, 800)
+	var objectMenu = createMainMenu("objectMenu", 0, 0)
+
+	// add the ability to add extra submenus
+	var addMenus = createSubMenu(objectMenu, "+");
 
 	// add items to the 'terrain' subMenu
 	var terrain = createSubMenu(objectMenu, "Terrain");
 	var terrainPanel = terrain.panel;
-	addHTML2panel(terrainPanel, addAddImage());
+	//addHTML2panel(terrainPanel, addAddImage());
 	addHTML2panel(terrainPanel, addImage("dirt.png"));
 	addHTML2panel(terrainPanel, addImage("green.png"));
 
 	// add items to the 'trees' subMenu
 	var trees = createSubMenu(objectMenu, "Trees");
 	var treesPanel = trees.panel;
-	addHTML2panel(treesPanel, addAddImage());
+	//addHTML2panel(treesPanel, addAddImage());
 	addHTML2panel(treesPanel, addImage("tree.png"));
 
 	// add items to the 'buildings' subMenu
 	var buildings = createSubMenu(objectMenu, "Buildings");
 	var buildingsPanel = buildings.panel;
-	addHTML2panel(buildingsPanel, addAddImage());
+	//addHTML2panel(buildingsPanel, addAddImage());
 	addHTML2panel(buildingsPanel, addImage("house_green.png"));
 	addHTML2panel(buildingsPanel, addImage("house_red.png"));
 	addHTML2panel(buildingsPanel, addImage("house_blue.png"));
+
 }
 
 
@@ -97,7 +126,7 @@ function createMainMenu(menuName, top, left){
 	//mainMenu.style.cssText = 'position:absolute; background-color:blue; top:100px; left:400px; width:300px; height:100px;';
 
 	// all main menus are added under the hub
-	var hub = document.getElementById("hub")
+	var hub = document.getElementById(menuNameHTML)
 	hub.appendChild(mainMenu)
 
 	return mainMenu
@@ -114,10 +143,16 @@ function createSubMenu(parentMenu, subMenuName){
 	subMenu.className = 'accordion';
 	subMenu.innerHTML = subMenuName;
 
-	// allow the submenu to collapse/show
-	subMenu.onclick = function(){
-		this.classList.toggle("active");
-		this.nextElementSibling.classList.toggle("show");
+	if (subMenuName !== "+"){
+		// allow the submenu to collapse/show
+		subMenu.onclick = function(){
+			this.classList.toggle("active");
+			this.nextElementSibling.classList.toggle("show");
+		}
+	}else{
+		subMenu.onclick = function(){
+			addSubMenu(this)
+		}
 	}
 	parentMenu.appendChild(subMenu);
 
@@ -129,6 +164,8 @@ function createSubMenu(parentMenu, subMenuName){
 	subMenuPanel.setAttribute("id", subMenuName + "-submenu-panel");
 	subMenuPanel.className = 'accordion-panel';
 	parentMenu.appendChild(subMenuPanel)
+
+	addHTML2panel(subMenuPanel, addAddImage());
 
 	var ret = {
 		menu: subMenu,
@@ -181,14 +218,22 @@ function enableDragging(){
  *  this function adds one dynamically
  */
 //TODO add a + button to add the menu so we can take the menu to add it to.
-function addSubMenu(){
-	var itemValue = document.querySelector('#menu-value').value;
+function addSubMenu(menu){
 
-	if (itemValue !== ""){
-		var submenu = document.getElementById("choose-submenu")
-		submenu.innerHTML += '<input type="radio" name="radio-item" value="' + itemValue + '"> ' + itemValue + '<br>';
-		createSubMenu(objectMenu, itemValue, 50);
+	// ask for the name of the new subMenu
+	var subMenuName = prompt("Adding a new subMenu. Type its name:", "e.g. trees");
+	
+	if (subMenuName !== "" && subMenuName !== null){
+		this.innerHTML += '<input type="radio" name="radio-item" value="' + subMenuName + '"> ' + subMenuName + '<br>';
+		createSubMenu(objectMenu, subMenuName);
 	}
+}
+
+
+function imageLoaded(panelName, img){
+	console.log("called")
+	var panel = document.getElementById(panelName)
+	addHTML2panel(panel, "<input class='floatedImg' type='image' src='" + img.src + "' />");
 }
 
 
@@ -200,8 +245,7 @@ function previewFiles(that) {
 
 	var files = that.files
 	var panelName = that.parentNode.parentNode.id 
-	var panel = document.getElementById(panelName)
-
+	
 	function readAndPreview(file) {
 
 		// Make sure `file.name` matches our extensions criteria
@@ -210,13 +254,13 @@ function previewFiles(that) {
 
 			reader.addEventListener("load", function () {
 
-				//var image = worldImageManager.load2MapEditor(file.name, this.result, imageLoaded);
+				worldImageManager.load2MapEditor(file.name, this.result, panelName, imageLoaded);
 
-				var image = new Image();
-				image.height = 200;
-				image.title = file.name;
-				image.src = this.result;
-				addHTML2panel(panel, "<input class='floatedImg' type='image' src='" + image.src + "' />");
+				//var image = new Image();
+				//image.height = 200;
+				//image.title = file.name;
+				//image.src = this.result;
+				//addHTML2panel(panel, "<input class='floatedImg' type='image' src='" + image.src + "' />");
 			}, false);
 
 			reader.readAsDataURL(file);

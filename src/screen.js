@@ -1,14 +1,28 @@
 class Screen {
 
 	constructor(width, height){
-		this._width = width
-		this._height = height
-
 		this._FPS = g_game_settings["FPS"]
 		this._period = 1000 / this._FPS // in millisec
 
-		if (width == 0 && height == 0)
-			this.getFullScreen()
+		if (width === undefined)
+			this.getFullWidth()
+		else
+			this._width = width
+
+		if (height === undefined)
+			this.getFullHeight()
+		else
+			this._height = height
+	}
+
+
+	getFullWidth(){
+		this._width = document.body.clientWidth
+	}
+
+
+	getFullHeight(){
+		this._height = document.body.clientHeight
 	}
 
 

@@ -78,7 +78,7 @@ const g_unit_tile_height = 64
 
 
 const g_selector_images = {
-	"selector" : "selector.png"
+	"selector" : "non_selector.png"
 }
 
 

@@ -3,7 +3,7 @@ var g_running = true
 
 class World extends EventEmitter {
 
-	constructor (width, height){
+	constructor(width, height){
 		super()
 
 		this._screen = new Screen(width, height)
@@ -97,6 +97,8 @@ class World extends EventEmitter {
 	 *  gets the new screen size and notifies the components in need
 	 */
 	_screenResize(){
+		// TODO we need to get these correctly. The user might not use the 
+		// whole screen as canvas
 		var size = this._screen.getFullScreen()
 		this._updateCanvasSize(size.width, size.height)
 		this._renderer.updateScreen(size.width, size.height)

@@ -73,7 +73,7 @@ class ImageManager {
 	 *  could have other functionality as well, but this is what it is mainly 
 	 *  used for right now.
 	 */
-	load2MapEditor(key, path, callback){
+	load2MapEditor(key, path, panel, callback){
 		var img = new Image()
 		var that = this
 
@@ -81,7 +81,7 @@ class ImageManager {
 			that._images[key] = img
 			
 			if(callback !== undefined)
-				callback()
+				callback(panel, img)
 		}
 
 		img.src = path
