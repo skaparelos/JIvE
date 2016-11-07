@@ -97,6 +97,7 @@ class World extends EventEmitter {
 	 *  gets the new screen size and notifies the components in need
 	 */
 	_screenResize(){
+
 		// TODO we need to get these correctly. The user might not use the 
 		// whole screen as canvas
 		var size = this._screen.getFullScreen()
@@ -173,7 +174,7 @@ class World extends EventEmitter {
 		var leftClick = ih.getLeftMouseClick()
 		if (leftClick !== this._previousLeftMouseClick) {
 			this._previousLeftMouseClick = leftClick
-			this.emit("leftmouseclick", leftClick)
+			this.emit("leftclick", leftClick)
 		}
 
 		// Handle mouse movement

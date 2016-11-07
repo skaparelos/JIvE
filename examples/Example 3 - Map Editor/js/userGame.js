@@ -8,6 +8,7 @@ var world;
 var worldImageManager;
 var worldSpriteSheetManager;
 var worldSelector;
+var worldMapLayers;
 
 // the name we gave to the html element to add the menu
 const menuNameHTML = "hub"
@@ -18,7 +19,7 @@ const menuNameHTML = "hub"
  */
 function main() {
 
-	var dim = setupMenu()
+	var dim = calculateSideMenuDimensions()
 	world = new World(dim.width, dim.height)
 	worldImageManager = world.getImageManager();
 	worldSpriteSheetManager = world.getSpriteSheet();
@@ -26,12 +27,12 @@ function main() {
 	// drag and drop is now disabled
 	//enableDragging()
 
-	addMenus()
+	initMenus()
 	setupWorld()
 }
 
 
-function setupMenu(){
+function calculateSideMenuDimensions(){
 	
 	// set the size of the menu on the side
 	var menuSpace = 400; // px
@@ -73,6 +74,8 @@ function setupWorld(){
 		worldSelector = world.getSelector()
 		var selectorImg = worldImageManager.get("selector")
 		worldSelector.setImg(selectorImg)
+
+		worldMapLayers = world.getMap().getLayer(0)
 		
 		// once images have been loaded, start the world
 		world.start()
@@ -84,38 +87,30 @@ function setupWorld(){
 		world.getSelector().setSelectorPos(tiles.tileY, tiles.tileX)
 	});
 
+
+	world.on("leftclick", function(e){
+		console.log("leftclick!!, selectorValue= " + selectorValue)
+		var tiles = world.screen2MapCoords(e)
+		if (tiles === -1) return;
+		//layer0.setCell(tiles.tileX, tiles.tileY, selectorValue)
+		worldMapLayers.setCell(tiles.tileX, tiles.tileY, selectorValue) 
+		// TODO the problem is that the renderer tries to load the picture from the spritesheet. HOWEVER, these pictures are only loaded into the imageManager
+	});
+
+
 }
 
 
-function addMenus(){
+/**
+ * Initialises the side menu
+ */
+function initMenus(){
 
 	// create a menu and add it to the hub
 	var objectMenu = createMainMenu("objectMenu", 0, 0)
 
 	// add the ability to add extra submenus
 	var addMenus = createSubMenu(objectMenu, "+");
-
-	// commented this as the user must load the images dynamically
-	/*
-	// add items to the 'terrain' subMenu
-	var terrain = createSubMenu(objectMenu, "Terrain");
-	var terrainPanel = terrain.panel;
-	addHTML2panel(terrainPanel, addImage("dirt.png"));
-	addHTML2panel(terrainPanel, addImage("green.png"));
-
-	// add items to the 'trees' subMenu
-	var trees = createSubMenu(objectMenu, "Trees");
-	var treesPanel = trees.panel;
-	addHTML2panel(treesPanel, addImage("tree.png"));
-
-	// add items to the 'buildings' subMenu
-	var buildings = createSubMenu(objectMenu, "Buildings");
-	var buildingsPanel = buildings.panel;
-	addHTML2panel(buildingsPanel, addImage("house_green.png"));
-	addHTML2panel(buildingsPanel, addImage("house_red.png"));
-	addHTML2panel(buildingsPanel, addImage("house_blue.png"));
-	*/
-
 }
 
 
@@ -249,7 +244,9 @@ function imageLoaded(panelName, img, id){
 }
 
 
+var selectorValue = 0
 function imageClicked(img){
+	selectorValue = img.id
 	var selectedImg = worldImageManager.get(img.id)
 	worldSelector.setImg(selectedImg)
 }

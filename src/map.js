@@ -173,7 +173,15 @@ class MapLayer{
 		return this._map
 	}
 
-	
+
+	setCell(row, col, value){
+		this._map[row][col] = value
+		// TODO
+		//if (this._hasMapCell)	
+
+	}
+
+
 	clear(){
 		this._map = []
 	}
@@ -328,6 +336,11 @@ class Map{
 			tileY: tiley,
 			tileX: tilex
 		}
+	}
+
+	
+	getLayer(num){
+		return this._map[num]
 	}
 
 
