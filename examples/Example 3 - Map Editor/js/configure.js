@@ -19,7 +19,11 @@ const g_game_settings = {
 	"DEBUG" : false,
 	
 	// max 60, min 30 (>60 does not have an effect, and <30 is not playable)
-	"FPS" :  40,
+	// this might be discrete, it depends on the browser
+	// actual values might be 30 or 60, anything in between is just an average
+	// of 30 and 60. e.g. 45 might be half 30fps, half 60fps
+	// better set this to 60 and make it work. (this is your best option)
+	"FPS" :  60,
 
 	// the directory where we should look for images
 	"IMAGES_DIR" : "imgs/"

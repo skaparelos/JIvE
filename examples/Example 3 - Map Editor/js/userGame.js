@@ -11,6 +11,7 @@ var worldSpriteSheetManager;
 // the name we gave to the html element to add the menu
 const menuNameHTML = "hub"
 
+
 /**
  * This is the main entry point
  */
@@ -21,7 +22,9 @@ function main() {
 	worldImageManager = world.getImageManager();
 	worldSpriteSheetManager = world.getSpriteSheet();
 
+	// drag and drop is now disabled
 	//enableDragging()
+
 	addMenus()
 	setupWorld()
 }
@@ -42,7 +45,7 @@ function setupMenu(){
 	hub.style.top = 0 + "px";
 
 	return {
-		width: screenWidth - menuSpace,
+		width: screenWidth - menuSpace - 2, // -2 is just some padding for beauty
 		height: screenHeight
 	}
 }
@@ -87,26 +90,26 @@ function addMenus(){
 	// add the ability to add extra submenus
 	var addMenus = createSubMenu(objectMenu, "+");
 
+	// commented this as the user must load the images dynamically
+	/*
 	// add items to the 'terrain' subMenu
 	var terrain = createSubMenu(objectMenu, "Terrain");
 	var terrainPanel = terrain.panel;
-	//addHTML2panel(terrainPanel, addAddImage());
 	addHTML2panel(terrainPanel, addImage("dirt.png"));
 	addHTML2panel(terrainPanel, addImage("green.png"));
 
 	// add items to the 'trees' subMenu
 	var trees = createSubMenu(objectMenu, "Trees");
 	var treesPanel = trees.panel;
-	//addHTML2panel(treesPanel, addAddImage());
 	addHTML2panel(treesPanel, addImage("tree.png"));
 
 	// add items to the 'buildings' subMenu
 	var buildings = createSubMenu(objectMenu, "Buildings");
 	var buildingsPanel = buildings.panel;
-	//addHTML2panel(buildingsPanel, addAddImage());
 	addHTML2panel(buildingsPanel, addImage("house_green.png"));
 	addHTML2panel(buildingsPanel, addImage("house_red.png"));
 	addHTML2panel(buildingsPanel, addImage("house_blue.png"));
+	*/
 
 }
 
@@ -144,6 +147,7 @@ function createSubMenu(parentMenu, subMenuName){
 	subMenu.innerHTML = subMenuName;
 
 	if (subMenuName !== "+"){
+
 		// allow the submenu to collapse/show
 		subMenu.onclick = function(){
 			this.classList.toggle("active");
@@ -165,7 +169,11 @@ function createSubMenu(parentMenu, subMenuName){
 	subMenuPanel.className = 'accordion-panel';
 	parentMenu.appendChild(subMenuPanel)
 
-	addHTML2panel(subMenuPanel, addAddImage());
+	// add the ability to add your own photos using a + image
+	// this should be done for every menu except the one that allows you to add
+	// extra submenus
+	if (subMenuName !== "+")
+		addHTML2panel(subMenuPanel, addAddImage());
 
 	var ret = {
 		menu: subMenu,
@@ -231,7 +239,6 @@ function addSubMenu(menu){
 
 
 function imageLoaded(panelName, img){
-	console.log("called")
 	var panel = document.getElementById(panelName)
 	addHTML2panel(panel, "<input class='floatedImg' type='image' src='" + img.src + "' />");
 }
@@ -254,13 +261,16 @@ function previewFiles(that) {
 
 			reader.addEventListener("load", function () {
 
+				// use JIvE to load images so that it is easy to draw them on the map
 				worldImageManager.load2MapEditor(file.name, this.result, panelName, imageLoaded);
 
+				// alternatively you might use something like this: (not suggested)
 				//var image = new Image();
 				//image.height = 200;
 				//image.title = file.name;
 				//image.src = this.result;
 				//addHTML2panel(panel, "<input class='floatedImg' type='image' src='" + image.src + "' />");
+
 			}, false);
 
 			reader.readAsDataURL(file);

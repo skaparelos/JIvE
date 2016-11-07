@@ -70,8 +70,7 @@ div.accordion-panel.show {
 
 .menu{
 	position:absolute; 
-	background-color:blue; 
-	width:410px; 
+	width:400px; 
 	height:100px;
 }
 
