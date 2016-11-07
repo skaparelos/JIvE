@@ -19,6 +19,9 @@ class ImageManager {
 		this._loaded = false
 
 		this._imagesPath = g_game_settings["IMAGES_DIR"]
+
+		// used for loading images online in the map editor
+		this._imageID = 0
 	}
 
 
@@ -72,16 +75,22 @@ class ImageManager {
 	 *  This function was created to be used with the online map editor. It 
 	 *  could have other functionality as well, but this is what it is mainly 
 	 *  used for right now.
+	 *  //TODO load to spritesheet as well
 	 */
-	load2MapEditor(key, path, panel, callback){
+	load2MapEditor(key, path, panelName, callback){
 		var img = new Image()
 		var that = this
 
+		var id = this._imageID
+		this._imageID += 1
+
 		img.onload = function(){
-			that._images[key] = img
+			// could have used key instead. not so usefull 
+			// TODO check if i need to pass 'key' at all
+			that._images[id] = img
 			
 			if(callback !== undefined)
-				callback(panel, img)
+				callback(panelName, img, id)
 		}
 
 		img.src = path

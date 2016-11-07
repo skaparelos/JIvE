@@ -7,6 +7,7 @@
 var world;
 var worldImageManager;
 var worldSpriteSheetManager;
+var worldSelector;
 
 // the name we gave to the html element to add the menu
 const menuNameHTML = "hub"
@@ -69,6 +70,10 @@ function setupWorld(){
 		var spriteSheet = world.getSpriteSheet()
 		spriteSheet.load("first_tileset", g_first_tileset_frames) 
 
+		worldSelector = world.getSelector()
+		var selectorImg = worldImageManager.get("selector")
+		worldSelector.setImg(selectorImg)
+		
 		// once images have been loaded, start the world
 		world.start()
 	})
@@ -238,9 +243,15 @@ function addSubMenu(menu){
 }
 
 
-function imageLoaded(panelName, img){
+function imageLoaded(panelName, img, id){
 	var panel = document.getElementById(panelName)
-	addHTML2panel(panel, "<input class='floatedImg' type='image' src='" + img.src + "' />");
+	addHTML2panel(panel, "<input id='" + id + "' class='floatedImg' type='image' onclick='imageClicked(this)' src='" + img.src + "' />");
+}
+
+
+function imageClicked(img){
+	var selectedImg = worldImageManager.get(img.id)
+	worldSelector.setImg(selectedImg)
 }
 
 
@@ -262,7 +273,8 @@ function previewFiles(that) {
 			reader.addEventListener("load", function () {
 
 				// use JIvE to load images so that it is easy to draw them on the map
-				worldImageManager.load2MapEditor(file.name, this.result, panelName, imageLoaded);
+				var imgPath = this.result
+				worldImageManager.load2MapEditor(file.name, imgPath, panelName, imageLoaded);
 
 				// alternatively you might use something like this: (not suggested)
 				//var image = new Image();

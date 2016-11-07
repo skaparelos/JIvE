@@ -146,10 +146,10 @@ class Renderer{
 		}
 
 		/* draw tile selector */
-		if (this._selector.isHidden() === false){
-			var sel = this._selector.getSelectorPos()
-			var row = sel.tileY
-			var col = sel.tileX
+		if (this._selector.isHidden() === false && this._selector.getImg() !== null){
+			var selectorPos = this._selector.getPos()
+			var row = selectorPos.tileY
+			var col = selectorPos.tileX
 			var img = null
 
 			//if (mapLvl1[row][col].type == MapCell.TYPES.EMPTY){
@@ -162,7 +162,7 @@ class Renderer{
 			//TODO use the non-selector as well. let the use decide the 
 			// number of layers to base his choice on
 	
-			img = this._imageManager.get("selector")
+			img = this._selector.getImg()
 			var coords = this._drawingCoords(row, col, img.width, img.height)	
 			this._ctx.drawImage(img, coords.x, coords.y, coords.width, coords.height)
 		}

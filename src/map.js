@@ -11,19 +11,29 @@ class Selector{
 
 		// set to "true" if you don't want it to be drawn
 		this._isHidden = false
+
+		// the image of the selector
+		this._img = null
 	}
 
 
-	/**
-	 *  Set the position of the selector
-	 */
 	setSelectorPos(tileY, tileX){
 		this._tileY = tileY
 		this._tileX = tileX
 	}
 
+	
+	setImg(img){
+		this._img = img
+	}
 
-	getSelectorPos(){
+
+	getImg(){
+		return this._img
+	}
+
+
+	getPos(){
 		return {
 			tileX: this._tileX,
 			tileY: this._tileY
@@ -57,17 +67,17 @@ class MapCell{
 
 	constructor(type){
 
-		/* TODO	do we need the id? */
+		// TODO	do we need the id?
 		this._id = 0
 
-		/*  (This helps path finding)
-			Types:
-			0 -> nothing is here
-			1 -> non-walkable surface. i.e. either building or tree or etc..
-			2 -> sprites */
+		//  (This helps path finding)
+		//	Types:
+		//	0 -> nothing is here
+		//	1 -> non-walkable surface. i.e. either building or tree or etc..
+		//	2 -> sprites 
 		this._type = type
 
-		/* This should hold the building instance or the sprite instance */
+		// This should hold the building instance or the sprite instance
 		this._entity = null
 	}
 
