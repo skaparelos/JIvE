@@ -4,16 +4,13 @@
  */
 
 
-/**
- * This is the main entry point
- */
-
 var world;
 var worldImageManager;
 var worldSpriteSheetManager;
 
+
 /**
- *  Entry point
+ * This is the main entry point
  */
 function main() {
 	world = new World(0, 0)
@@ -51,7 +48,7 @@ function setupWorld(){
 	world.on("mousemove", function(e){
 		var tiles = world.screen2MapCoords(e)
 		if (tiles === -1) return;
-		world.getSelector().setSelectorPos(tiles.tileY, tiles.tileX)
+		//world.getSelector().setSelectorPos(tiles.tileY, tiles.tileX)
 	});
 
 }
@@ -60,25 +57,25 @@ function setupWorld(){
 function addMenus(){
 
 	// create a menu and add it to the hub
-	var objectMenu = createMainMenu("objectMenu", 300, 300)
+	var objectMenu = createMainMenu("objectMenu", 50, 800)
 
 	// add items to the 'terrain' subMenu
 	var terrain = createSubMenu(objectMenu, "Terrain");
 	var terrainPanel = terrain.panel;
-	addHTML2panel(terrainPanel, addAddImage(1));
+	addHTML2panel(terrainPanel, addAddImage());
 	addHTML2panel(terrainPanel, addImage("dirt.png"));
 	addHTML2panel(terrainPanel, addImage("green.png"));
 
 	// add items to the 'trees' subMenu
 	var trees = createSubMenu(objectMenu, "Trees");
 	var treesPanel = trees.panel;
-	addHTML2panel(treesPanel, addAddImage(2));
+	addHTML2panel(treesPanel, addAddImage());
 	addHTML2panel(treesPanel, addImage("tree.png"));
 
 	// add items to the 'buildings' subMenu
 	var buildings = createSubMenu(objectMenu, "Buildings");
 	var buildingsPanel = buildings.panel;
-	addHTML2panel(buildingsPanel, addAddImage(3));
+	addHTML2panel(buildingsPanel, addAddImage());
 	addHTML2panel(buildingsPanel, addImage("house_green.png"));
 	addHTML2panel(buildingsPanel, addImage("house_red.png"));
 	addHTML2panel(buildingsPanel, addImage("house_blue.png"));
@@ -155,8 +152,8 @@ function addImage(path){
 /**
  *  Adds an 'addImage' button, that can be used to load pictures from the pc.
  */
-function addAddImage(num){
-	return 	'<label class="custom-file-upload floatedImg"> <input id="browse' + num + '" type="file" onchange="previewFiles(this)" multiple> + Add </label>' 
+function addAddImage(){
+	return 	'<label class="custom-file-upload floatedImg"> <input id="browse" type="file" onchange="previewFiles(this)" multiple> + Add </label>' 
 }
 
 
@@ -183,6 +180,7 @@ function enableDragging(){
  *  and u might want to add a new submenu called 'UFOs'
  *  this function adds one dynamically
  */
+//TODO add a + button to add the menu so we can take the menu to add it to.
 function addSubMenu(){
 	var itemValue = document.querySelector('#menu-value').value;
 
