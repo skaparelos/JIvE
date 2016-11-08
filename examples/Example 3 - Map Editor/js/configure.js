@@ -91,7 +91,7 @@ const g_basic_tilesets = {
 }
 
 const g_first_tileset_frames = {
-	"0" : [0, 0, 128, 110, 0, 0]
+	"0" : [0, 0, 128, 64, 0, 0]
 }
 
 

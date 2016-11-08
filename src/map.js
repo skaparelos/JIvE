@@ -17,19 +17,9 @@ class Selector{
 	}
 
 
-	setSelectorPos(tileY, tileX){
+	setPos(tileY, tileX){
 		this._tileY = tileY
 		this._tileX = tileX
-	}
-
-	
-	setImg(img){
-		this._img = img
-	}
-
-
-	getImg(){
-		return this._img
 	}
 
 
@@ -38,6 +28,15 @@ class Selector{
 			tileX: this._tileX,
 			tileY: this._tileY
 		}
+	}
+	
+	setImg(img){
+		this._img = img
+	}
+
+
+	getImg(){
+		return this._img
 	}
 
 	
@@ -178,7 +177,6 @@ class MapLayer{
 		this._map[row][col] = value
 		// TODO
 		//if (this._hasMapCell)	
-
 	}
 
 

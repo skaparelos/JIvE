@@ -4,7 +4,6 @@ class Renderer{
 			imageManager, map, selector, spriteSheet){
 
 		this._world = world
-
 		this._ctx = ctx
 
 		// we need the screen width and height to know the space we have for
@@ -22,11 +21,8 @@ class Renderer{
 		// we need the map to be able to access the map levels directly
 		// rather than passing them as parameters. This should be faster
 		this._map = map
-
 		this._selector = selector
-
 		this._spriteSheet = spriteSheet
-	
 		this._setEvents()
 	
 	}

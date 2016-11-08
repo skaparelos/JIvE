@@ -92,7 +92,6 @@ class Camera{
 			this._zoomLevel = value
 		else
 			console.log("changing the zoom level is not allowed. Check the configuration file")
-
 		return this
 	}	
 

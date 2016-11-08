@@ -4,6 +4,7 @@
  * and nickname it 'blue-house'
  */
 class ImageManager {
+
 	constructor(){
 		this._images = {}
 		

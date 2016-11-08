@@ -183,12 +183,11 @@ class World extends EventEmitter {
 		var isHovering = (mouseHover !== this._previousMouseScroll)
 		if (isHovering) {
 			this._previousMouseScroll = mouseHover
-			let leftMouseDown = ih.getLeftMouseDown()
-
-			if (leftMouseDown)
-				this.emit("leftdrag", mouseHover)
-			
 			this.emit("mousemove", mouseHover)
+
+			// mouse drag
+			if (ih.getLeftMouseDown())
+				this.emit("leftdrag", mouseHover)
 		}
 
 		// call user's update function everytime 
@@ -232,8 +231,7 @@ class World extends EventEmitter {
 
 
 	setCameraZoomLevel(level){
-		this._camera.setZoomLevel(zoomLevel)
-		this._change = true
+		this._camera.setZoomLevel(level)
 	}
 
 

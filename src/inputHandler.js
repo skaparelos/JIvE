@@ -86,7 +86,6 @@ class InputHandler{
 	 */
 	_mouseDown(e){	
 		this._mouseAction[e.button] = true
-		console.log("DOWN:e.button = " + e.button)
 		switch (e.which) {
 			case 1: // left click
 				this._leftMouseClickEvent = e
@@ -103,7 +102,6 @@ class InputHandler{
 	 */
 	_mouseUp(e){
 		this._mouseAction[e.button] = false
-		console.log("UP:e.button = "  + e.button)
 	}
 
 

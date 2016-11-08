@@ -20,6 +20,33 @@ canvas {
 }
 
 
+/**** other stuff ****/
+
+.floatedImg{
+	float: left;
+	cursor: pointer;
+}
+
+.menu{
+	position:absolute; 
+	width:400px; 
+	height:100px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding-right: 10px;
+    text-align: center;
+    content: url("imgs/plus.png");
+    width: 64px;
+    height: 64px;
+}
+
+
 
 /**** Accordion stuff ****/
 
@@ -58,32 +85,5 @@ div.accordion-panel {
 
 div.accordion-panel.show {
 	display: block;
-}
-
-
-/**** other stuff ****/
-
-.floatedImg{
-	float: left;
-	cursor: pointer;
-}
-
-.menu{
-	position:absolute; 
-	width:400px; 
-	height:100px;
-}
-
-input[type="file"] {
-    display: none;
-}
-
-.custom-file-upload {
-    display: inline-block;
-    padding-right: 10px;
-    text-align: center;
-    content: url("imgs/plus.png");
-    width: 64px;
-    height: 64px;
 }
 

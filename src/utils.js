@@ -11,8 +11,18 @@ class Utils{
 		elapsed = new Date().getTime() - start;
 		console.log("Time Elapsed: " + elapsed);
 	}
+
+	
+	static keyCode2KeyChar(keyCode){
+		return String.fromCharCode(keyCode) 
+	}
+
+	static key(keyChar){
+		return this.keyboardKeys[keyChar]
+	}
 	
 }
+
 
 
 Utils.keys = {
@@ -76,8 +86,10 @@ Utils.keyboardKeys =  {
 	PLUS: 187,
 	MINUS: 189,
 	PLUS_firefox: 61, // firefox has different codes
- 	MINUS_firefox: 173 // firefox has different codes
+ 	MINUS_firefox: 173, // firefox has different codes
 
+	"=": 187,
+	"-": 189
 }
 
 
