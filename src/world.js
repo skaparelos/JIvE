@@ -171,16 +171,23 @@ class World extends EventEmitter {
 		}
 
 		// Handle left mouse click
-		var leftClick = ih.getLeftMouseClick()
-		if (leftClick !== this._previousLeftMouseClick) {
+		var leftClick  = ih.getLeftMouseClick()
+		var isClicking = (leftClick !== this._previousLeftMouseClick)
+		if (isClicking) {
 			this._previousLeftMouseClick = leftClick
 			this.emit("leftclick", leftClick)
 		}
 
-		// Handle mouse movement
+		// handle mouse hover and mouse dragging
 		var mouseHover = ih.getMouseHover()
-		if (mouseHover !== this._previousMouseScroll) {
+		var isHovering = (mouseHover !== this._previousMouseScroll)
+		if (isHovering) {
 			this._previousMouseScroll = mouseHover
+			let leftMouseDown = ih.getLeftMouseDown()
+
+			if (leftMouseDown)
+				this.emit("leftdrag", mouseHover)
+			
 			this.emit("mousemove", mouseHover)
 		}
 

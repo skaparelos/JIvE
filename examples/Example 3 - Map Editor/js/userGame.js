@@ -85,7 +85,6 @@ function setupWorld(){
 		world.getSelector().setSelectorPos(tiles.tileY, tiles.tileX)
 	});
 
-
 	world.on("leftclick", function(e){
 		console.log("leftclick!!, selectorValue= " + selectorValue)
 		var tiles = world.screen2MapCoords(e)
@@ -95,7 +94,13 @@ function setupWorld(){
 		// TODO the problem is that the renderer tries to load the picture from the spritesheet. HOWEVER, these pictures are only loaded into the imageManager
 	});
 
-
+	world.on("leftdrag", function(e){
+		console.log("leftdrag!!")
+		var tiles = world.screen2MapCoords(e)
+		if (tiles === -1) return;
+		worldMapLayer0.setCell(tiles.tileY, tiles.tileX, selectorValue)		
+	});
+	
 }
 
 

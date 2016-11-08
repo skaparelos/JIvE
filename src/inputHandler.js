@@ -84,10 +84,10 @@ class InputHandler{
 	/**
 	 *  mouse button pressed
 	 */
-	_mouseDown(e){
+	_mouseDown(e){	
 		this._mouseAction[e.button] = true
+		console.log("DOWN:e.button = " + e.button)
 		switch (e.which) {
-
 			case 1: // left click
 				this._leftMouseClickEvent = e
 				break;
@@ -103,6 +103,7 @@ class InputHandler{
 	 */
 	_mouseUp(e){
 		this._mouseAction[e.button] = false
+		console.log("UP:e.button = "  + e.button)
 	}
 
 
@@ -125,6 +126,11 @@ class InputHandler{
 
 	getKeyAction(){
 		return this._keyAction
+	}
+
+
+	getLeftMouseDown(){
+		return this._mouseAction[0];
 	}
 
 
