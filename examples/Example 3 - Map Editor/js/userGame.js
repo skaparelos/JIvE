@@ -8,7 +8,7 @@ var world;
 var worldImageManager;
 var worldSpriteSheetManager;
 var worldSelector;
-var worldMapLayers;
+var worldMapLayer0;
 
 // the name we gave to the html element to add the menu
 const menuNameHTML = "hub"
@@ -67,15 +67,13 @@ function setupWorld(){
 	// put the callback in the last one, otherwise it might not work
 	im.load(g_basic_tilesets, function(){
 
-		// get spriteSheet
-		var spriteSheet = world.getSpriteSheet()
-		spriteSheet.load("first_tileset", g_first_tileset_frames) 
+		worldSpriteSheetManager.load("first_tileset", g_first_tileset_frames) 
 
 		worldSelector = world.getSelector()
 		var selectorImg = worldImageManager.get("selector")
 		worldSelector.setImg(selectorImg)
 
-		worldMapLayers = world.getMap().getLayer(0)
+		worldMapLayer0 = world.getMap().getLayer(0)
 		
 		// once images have been loaded, start the world
 		world.start()
@@ -93,7 +91,7 @@ function setupWorld(){
 		var tiles = world.screen2MapCoords(e)
 		if (tiles === -1) return;
 		//layer0.setCell(tiles.tileX, tiles.tileY, selectorValue)
-		worldMapLayers.setCell(tiles.tileX, tiles.tileY, selectorValue) 
+		worldMapLayer0.setCell(tiles.tileY, tiles.tileX, selectorValue) 
 		// TODO the problem is that the renderer tries to load the picture from the spritesheet. HOWEVER, these pictures are only loaded into the imageManager
 	});
 
@@ -239,6 +237,12 @@ function addSubMenu(menu){
 
 
 function imageLoaded(panelName, img, id){
+
+	// load it to the spriteSheet
+	var tempFrames = {}
+	tempFrames[id] = [0, 0, img.width, img.height, 0, 0]
+	worldSpriteSheetManager.load(id, tempFrames) 
+
 	var panel = document.getElementById(panelName)
 	addHTML2panel(panel, "<input id='" + id + "' class='floatedImg' type='image' onclick='imageClicked(this)' src='" + img.src + "' />");
 }

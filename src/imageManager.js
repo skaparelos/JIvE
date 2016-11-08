@@ -21,7 +21,9 @@ class ImageManager {
 		this._imagesPath = g_game_settings["IMAGES_DIR"]
 
 		// used for loading images online in the map editor
-		this._imageID = 0
+		// start this from 1, to allow for the value 0
+		// to be the isometric sketch map 
+		this._imageID = 1
 	}
 
 
@@ -95,7 +97,6 @@ class ImageManager {
 
 		img.src = path
 
-		return img
 	}
 
 
