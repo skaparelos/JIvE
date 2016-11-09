@@ -119,7 +119,6 @@ class World extends EventEmitter {
 		this._deltaTime = now - this._then
 
 		if (this._deltaTime >= this._period) {
-			
 			this._update(this._deltaTime)
 			this._renderer.drawWholeScreen()
         	this._then = now - (this._deltaTime % this._period)	

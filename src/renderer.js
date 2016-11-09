@@ -24,7 +24,10 @@ class Renderer{
 		this._selector = selector
 		this._spriteSheet = spriteSheet
 		this._setEvents()
-	
+
+		// this is a micro optimisation to avoid recalculating this for every frame
+		this._halfUnitTileWidth = g_unit_tile_width / 2
+		this._halfUnitTileHeight = g_unit_tile_height / 2
 	}
 
 
@@ -94,6 +97,14 @@ class Renderer{
 		var mapLayers = this._map.getMapLayers()
 		var totalLayers = mapLayers.length
 
+		//get camera position
+		//TODO remove this from here and update it when it is needed
+		var cameraPos = this._camera.getPos()
+		var camX = cameraPos.x
+		var camY = cameraPos.y
+		var zoomLevel = this._camera.getZoomLevel()
+
+
 		for (var layer = 0; layer < totalLayers; layer++){
 			var mapLayer = mapLayers[layer].getLayerMap()
 			var hasMapCell = mapLayers[layer].hasMapCell()
@@ -104,17 +115,17 @@ class Renderer{
 					// This means we are drawing background
 					if (hasMapCell === false){
 						var val = mapLayer[row][col]
-						var imgDim = this._spriteSheet.getFrameDimensions(val + "")
+						var imgDim = this._spriteSheet.getFrameDimensions(val)
 						var imgWidth = imgDim.width
 						var imgHeight = imgDim.height
 
 						var coords = this._drawingCoords(row, col, imgWidth, 
-							imgHeight, false)
+							imgHeight, camX, camY, zoomLevel)
 
 						// draw the image
 						//this._ctx.drawImage(img, coords.x, coords.y, 
 						//		coords.width, coords.height)
-						this._spriteSheet.drawFrame(val + "", coords.x, 
+						this._spriteSheet.drawFrame(val, coords.x, 
 							coords.y, coords.width, coords.height)
 					
 					}
@@ -141,6 +152,7 @@ class Renderer{
 			}
 		}
 
+
 		/* draw tile selector */
 		if (this._selector.isHidden() === false && this._selector.getImg() !== null){
 			var selectorPos = this._selector.getPos()
@@ -159,43 +171,38 @@ class Renderer{
 			// number of layers to base his choice on
 	
 			img = this._selector.getImg()
-			var coords = this._drawingCoords(row, col, img.width, img.height)	
+			var coords = this._drawingCoords(row, col, img.width, img.height, 
+					camX, camY, zoomLevel)	
 			this._ctx.drawImage(img, coords.x, coords.y, coords.width, coords.height)
 		}
 
 	} // end of drawMaps() 
 
 
-	// TODO optimise this is called extremely often!!	
-	_drawingCoords(row, col, imgWidth, imgHeight, entity){
-		var cameraPos = this._camera.getPos()
-		var camX = cameraPos.x
-		var camY = cameraPos.y
+	// TODO optimise this is called extremely often!!
+	// TODO this is called for N layers and recalculates the same thing
+	// need to optimise this to be called once for all layers since the result
+	// is the same
+	_drawingCoords(row, col, imgWidth, imgHeight, camX, camY, zoomLevel){
 
-		//TODO remove this from here and update it when it is needed
-		var zoomLevel = this._camera.getZoomLevel()
-	
 		// Map to World coords conversion 
-		var initX = (col - row) * g_unit_tile_width / 2
-		var initY = (row + col) * g_unit_tile_height / 2
+		var initX = (col - row) * this._halfUnitTileWidth
+		var initY = (row + col) * this._halfUnitTileHeight
 
 		// screen coordinates
-		var screenX = Math.floor(initX / zoomLevel + camX)
-		var screenY = Math.floor(initY / zoomLevel + camY)
+		var screenX = initX / zoomLevel + camX
+		var screenY = initY / zoomLevel + camY
 
 		// calculate the new tile width & height based on the zoom level
-		var widthZoom = Math.floor(imgWidth / zoomLevel)
+		var widthZoom  = Math.floor(imgWidth / zoomLevel)
 		var heightZoom = Math.floor(imgHeight / zoomLevel)
 
-		// If we are not drawing background, make this adjustment
-		if (entity === true){
-
-			screenX = Math.floor(screenX - imgWidth / (zoomLevel * 2)
+		// make this adjustment (this is to correctly draw any image)
+		screenX = Math.floor(screenX - imgWidth / (zoomLevel * 2)
 					+ g_unit_tile_width / (zoomLevel * 2))
 
-			screenY = Math.floor(screenY - imgHeight / zoomLevel 
+		screenY = Math.floor(screenY - imgHeight / zoomLevel 
 					+ g_unit_tile_height / zoomLevel)
-		}
 		
 		return{
 			x: screenX,

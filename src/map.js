@@ -63,6 +63,12 @@ class Selector{
  *  
  */
 class MapCell{
+	
+	// TODO think: i could put here initX, initY, and screenX, screenY 
+	// and have an update function
+	// this is more compact.
+	// because as it is now we would have to make changes in the renderer as well
+
 
 	constructor(type){
 

@@ -1,6 +1,7 @@
 // More like Viewport rather than camera.
 class Camera{
-	constructor(zoomLevel){
+
+	constructor(){
 		
 		// Set the viewport to the origin	
 		this._x = 0
@@ -18,8 +19,8 @@ class Camera{
 
 
 	_checkButtonPressed(keyAction, buttons){
-		for (let key in buttons){
-			let value = buttons[key]
+		for (var key in buttons){
+			var value = buttons[key]
 			if(keyAction[value] === true)
 				return true
 		}
@@ -41,10 +42,10 @@ class Camera{
 		let RIGHT = keyAction[keys.D] || keyAction[keys.RIGHT]
 		*/
 
-		let UP    = this._checkButtonPressed(keyAction, this._upButtons)
-		let DOWN  = this._checkButtonPressed(keyAction, this._downButtons)
-		let LEFT  = this._checkButtonPressed(keyAction, this._leftButtons)
-		let RIGHT = this._checkButtonPressed(keyAction, this._rightButtons)
+		var UP    = this._checkButtonPressed(keyAction, this._upButtons)
+		var DOWN  = this._checkButtonPressed(keyAction, this._downButtons)
+		var LEFT  = this._checkButtonPressed(keyAction, this._leftButtons)
+		var RIGHT = this._checkButtonPressed(keyAction, this._rightButtons)
 
 		if (DOWN || UP || LEFT || RIGHT){
     
