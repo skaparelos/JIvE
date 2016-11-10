@@ -104,7 +104,6 @@ class Renderer{
 		var camY = cameraPos.y
 		var zoomLevel = this._camera.getZoomLevel()
 
-
 		for (var layer = 0; layer < totalLayers; layer++){
 			var mapLayer = mapLayers[layer].getLayerMap()
 			var hasMapCell = mapLayers[layer].hasMapCell()

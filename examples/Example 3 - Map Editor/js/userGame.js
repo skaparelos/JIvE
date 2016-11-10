@@ -54,7 +54,7 @@ function setupWorld(){
 		worldSelector.setImg(selectorImg)
 
 		worldMapLayer0 = world.getMap().getLayer(0)
-		
+	
 		// once images have been loaded, start the world
 		world.start()
 	})

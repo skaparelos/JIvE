@@ -87,16 +87,32 @@ class ImageManager {
 		var id = this._imageID
 		this._imageID += 1
 
+		// keep track of the name of the image
+		if (!this._originalImageName) this._originalImageName = {}
+		this._originalImageName[id] = key
+
 		img.onload = function(){
-			// could have used key instead. not so usefull 
-			// TODO check if i need to pass 'key' at all
 			that._images[id] = img
-			
 			if(callback !== undefined)
 				callback(panelName, img, id)
 		}
 
 		img.src = path
+
+	}
+
+
+	/**
+	 *  This is used in the map editor to export all images in a tileset
+	 *	
+	 */
+	exportToTileset(){
+	
+		if (!this._originalImageName) return;
+	
+		for(var i in this._images){
+			console.log("id = " + i + ") " + this._originalImageName[i])
+		}
 
 	}
 

@@ -141,3 +141,38 @@ var g_level0_map = [
 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
 
+
+
+/*
+	to extract the following in code:
+	var worldObjects2 = []
+	var wo = { "id" : "idno3", ... }
+	worldObjects2.push(wo)
+*/
+var worldObjects = [
+
+	{	"id" : "idNo",
+		"tileX" : "tileXNo",
+		"tileY" : "tileYNo",
+		"tileWidth" : "tileWidthNo",
+		"tileHeight" : "tileHeightNo",
+		"frame" : "frameNo",
+		"drawable" : "drawableBool",
+		"layer" : "0"
+	},
+
+	{	"id" : "idNo2",
+		"tileX" : "tileXNo2",
+		"tileY" : "tileYNo2",
+		"tileWidth" : "tileWidthNo2",
+		"tileHeight" : "tileHeightNo2",
+		"frame" : "frameNo2",
+		"drawable" : "drawableBool2",
+		"layer" : "0"
+	}
+]
+
+// TODO need to extract pictures as well
+
+
+

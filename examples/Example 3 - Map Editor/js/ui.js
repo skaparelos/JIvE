@@ -25,11 +25,14 @@ function calculateSideMenuDimensions(){
  */
 function initMenus(){
 
+	addExportButton()
+
 	// create a menu and add it to the hub
-	var objectMenu = createMainMenu("objectMenu", 0, 0)
+	var objectMenu = createMainMenu("objectMenu", 50, 0) // top, left
 
 	// add the ability to add extra submenus
 	var addMenus = createSubMenu(objectMenu, "+");
+
 }
 
 
@@ -54,6 +57,27 @@ function createMainMenu(menuName, top, left){
 	return mainMenu
 }
 
+
+/**
+ *	This function adds a button which allows the user to export the tileset
+ */ 
+function addExportButton(){
+	
+	var exportBtn = document.createElement('button')
+	exportBtn.innerHTML = "Export Tileset to console"
+	exportBtn.setAttribute("id", "exportBtn")
+	exportBtn.style.top = 0 + "px";
+	exportBtn.style.right =  0 + "px";
+	exportBtn.style.width = 100 + "px";
+	exportBtn.style.height = 50 + "px";
+
+	exportBtn.onclick = function(){
+		worldImageManager.exportToTileset()
+	}
+
+	var hub = document.getElementById(menuNameHTML)
+	hub.appendChild(exportBtn)
+}
 
 /**
  *

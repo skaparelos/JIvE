@@ -30,6 +30,7 @@ class Selector{
 		}
 	}
 	
+
 	setImg(img){
 		this._img = img
 	}
@@ -63,6 +64,9 @@ class Selector{
  *  
  */
 class MapCell{
+
+	//TODO think: keep the image of the imagecell here? I don't think it's a good
+	// think to do as we will be wasting space
 	
 	// TODO think: i could put here initX, initY, and screenX, screenY 
 	// and have an update function
@@ -360,6 +364,11 @@ class Map{
 
 	getHeight(){
 		return this._height
+	}
+
+	
+	toJSON(){
+
 	}
 }
 
