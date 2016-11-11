@@ -151,7 +151,6 @@ class MapLayer{
 	}
 
 
-	// TODO continue from here tomorrow
 	createEmptyLayer(mapWidth, mapHeight, worldObject){
 		for (var i = 0; i < mapHeight; i++) {
 			this._map[i] = []
@@ -228,6 +227,26 @@ class Map{
 		this._width = 0
 		this._height = 0
 		this._map = []
+	}
+
+
+	load(map){
+		var mapJSONed = JSON.parse(map)
+		
+		this._height = mapJSONed[0]["_map"].length
+		this._width = mapJSONed[0]["_map"][0].length
+
+		if (this._width !== this._height)
+			console.log("ERROR! height does not match width!")
+
+		// TODO!!! this is not correct!, it just puts the same frame on everything
+		var frame = mapJSONed[0]["_map"][0][0]["_entity"]._frame
+		var wo = new WorldObject(frame)
+
+		var layer = new MapLayer()
+		layer.createEmptyLayer(this._width, this._height, wo)
+
+		this.addLayer(layer)
 	}
 
 
@@ -388,7 +407,13 @@ class Map{
 
 	
 	exportToJSON(){
-		
+		// TODO!!!!
+		// i need to extract all wolrdObjects to JSON and the map size
+		// then create an empty map
+		// then create the worldObjects that i loaded
+		// then assign to the right mapCell the right worldObject
+		var mapJSONed = JSON.stringify(this._map);	
+		console.log(mapJSONed)
 	}
 }
 

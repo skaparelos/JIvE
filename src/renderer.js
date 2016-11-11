@@ -8,11 +8,12 @@ class Renderer{
 
 		// we need the screen width and height to know the space we have for
 		// drawing
+		// TODO put this in camera and get it from there
 		this._screenWidth = screenWidth
 		this._screenHeight = screenHeight
 
 		// how much off the screen to draw
-		this._offset = 50
+		this._offset = g_unit_tile_width / 2
 	
 		// we need the camera for the zoom level and for the change 
 		// in the X and Y axis
@@ -29,7 +30,7 @@ class Renderer{
 		this._setEvents()
 
 		// this is a micro optimisation to avoid recalculating this for every frame
-		this._halfUnitTileWidth = g_unit_tile_width / 2
+		this._halfUnitTileWidth  = g_unit_tile_width / 2
 		this._halfUnitTileHeight = g_unit_tile_height / 2
 	}
 
@@ -108,41 +109,38 @@ class Renderer{
 		var zoomLevel = this._camera.getZoomLevel()
 
 		// TODO do it like this? or just go through the world items?
-		for (var layer = 0; layer < totalLayers; layer++){
+		for (var layer in mapLayers){
 			var mapLayer = mapLayers[layer].getLayerMap()
 
 			for (var row = startRow; row < endRow; row++) { 
 
 				for (var col = startCol; col < endCol; col++) {
 					var mapCell = mapLayer[row][col].getMapCell()
+					if (mapCell.type === MapCell.TYPES.EMPTY ||
+						mapCell.entity === null) 
+							break;
+
 					var val = mapCell.entity.getFrame()
+					var imgDim = this._spriteSheet.getFrameDimensions(val)
+					var imgWidth = imgDim.width
+					var imgHeight = imgDim.height
 
-					if (mapCell.type !== MapCell.TYPES.EMPTY &&
-						mapCell.entity !== null){
-						
-						var imgDim = this._spriteSheet.getFrameDimensions(val)
-						var imgWidth = imgDim.width
-						var imgHeight = imgDim.height
+					var coords = this._drawingCoords(row, col, imgWidth, 
+						imgHeight, camX, camY, zoomLevel)
 
-						var coords = this._drawingCoords(row, col, imgWidth, 
-							imgHeight, camX, camY, zoomLevel)
+					if (coords.x > 0 - this._offset &&
+						coords.y > 0 - this._offset && 
+						coords.x < this._screenWidth + this._offset &&
+						coords.y < this._screenHeight + this._offset){
 
-						if (coords.x > 0 - this._offset && 
-							coords.x < this._screenWidth + this._offset &&
-							coords.y > 0 - this._offset && 
-							coords.y < this._screenHeight + this._offset){
 							this._spriteSheet.drawFrame(val, coords.x, 
 								coords.y, coords.width, coords.height)	
-						}
 					}
-						
-
 				}
 			}
 		}
 
-
-		/* draw tile selector */
+		// draw tile selector
 		var selectorImg = this._selector.getImg()
 		if (this._selector.isHidden() === false && selectorImg !== null){
 			var selectorPos = this._selector.getPos()
