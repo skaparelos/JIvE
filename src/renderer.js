@@ -1,5 +1,5 @@
-
 class Renderer{
+
 	constructor(world, ctx, screenWidth, screenHeight, camera, 
 			imageManager, map, selector, spriteSheet){
 
@@ -10,6 +10,9 @@ class Renderer{
 		// drawing
 		this._screenWidth = screenWidth
 		this._screenHeight = screenHeight
+
+		// how much off the screen to draw
+		this._offset = 50
 	
 		// we need the camera for the zoom level and for the change 
 		// in the X and Y axis
@@ -104,16 +107,19 @@ class Renderer{
 		var camY = cameraPos.y
 		var zoomLevel = this._camera.getZoomLevel()
 
+		// TODO do it like this? or just go through the world items?
 		for (var layer = 0; layer < totalLayers; layer++){
 			var mapLayer = mapLayers[layer].getLayerMap()
-			var hasMapCell = mapLayers[layer].hasMapCell()
 
-			for (var row = startRow; row < endRow; row++) { // row
-				for (var col = startCol; col < endCol; col++) { // column
+			for (var row = startRow; row < endRow; row++) { 
 
-					// This means we are drawing background
-					if (hasMapCell === false){
-						var val = mapLayer[row][col]
+				for (var col = startCol; col < endCol; col++) {
+					var mapCell = mapLayer[row][col].getMapCell()
+					var val = mapCell.entity.getFrame()
+
+					if (mapCell.type !== MapCell.TYPES.EMPTY &&
+						mapCell.entity !== null){
+						
 						var imgDim = this._spriteSheet.getFrameDimensions(val)
 						var imgWidth = imgDim.width
 						var imgHeight = imgDim.height
@@ -121,58 +127,35 @@ class Renderer{
 						var coords = this._drawingCoords(row, col, imgWidth, 
 							imgHeight, camX, camY, zoomLevel)
 
-						// draw the image
-						//this._ctx.drawImage(img, coords.x, coords.y, 
-						//		coords.width, coords.height)
-						this._spriteSheet.drawFrame(val, coords.x, 
-							coords.y, coords.width, coords.height)
-					
-					}
-	
-					// That means that we are not drawing background
-					if (hasMapCell === true){
-						var mapCell = mapLayer[row][col].getMapCell()
-
-						if (mapCell.type !== MapCell.TYPES.EMPTY &&
-							mapCell.entity !== null){
-							
-							//var img = mapCell.entity.getImage()
-							//img.draw(...)
-							//var imgWidth = img.getWidth()
-							//var imgHeight = img.getHeight()
-							//var coords = this._drawingCoords(row, col, imgWidth,
-							//	imgHeight, true)
-							//img.draw(this._ctx, coords.x, coords.y, coords.width,
-							//	coords.height)
+						if (coords.x > 0 - this._offset && 
+							coords.x < this._screenWidth + this._offset &&
+							coords.y > 0 - this._offset && 
+							coords.y < this._screenHeight + this._offset){
+							this._spriteSheet.drawFrame(val, coords.x, 
+								coords.y, coords.width, coords.height)	
 						}
-						
 					}
+						
+
 				}
 			}
 		}
 
 
 		/* draw tile selector */
-		if (this._selector.isHidden() === false && this._selector.getImg() !== null){
+		var selectorImg = this._selector.getImg()
+		if (this._selector.isHidden() === false && selectorImg !== null){
 			var selectorPos = this._selector.getPos()
 			var row = selectorPos.tileY
 			var col = selectorPos.tileX
 			var img = null
 
-			//if (mapLvl1[row][col].type == MapCell.TYPES.EMPTY){
-			//	img = this._imageManager.get("selector")
-			//}else{  
-			//	img = this._imageManager.get("non-selector")
-			//}
 			// TODO isn't that something the user has to do?
 			// this shouldn't be here
-			//TODO use the non-selector as well. let the use decide the 
-			// number of layers to base his choice on
 	
-			img = this._selector.getImg()
-			var coords = this._drawingCoords(row, col, img.width, img.height, 
+			var coords = this._drawingCoords(row, col, selectorImg.width, selectorImg.height, 
 					camX, camY, zoomLevel)	
-			this._ctx.drawImage(img, coords.x, coords.y, coords.width, coords.height)
+			this._ctx.drawImage(selectorImg, coords.x, coords.y, coords.width, coords.height)
 		}
 
 	} // end of drawMaps() 

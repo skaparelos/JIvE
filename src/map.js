@@ -74,20 +74,27 @@ class MapCell{
 	// because as it is now we would have to make changes in the renderer as well
 
 
-	constructor(type){
+	constructor(type = 0, entity = null){
 
 		// TODO	do we need the id?
 		this._id = 0
 
 		//  (This helps path finding)
 		//	Types:
-		//	0 -> nothing is here
-		//	1 -> non-walkable surface. i.e. either building or tree or etc..
-		//	2 -> sprites 
+		//	0 -> empty
+		//  1 -> walkable, but non empty (this is for bg tiles) (e.g might contain a door)
+		//	2 -> non-walkable surface. i.e. either building or tree or etc..
+		//	3 -> sprites 
 		this._type = type
 
 		// holds the world object (i.e. building or unit)
-		this._entity = null
+		this._entity = entity
+	}
+
+
+	setMapCell(type, worldObject){
+		this._type = type
+		this._entity = worldObject
 	}
 
 
@@ -113,9 +120,10 @@ class MapCell{
 
 // TODO change this and let the user define it
 MapCell.TYPES = {
-	EMPTY : 0,
-	NON_WALKABLE : 1,
-	SPRITE : 2	
+	EMPTY: 0, // all empty are walkable
+	WALKABLE_NON_EMPTY : 1, // contains sth that can be walked over. e.g. bg tile, or coin to take or door to go through
+	NON_WALKABLE : 2, // non walkable contain sth like house or tree
+	SPRITE : 3	// contain a sprite //TODO is this NON_WALKABLE?
 }
 
 
@@ -140,16 +148,15 @@ class MapLayer{
 
 	constructor(){
 		this._map = []
-		this._hasMapCell = false
 	}
 
 
 	// TODO continue from here tomorrow
-	createEmptyMapLayer(mapWidth, mapHeight){
+	createEmptyLayer(mapWidth, mapHeight, worldObject){
 		for (var i = 0; i < mapHeight; i++) {
 			this._map[i] = []
 			for (var j = 0; j < mapWidth; j++) { 
-				this._map[i][j] = new MapCell(0)
+				this._map[i][j] = new MapCell(MapCell.TYPES.WALKABLE_NON_EMPTY, worldObject)
 			} 
 		}
 	}
@@ -158,8 +165,10 @@ class MapLayer{
 	/**
 	 *	If withMapCell is true, then that layer will have a map cell
 	 */ 
-	load(map, withMapCell){
+	load(map){
 
+		// TODO fix this function
+		/*
 		if (withMapCell === false){
 			this._map = map
 			this._hasMapCell = false
@@ -177,6 +186,7 @@ class MapLayer{
 				} 
 			}
 		}
+		*/
 	}
 
 
@@ -194,9 +204,8 @@ class MapLayer{
 	}
 
 
-	setCell(row, col, value){
-		this._map[row][col] = value
-		// TOD	//if (this._hasMapCell)	
+	setCell(row, col, type, worldObject){
+		this._map[row][col].setMapCell(type, worldObject)
 	}
 
 
@@ -227,7 +236,8 @@ class Map{
 
 		// we update the width and height everytime since we do not
 		// know the total number of layers in advance (these should be the same
-		// for each layer) 
+		// for each layer)
+		// TODO use a singleton 
 		this._width = mapLayer.getLayerMap()[0].length
 		this._height = mapLayer.getLayerMap().length
 		console.log('map width = ' + this._width + ' height = ' + this._height)

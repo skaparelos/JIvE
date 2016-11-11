@@ -21,7 +21,7 @@ class Camera{
 	_checkButtonPressed(keyAction, buttons){
 		for (var key in buttons){
 			var value = buttons[key]
-			if(keyAction[value] === true)
+			if (keyAction[value] === true)
 				return true
 		}
 		return false

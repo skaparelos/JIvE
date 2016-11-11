@@ -256,7 +256,10 @@ function imageLoaded(panelName, img, id){
 	// load it to the spriteSheet
 	var tempFrames = {}
 	tempFrames[id] = [0, 0, img.width, img.height, 0, 0]
-	worldSpriteSheetManager.load(id, tempFrames) 
+	worldSpriteSheetManager.load(id, tempFrames)
+	
+	var wo = new WorldObject(id)
+	worldObjects.push(wo)
 
 	var panel = document.getElementById(panelName)
 	addHTML2panel(panel, "<input id='" + id + "' class='floatedImg' type='image' onclick='imageClicked(this)' src='" + img.src + "' />");

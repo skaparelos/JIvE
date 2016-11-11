@@ -9,6 +9,7 @@ var worldImageManager;
 var worldSpriteSheetManager;
 var worldSelector;
 var worldMapLayer0;
+var worldObjects = [];
 
 // the name we gave to the html element to add the menu
 const menuNameHTML = "hub"
@@ -18,6 +19,10 @@ const menuNameHTML = "hub"
  * This is the main entry point
  */
 function main() {
+
+	var mapDimInput = prompt("Enter map size (same for width and height):", "50");
+	if (mapDimInput !== null)
+		mapDimInput = parseInt(mapDimInput)
 
 	var dim = calculateSideMenuDimensions()
 	world = new World(dim.width, dim.height)
@@ -29,20 +34,23 @@ function main() {
 	//enableDragging()
 
 	initMenus()
-	setupWorld()
+	setupWorld(mapDimInput)
 }
 
 
-function setupWorld(){
+function setupWorld(mapDim){
+
+	var bgTile = new WorldObject(0, true, 0, 0, 0, 0, 0)
 
 	// Load the map layers
 	var layer0 = new MapLayer()
-	layer0.load(g_level0_map, false)
+	layer0.createEmptyLayer(mapDim, mapDim, bgTile)
 	world.getMap().addLayer(layer0)
 
 	// Load images to the world
 	im = world.getImageManager()
 	im.load(g_selector_images)
+
 
 	// put the callback in the last one, otherwise it might not work
 	im.load(g_basic_tilesets, function(){
@@ -68,14 +76,16 @@ function setupWorld(){
 	world.on("leftdrag", function(e){
 		var tiles = world.screen2MapCoords(e)
 		if (tiles === -1) return;
-		worldMapLayer0.setCell(tiles.tileY, tiles.tileX, selectorValue)		
+		if (selectorValue != -1)
+			worldMapLayer0.setCell(tiles.tileY, tiles.tileX, 2, worldObjects[selectorValue - 1]) 	
 	});
 
 	world.on("leftclick", function(e){
 		var tiles = world.screen2MapCoords(e)
 		if (tiles === -1) return;
 		//layer0.setCell(tiles.tileX, tiles.tileY, selectorValue)
-		worldMapLayer0.setCell(tiles.tileY, tiles.tileX, selectorValue) 
+		if (selectorValue != -1)
+			worldMapLayer0.setCell(tiles.tileY, tiles.tileX, 2, worldObjects[selectorValue - 1]) 
 		// TODO the problem is that the renderer tries to load the picture from the spritesheet. HOWEVER, these pictures are only loaded into the imageManager
 	});
 
@@ -92,14 +102,10 @@ function setupWorld(){
 			world.setCameraZoomLevel(2)
 	});
 
-	var wo = new WorldObject()
-	var wo2 = new WorldObject()
-	
-	
 }
 
 
-var selectorValue = 0
+var selectorValue = -1
 function imageClicked(img){
 	selectorValue = img.id
 	var selectedImg = worldImageManager.get(img.id)

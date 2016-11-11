@@ -149,7 +149,7 @@ var g_level0_map = [
 	var wo = { "id" : "idno3", ... }
 	worldObjects2.push(wo)
 */
-var worldObjects = [
+var worldObjects2 = [
 
 	{	"id" : "idNo",
 		"tileX" : "tileXNo",
