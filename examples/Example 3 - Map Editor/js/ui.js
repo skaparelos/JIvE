@@ -25,7 +25,8 @@ function calculateSideMenuDimensions(){
  */
 function initMenus(){
 
-	addExportButton()
+	addExport2TilesetBtn()
+	addExport2JSONBtn()
 
 	// create a menu and add it to the hub
 	var objectMenu = createMainMenu("objectMenu", 50, 0) // top, left
@@ -37,7 +38,7 @@ function initMenus(){
 
 
 /**
- *  
+ * This is the main menu where you can add submenus that will contain your tiles 
  */
 function createMainMenu(menuName, top, left){
 
@@ -61,23 +62,44 @@ function createMainMenu(menuName, top, left){
 /**
  *	This function adds a button which allows the user to export the tileset
  */ 
-function addExportButton(){
+function addExport2TilesetBtn(){
 	
 	var exportBtn = document.createElement('button')
 	exportBtn.innerHTML = "Export Tileset to console"
-	exportBtn.setAttribute("id", "exportBtn")
+	exportBtn.setAttribute("id", "exporttileset")
 	exportBtn.style.top = 0 + "px";
 	exportBtn.style.right =  0 + "px";
 	exportBtn.style.width = 100 + "px";
 	exportBtn.style.height = 50 + "px";
 
 	exportBtn.onclick = function(){
-		worldImageManager.exportToTileset()
+		worldImageManager.exportImages()
 	}
 
 	var hub = document.getElementById(menuNameHTML)
 	hub.appendChild(exportBtn)
 }
+
+
+function addExport2JSONBtn(){
+
+	var exportBtn = document.createElement('button')
+	exportBtn.innerHTML = "Export map to JSON"
+	exportBtn.setAttribute("id", "exportjson")
+	exportBtn.style.top = 0 + "px";
+	exportBtn.style.left =  100 + "px";
+	exportBtn.style.width = 100 + "px";
+	exportBtn.style.height = 50 + "px";
+
+	exportBtn.onclick = function(){
+		world.getMap().exportToJSON()
+	}
+
+	var hub = document.getElementById(menuNameHTML)
+	hub.appendChild(exportBtn)
+}
+
+
 
 /**
  *
@@ -127,11 +149,17 @@ function createSubMenu(parentMenu, subMenuName){
 }
 
 
+/**
+ *	Adds some html to a given panel
+ */ 
 function addHTML2panel(panel, htmlCode){
 	panel.innerHTML += htmlCode;
 }
 
 
+/**
+ *	Adds an image that the user loaded to the appropriate submenu
+ */
 function addImage(path){
 	return "<input class='floatedImg' type='image' src='imgs/" + path + "' />"
 }

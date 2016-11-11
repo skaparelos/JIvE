@@ -106,7 +106,7 @@ class ImageManager {
 	 *  This is used in the map editor to export all images in a tileset
 	 *	
 	 */
-	exportToTileset(){
+	exportImages(){
 	
 		if (!this._originalImageName) return;
 	

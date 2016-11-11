@@ -86,7 +86,7 @@ class MapCell{
 		//	2 -> sprites 
 		this._type = type
 
-		// This should hold the building instance or the sprite instance
+		// holds the world object (i.e. building or unit)
 		this._entity = null
 	}
 
@@ -144,6 +144,17 @@ class MapLayer{
 	}
 
 
+	// TODO continue from here tomorrow
+	createEmptyMapLayer(mapWidth, mapHeight){
+		for (var i = 0; i < mapHeight; i++) {
+			this._map[i] = []
+			for (var j = 0; j < mapWidth; j++) { 
+				this._map[i][j] = new MapCell(0)
+			} 
+		}
+	}
+
+
 	/**
 	 *	If withMapCell is true, then that layer will have a map cell
 	 */ 
@@ -164,7 +175,7 @@ class MapLayer{
 				for (var j = 0; j < mapWidth; j++) { 
 					this._map[i][j] = new MapCell(map[i][j])
 				} 
-			} 
+			}
 		}
 	}
 
@@ -185,8 +196,7 @@ class MapLayer{
 
 	setCell(row, col, value){
 		this._map[row][col] = value
-		// TODO
-		//if (this._hasMapCell)	
+		// TOD	//if (this._hasMapCell)	
 	}
 
 
@@ -367,8 +377,8 @@ class Map{
 	}
 
 	
-	toJSON(){
-
+	exportToJSON(){
+		
 	}
 }
 

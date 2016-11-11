@@ -91,6 +91,10 @@ function setupWorld(){
 		if (e.keyCode == Utils.key("-"))
 			world.setCameraZoomLevel(2)
 	});
+
+	var wo = new WorldObject()
+	var wo2 = new WorldObject()
+	
 	
 }
 
