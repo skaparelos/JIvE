@@ -40,13 +40,19 @@ function main() {
 
 function setupWorld(mapDim){
 
-	var bgTile = new WorldObject(0, true, 0, 0, 0, 0, 0)
+	// TODO fix this
+	// do not remove this from here in the map editor
+	var wo = new WorldObject(0)
 
 	// Load the map layers
 	var layer0 = new MapLayer()
-	//layer0.createEmptyLayer(mapDim, mapDim, bgTile)
+
+	// code to make map editor work:
+	//layer0.createEmptyLayer(mapDim, mapDim)
 	//world.getMap().addLayer(layer0)
-	world.getMap().load(g_mapLevel)
+
+	// code to test loading
+	world.getMap().load()
 
 	// Load images to the world
 	im = world.getImageManager()
@@ -79,7 +85,7 @@ function setupWorld(mapDim){
 		var tiles = world.screen2MapCoords(e)
 		if (tiles === -1) return;
 		if (selectorValue != -1)
-			worldMapLayer0.setCell(tiles.tileY, tiles.tileX, 1, worldObjects[selectorValue - 1]) 	
+			worldMapLayer0.setCell(tiles.tileY, tiles.tileX, 1, worldObjects[selectorValue - 1].getID()) 	
 	});
 
 	world.on("leftclick", function(e){
@@ -87,7 +93,7 @@ function setupWorld(mapDim){
 		if (tiles === -1) return;
 		//layer0.setCell(tiles.tileX, tiles.tileY, selectorValue)
 		if (selectorValue != -1)
-			worldMapLayer0.setCell(tiles.tileY, tiles.tileX, 1, worldObjects[selectorValue - 1]) 
+			worldMapLayer0.setCell(tiles.tileY, tiles.tileX, 1, worldObjects[selectorValue - 1].getID()) 
 		// TODO the problem is that the renderer tries to load the picture from the spritesheet. HOWEVER, these pictures are only loaded into the imageManager
 	});
 

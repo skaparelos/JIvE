@@ -65,12 +65,12 @@ function createMainMenu(menuName, top, left){
 function addExport2TilesetBtn(){
 	
 	var exportBtn = document.createElement('button')
-	exportBtn.innerHTML = "Export Tileset to console"
+	exportBtn.innerHTML = "Export ID to images correspondence (See console)"
 	exportBtn.setAttribute("id", "exporttileset")
 	exportBtn.style.top = 0 + "px";
 	exportBtn.style.right =  0 + "px";
 	exportBtn.style.width = 100 + "px";
-	exportBtn.style.height = 50 + "px";
+	exportBtn.style.height = 50 + "px";	
 
 	exportBtn.onclick = function(){
 		worldImageManager.exportImages()
@@ -78,6 +78,14 @@ function addExport2TilesetBtn(){
 
 	var hub = document.getElementById(menuNameHTML)
 	hub.appendChild(exportBtn)
+
+
+	// link to download json
+	var exportLink = document.createElement('a')
+	exportLink.setAttribute("id", "exportLink")
+	exportLink.style.display = "none"
+	hub.appendChild(exportLink)
+
 }
 
 
@@ -92,7 +100,14 @@ function addExport2JSONBtn(){
 	exportBtn.style.height = 50 + "px";
 
 	exportBtn.onclick = function(){
-		world.getMap().exportToJSON()
+		var jsonified = WorldObject.exportJSON()
+		jsonified += world.getMap().exportJSON()
+
+		var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(jsonified);
+		var dlAnchorElem = document.getElementById('exportLink');
+		dlAnchorElem.setAttribute("href",     dataStr     );
+		dlAnchorElem.setAttribute("download", "mapLevel.js");
+		dlAnchorElem.click();
 	}
 
 	var hub = document.getElementById(menuNameHTML)

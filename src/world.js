@@ -3,10 +3,10 @@ var g_running = true
 
 class World extends EventEmitter {
 
-	constructor(width, height){
+	constructor(screenWidth, screenHeight){
 		super()
 
-		this._screen = new Screen(width, height)
+		this._screen = new Screen(screenWidth, screenHeight)
 		this._period = this._screen.getPeriod()
 
 		this._map = new Map()

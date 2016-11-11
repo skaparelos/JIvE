@@ -88,6 +88,9 @@ class MapCell{
 		this._type = type
 
 		// holds the world object (i.e. building or unit)
+		// TODO i could just keep an ID and use the WorldObject.worldObjects array to access it
+		// the reason that this is an ID, is because it is easier to deal with JSON.
+		// if it wasn't it would unroll all the details of the object. Keep things simpler.
 		this._entity = entity
 	}
 
@@ -151,12 +154,15 @@ class MapLayer{
 	}
 
 
-	createEmptyLayer(mapWidth, mapHeight, worldObject){
+	createEmptyLayer(mapWidth, mapHeight){
+
 		for (var i = 0; i < mapHeight; i++) {
 			this._map[i] = []
+
 			for (var j = 0; j < mapWidth; j++) { 
-				this._map[i][j] = new MapCell(MapCell.TYPES.WALKABLE_NON_EMPTY, worldObject)
+				this._map[i][j] = new MapCell(MapCell.TYPES.WALKABLE_NON_EMPTY, 0)
 			} 
+
 		}
 	}
 
@@ -203,8 +209,8 @@ class MapLayer{
 	}
 
 
-	setCell(row, col, type, worldObject){
-		this._map[row][col].setMapCell(type, worldObject)
+	setCell(row, col, type, worldObjectID){
+		this._map[row][col].setMapCell(type, worldObjectID)
 	}
 
 
@@ -230,21 +236,34 @@ class Map{
 	}
 
 
-	load(map){
-		var mapJSONed = JSON.parse(map)
+	load(){
+
+		//TODO DOES NOT WORK WITH LAYERS
+
+		// load worldObjects here and then the map. This is to ensure that they
+		// happen in order and that the map is not loaded before the worldObjects
+		WorldObject.load(g_worldObjects)
+
+		// now load the map
+		var mapJSONed = JSON.parse(g_mapLevels)
 		
-		this._height = mapJSONed[0]["_map"].length
-		this._width = mapJSONed[0]["_map"][0].length
+		this._height = mapJSONed["_height"]
+		this._width = mapJSONed["_width"]
 
 		if (this._width !== this._height)
 			console.log("ERROR! height does not match width!")
 
-		// TODO!!! this is not correct!, it just puts the same frame on everything
-		var frame = mapJSONed[0]["_map"][0][0]["_entity"]._frame
-		var wo = new WorldObject(frame)
-
+		//create empty map layer
 		var layer = new MapLayer()
-		layer.createEmptyLayer(this._width, this._height, wo)
+		layer.createEmptyLayer(this._width, this._height)
+
+		var map = mapJSONed["_map"][0]["_map"]
+		for (var row = 0; row < this._height; row++){
+			for (var col = 0; col < this._width; col++){
+				var c = map[row][col]
+				layer.setCell(row, col, c["_type"], c["_entity"])
+			}
+		}
 
 		this.addLayer(layer)
 	}
@@ -406,15 +425,10 @@ class Map{
 	}
 
 	
-	exportToJSON(){
-		// TODO!!!!
-		// i need to extract all wolrdObjects to JSON and the map size
-		// then create an empty map
-		// then create the worldObjects that i loaded
-		// then assign to the right mapCell the right worldObject
-		var mapJSONed = JSON.stringify(this._map);	
-		console.log(mapJSONed)
+	exportJSON(){
+		var jsonified = "var g_mapLevels = '" + JSON.stringify(this) + "'\n";
+		return jsonified
 	}
-}
 
+}
 

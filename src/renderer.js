@@ -116,11 +116,13 @@ class Renderer{
 
 				for (var col = startCol; col < endCol; col++) {
 					var mapCell = mapLayer[row][col].getMapCell()
+
 					if (mapCell.type === MapCell.TYPES.EMPTY ||
 						mapCell.entity === null) 
 							break;
 
-					var val = mapCell.entity.getFrame()
+					var entityID = mapCell.entity
+					var val = WorldObject.worldObjects[entityID].getFrame()
 					var imgDim = this._spriteSheet.getFrameDimensions(val)
 					var imgWidth = imgDim.width
 					var imgHeight = imgDim.height
