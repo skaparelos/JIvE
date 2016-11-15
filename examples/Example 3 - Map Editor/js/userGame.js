@@ -24,6 +24,14 @@ function main() {
 	if (mapDimInput !== null)
 		mapDimInput = parseInt(mapDimInput)
 
+	g_unit_tile_width = prompt("Enter minimum tile width:", "128");
+	if (g_unit_tile_width !== null)
+		g_unit_tile_width = parseInt(g_unit_tile_width)
+
+	g_unit_tile_height = prompt("Enter minimum tile height:", "64");
+	if (g_unit_tile_height !== null)
+		g_unit_tile_height = parseInt(g_unit_tile_height)
+
 	var dim = calculateSideMenuDimensions()
 	world = new World(dim.width, dim.height)
 	worldImageManager = world.getImageManager();
@@ -48,11 +56,11 @@ function setupWorld(mapDim){
 	var layer0 = new MapLayer()
 
 	// code to make map editor work:
-	//layer0.createEmptyLayer(mapDim, mapDim)
-	//world.getMap().addLayer(layer0)
+	layer0.createEmptyLayer(mapDim, mapDim)
+	world.getMap().addLayer(layer0)
 
 	// code to test loading
-	world.getMap().load()
+	//world.getMap().load()
 
 	// Load images to the world
 	im = world.getImageManager()

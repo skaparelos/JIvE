@@ -19,7 +19,6 @@ function calculateSideMenuDimensions(){
 }
 
 
-
 /**
  * Initialises the side menu
  */
@@ -28,11 +27,11 @@ function initMenus(){
 	addExport2TilesetBtn()
 	addExport2JSONBtn()
 
-	// create a menu and add it to the hub
-	var objectMenu = createMainMenu("objectMenu", 50, 0) // top, left
+	// create an accordion menu and add it to the hub
+	var accordionMenu = createAccordionMenu("accordionMenu", 0, 0) // top, left
 
 	// add the ability to add extra submenus
-	var addMenus = createSubMenu(objectMenu, "+");
+	var addMenus = createSubAccordion(accordionMenu, "+");
 
 }
 
@@ -40,11 +39,11 @@ function initMenus(){
 /**
  * This is the main menu where you can add submenus that will contain your tiles 
  */
-function createMainMenu(menuName, top, left){
+function createAccordionMenu(name, top, left){
 
 	// make the menu box where we will add items
 	var mainMenu = document.createElement('div')
-	mainMenu.setAttribute("id", menuName)
+	mainMenu.setAttribute("id", name)
 	mainMenu.setAttribute('draggable', true)
 	mainMenu.className = "menu"
 	mainMenu.style.top = top + "px"
@@ -67,10 +66,10 @@ function addExport2TilesetBtn(){
 	var exportBtn = document.createElement('button')
 	exportBtn.innerHTML = "Export ID to images correspondence (See console)"
 	exportBtn.setAttribute("id", "exporttileset")
-	exportBtn.style.top = 0 + "px";
-	exportBtn.style.right =  0 + "px";
+	exportBtn.className = "menuBtn"
+	exportBtn.style.left =  0 + "px";
 	exportBtn.style.width = 100 + "px";
-	exportBtn.style.height = 50 + "px";	
+	exportBtn.style.height = 75 + "px";	
 
 	exportBtn.onclick = function(){
 		worldImageManager.exportImages()
@@ -84,7 +83,7 @@ function addExport2TilesetBtn(){
 	var exportLink = document.createElement('a')
 	exportLink.setAttribute("id", "exportLink")
 	exportLink.style.display = "none"
-	hub.appendChild(exportLink)
+	exportBtn.appendChild(exportLink)
 
 }
 
@@ -94,10 +93,11 @@ function addExport2JSONBtn(){
 	var exportBtn = document.createElement('button')
 	exportBtn.innerHTML = "Export map to JSON"
 	exportBtn.setAttribute("id", "exportjson")
+	exportBtn.className = "menuBtn"
 	exportBtn.style.top = 0 + "px";
 	exportBtn.style.left =  100 + "px";
 	exportBtn.style.width = 100 + "px";
-	exportBtn.style.height = 50 + "px";
+	exportBtn.style.height = 75 + "px";
 
 	exportBtn.onclick = function(){
 		var jsonified = WorldObject.exportJSON()
@@ -119,44 +119,44 @@ function addExport2JSONBtn(){
 /**
  *
  */
-function createSubMenu(parentMenu, subMenuName){
+function createSubAccordion(accordionMenu, subAccordionName){
 
-	var subMenu = document.createElement('button')
-	subMenu.setAttribute("id", subMenuName + "-submenu")
-	subMenu.className = 'accordion';
-	subMenu.innerHTML = subMenuName;
+	var subAccordionMenu = document.createElement('button')
+	subAccordionMenu.setAttribute("id", subAccordionName + "-submenu")
+	subAccordionMenu.className = 'accordion';
+	subAccordionMenu.innerHTML = subAccordionName;
 
-	if (subMenuName !== "+"){
+	if (subAccordionName !== "+"){
 
 		// allow the submenu to collapse/show
-		subMenu.onclick = function(){
+		subAccordionMenu.onclick = function(){
 			this.classList.toggle("active");
 			this.nextElementSibling.classList.toggle("show");
 		}
 	}else{
-		subMenu.onclick = function(){
+		subAccordionMenu.onclick = function(){
 			addSubMenu(this)
 		}
 	}
-	parentMenu.appendChild(subMenu);
+	accordionMenu.appendChild(subAccordionMenu);
 
 	// the panel is the place where any contents will be added for the submenu
 	// IMPORTANT NOTE: the panel is not placed within the button but after it
 	// otherwise, it would be collapsed everytime we click it contents!!
 	// Thus, add it to 'parentMenu', NOT to 'subMenu'
 	var subMenuPanel = document.createElement('div');
-	subMenuPanel.setAttribute("id", subMenuName + "-submenu-panel");
+	subMenuPanel.setAttribute("id", subAccordionMenu + "-submenu-panel");
 	subMenuPanel.className = 'accordion-panel';
-	parentMenu.appendChild(subMenuPanel)
+	accordionMenu.appendChild(subMenuPanel)
 
 	// add the ability to add your own photos using a + image
 	// this should be done for every menu except the one that allows you to add
 	// extra submenus
-	if (subMenuName !== "+")
+	if (subAccordionName !== "+")
 		addHTML2panel(subMenuPanel, addAddImage());
 
 	var ret = {
-		menu: subMenu,
+		menu: subAccordionMenu,
 		panel: subMenuPanel
 	}
 
@@ -226,7 +226,7 @@ function previewFiles(that) {
 				var imgPath = this.result
 				worldImageManager.load2MapEditor(file.name, imgPath, panelName, imageLoaded);
 
-				// alternatively you might use something like this: (not suggested)
+				// alternatively you might want to use something like this: (not suggested)
 				//var image = new Image();
 				//image.height = 200;
 				//image.title = file.name;
@@ -261,7 +261,7 @@ function addSubMenu(menu){
 	
 	if (subMenuName !== "" && subMenuName !== null){
 		this.innerHTML += '<input type="radio" name="radio-item" value="' + subMenuName + '"> ' + subMenuName + '<br>';
-		createSubMenu(objectMenu, subMenuName);
+		createSubMenu(accordionMenu, subMenuName);
 	}
 }
 

@@ -41,6 +41,8 @@ class SpriteSheet{
 	 */
 	getFrameDimensions(frameName){
 		var f = this._frames[frameName]
+		if (f === undefined)
+			console.log("UNDEFINED!!")
 		return {
 			width: f[SpriteSheet.WIDTH],
 			height: f[SpriteSheet.HEIGHT]

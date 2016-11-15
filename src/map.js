@@ -103,7 +103,7 @@ class MapCell{
 
 	getMapCell(){
 		return {
-			id: this.id,
+			id: this._id,
 			type: this._type,
 			entity: this._entity
 		}
@@ -155,7 +155,6 @@ class MapLayer{
 
 
 	createEmptyLayer(mapWidth, mapHeight){
-
 		for (var i = 0; i < mapHeight; i++) {
 			this._map[i] = []
 

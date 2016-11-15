@@ -113,6 +113,7 @@ class ImageManager {
 		for(var i in this._images){
 			console.log("id = " + i + ") " + this._originalImageName[i])
 		}
+		alert("See output in console!")
 
 	}
 

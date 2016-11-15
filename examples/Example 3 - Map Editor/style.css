@@ -33,6 +33,8 @@ canvas {
 	height:100px;
 }
 
+
+/* replace file uploading */
 input[type="file"] {
     display: none;
 }
@@ -45,6 +47,21 @@ input[type="file"] {
     width: 64px;
     height: 64px;
 }
+
+
+/* menu buttons */
+
+.menuBtn {	
+	background-color: #221c1c;
+	color: grey; 
+}
+
+
+/*.menuBtn:hover {
+	background-color: #3b2b2b;
+	color: white;
+}*/
+
 
 
 

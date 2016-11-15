@@ -67,10 +67,10 @@ const g_camera_settings = {
 \***************************/
 
 /* UNIT TILE WIDTH (smallest possible width) */
-const g_unit_tile_width = 128
+var g_unit_tile_width = 128
 
 /* UNIT TILE HEIGHT (smallest possible height) */
-const g_unit_tile_height = 64
+var g_unit_tile_height = 64
 
 
 /***************************\
