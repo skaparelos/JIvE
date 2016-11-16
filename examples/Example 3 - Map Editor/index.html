@@ -54,15 +54,15 @@
 		  	<form>
 
 				<label for="fname">Map dimensions</label>
-				<input type="text" id="mapdim" value="50">
+				<input type="text" id="mapdim" value="50" onchange="setupWorld(this.value)" maxlength="4">
 				<br>
 
 				<label for="lname">Smallest tile width</label>
-				<input type="text" id="unitwidth" value="128">
+				<input type="text" id="unitwidth" value="128" maxlength="4">
 				<br>
 
 				<label for="lname">Smallest tile height</label>
-				<input type="text" id="unitheight" value="64">
+				<input type="text" id="unitheight" value="64" maxlength="4">
 				<br>
 
 			</form>

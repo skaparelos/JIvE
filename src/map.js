@@ -6,14 +6,7 @@
 class Selector{
 
 	constructor(){
-		this._tileX = 0
-		this._tileY = 0
-
-		// set to "true" if you don't want it to be drawn
-		this._isHidden = false
-
-		// the image of the selector
-		this._img = null
+		this.clear()
 	}
 
 
@@ -48,6 +41,18 @@ class Selector{
 
 	setHidden(hidden){
 		this._hidden = hidden
+	}
+
+
+	clear(){
+		this._tileX = 0
+		this._tileY = 0
+
+		// set to "true" if you don't want it to be drawn
+		this._isHidden = false
+
+		// the image of the selector
+		this._img = null
 	}
 }
 

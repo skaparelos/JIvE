@@ -109,6 +109,7 @@ div.accordion-panel {
 	overflow-y: scroll;
 }
 
+
 div.accordion-panel.show {
 	display: block;
 }
@@ -137,10 +138,12 @@ li a, .dropbtn {
 	cursor: pointer;
 }
 
+
 /* Change the link color to #111 (black) on hover */
 li a:hover, .dropdown:hover .dropbtn {
     background-color: #111;
 }
+
 
 li.dropdown {
     display: inline-block;
@@ -186,6 +189,7 @@ li.dropdown {
     background-color: #333;
 }
 
+
 .flex-item {
     background-color: #555;
     height: 100%;
@@ -199,7 +203,7 @@ li.dropdown {
 .flex-item input[type=text] {
     width: 75px;
     padding: 4px 4px;
-    margin: 8px 0;
+    margin: 4px 0;
     box-sizing: border-box;
     border: 1px solid #777;
     -webkit-transition: 0.1s;
@@ -207,9 +211,9 @@ li.dropdown {
 	background-color: #666;
 }
 
+
 .flex-item input[type=text]:focus {
-    border: 1px solid #999;
-	
+    border: 1px solid #999;	
 }
 
 

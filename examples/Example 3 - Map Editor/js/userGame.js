@@ -20,24 +20,7 @@ const menuNameHTML = "hub"
  */
 function main() {
 
-	var mapDimInput = prompt("Enter map size (same for width and height):", "50");
-	if (mapDimInput !== null)
-		mapDimInput = parseInt(mapDimInput)
-
-	g_unit_tile_width = prompt("Enter minimum tile width:", "128");
-	if (g_unit_tile_width !== null)
-		g_unit_tile_width = parseInt(g_unit_tile_width)
-
-	g_unit_tile_height = prompt("Enter minimum tile height:", "64");
-	if (g_unit_tile_height !== null)
-		g_unit_tile_height = parseInt(g_unit_tile_height)
-
-	
-	var dim = calculateSideMenuDimensions()
-	world = new World(dim.width, dim.height)
-	worldImageManager = world.getImageManager();
-	worldSpriteSheetManager = world.getSpriteSheet();
-	worldSelector = world.getSelector();
+	mapDimInput = 50
 
 	// drag and drop is now disabled (if on comments)
 	//enableDragging()
@@ -48,6 +31,21 @@ function main() {
 
 
 function setupWorld(mapDim){
+
+	// remove canvas if already exists (in case of map dimension resize)
+	var body = document.getElementsByTagName("BODY")[0];
+	var canvas = document.getElementById("myCanvas")
+	if (canvas)
+		body.removeChild(canvas)
+
+	var dim = calculateSideMenuDimensions()
+	world = new World(dim.width, dim.height)
+	worldImageManager = world.getImageManager();
+	worldSpriteSheetManager = world.getSpriteSheet();
+	worldSelector = world.getSelector();
+
+	//TODO check for error
+	mapDim = parseInt(mapDim)
 
 	// TODO fix this
 	// do not remove this from here in the map editor
