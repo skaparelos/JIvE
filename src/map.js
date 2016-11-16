@@ -159,12 +159,15 @@ class MapLayer{
 	}
 
 
-	createEmptyLayer(mapWidth, mapHeight){
+	createEmptyLayer(mapWidth, mapHeight, type = undefined){
+		if (type === undefined)
+			type = MapCell.TYPES.WALKABLE_NON_EMPTY
+
 		for (var i = 0; i < mapHeight; i++) {
 			this._map[i] = []
 
 			for (var j = 0; j < mapWidth; j++) { 
-				this._map[i][j] = new MapCell(MapCell.TYPES.WALKABLE_NON_EMPTY, 0)
+				this._map[i][j] = new MapCell(type, 0)
 			} 
 
 		}

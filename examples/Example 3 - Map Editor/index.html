@@ -38,7 +38,7 @@
 			      <a href="#">script</a>
 			    </div>
 			</li>
-			<li><a class="fa fa-download"href="#"></a></li>
+			<li><a id="exportLink" class="fa fa-download" href="#" onclick="downloadMap()"></a></li>
 		</ul>
 
 	
@@ -55,7 +55,6 @@
 		  		<div id="flexitem3" class="flex-item" style="top:0px; height:40%;">
 		  			<header>Map Properties</header>
 				  	<form>
-
 						<label for="fname">Map dimensions</label>
 						<input type="text" id="mapdim" value="50" onchange="setupWorld(this.value)" maxlength="4">
 						<br>
@@ -67,19 +66,16 @@
 						<label for="lname">Smallest tile height</label>
 						<input type="text" id="unitheight" value="64" maxlength="4">
 						<br>
-
 					</form>
 			  	</div>
 
 		 	  <div id="flexitem4" class="flex-item" style="top:50%;">
 		 	  	<header>
-		 	  		Layers &nbsp; &nbsp; <i class="fa fa-plus"href="#" onclick="addLayer()"></i>
-
+		 	  		Layers &nbsp; &nbsp; <i class="fa fa-plus" href="#" onclick="addLayer()"></i>
 
 		 	  	</header>
 		 	  	<form id="layers">
-				  <input type="radio" name="layer" value="layer0"> Layer 0<br>
-				  <input type="radio" name="layer" value="layer1"> Layer 1<br>
+				  <input type="radio" name="layer" onclick="changeSelectedLayer(this)" value="0" checked="checked"> Layer 0<br>
 				</form>
 
 			  </div>
@@ -91,18 +87,4 @@
 	</div>
 </body>
 
-<script>
-
-var layerCtr = 2;
-
-function addLayer(){
-
-	var layerForm = document.getElementById('layers');
-	var radioBtnHtml = '<input type="radio" name="layer" value="layer' + layerCtr + '"> Layer ' + layerCtr + '<br>';
-	layerCtr += 1;
-	layerForm.innerHTML += radioBtnHtml;
-
-}
-
-</script>
 </html>

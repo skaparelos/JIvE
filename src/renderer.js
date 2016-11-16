@@ -117,26 +117,27 @@ class Renderer{
 				for (var col = startCol; col < endCol; col++) {
 					var mapCell = mapLayer[row][col].getMapCell()
 
-					if (mapCell.type === MapCell.TYPES.EMPTY ||
-						mapCell.entity === null) 
-							break;
+					if (mapCell.type !== MapCell.TYPES.EMPTY &&
+						mapCell.entity !== null) {
+							
 
-					var entityID = mapCell.entity
-					var val = WorldObject.worldObjects[entityID].getFrame()
-					var imgDim = this._spriteSheet.getFrameDimensions(val)
-					var imgWidth = imgDim.width
-					var imgHeight = imgDim.height
+						var entityID = mapCell.entity
+						var val = WorldObject.worldObjects[entityID].getFrame()
+						var imgDim = this._spriteSheet.getFrameDimensions(val)
+						var imgWidth = imgDim.width
+						var imgHeight = imgDim.height
 
-					var coords = this._drawingCoords(row, col, imgWidth, 
-						imgHeight, camX, camY, zoomLevel)
+						var coords = this._drawingCoords(row, col, imgWidth, 
+							imgHeight, camX, camY, zoomLevel)
 
-					if (coords.x > 0 - this._offset &&
-						coords.y > 0 - this._offset && 
-						coords.x < this._screenWidth + this._offset &&
-						coords.y < this._screenHeight + this._offset){
+						if (coords.x > 0 - this._offset &&
+							coords.y > 0 - this._offset && 
+							coords.x < this._screenWidth + this._offset &&
+							coords.y < this._screenHeight + this._offset){
 
-							this._spriteSheet.drawFrame(val, coords.x, 
-								coords.y, coords.width, coords.height)	
+								this._spriteSheet.drawFrame(val, coords.x, 
+									coords.y, coords.width, coords.height)	
+						}
 					}
 				}
 			}

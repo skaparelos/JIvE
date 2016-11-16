@@ -10,6 +10,13 @@ var worldSpriteSheetManager;
 var worldSelector;
 var worldMapLayer0;
 var worldObjects = [];
+var worldMap;
+var mapDims = 50
+
+
+var layerCtr = 0;
+var selectedLayer = 0
+
 
 // the name we gave to the html element to add the menu
 const menuNameHTML = "hub"
@@ -20,13 +27,11 @@ const menuNameHTML = "hub"
  */
 function main() {
 
-	mapDimInput = 50
-
 	// drag and drop is now disabled (if on comments)
 	//enableDragging()
 
 	//initMenus()
-	setupWorld(mapDimInput)
+	setupWorld(mapDims)
 }
 
 
@@ -53,16 +58,18 @@ function setupWorld(mapDim){
 	//TODO check for error
 	mapDim = parseInt(mapDim)
 
+	worldMap = world.getMap()
+
 	// TODO fix this
 	// do not remove this from here in the map editor
 	var wo = new WorldObject(0)
-
+	
 	// Load the map layers
 	var layer0 = new MapLayer()
-
+	
 	// code to make map editor work:
 	layer0.createEmptyLayer(mapDim, mapDim)
-	world.getMap().addLayer(layer0)
+	worldMap.addLayer(layer0)
 
 	// code to test loading
 	//world.getMap().load()
@@ -81,8 +88,6 @@ function setupWorld(mapDim){
 		worldSelector = world.getSelector()
 		var selectorImg = worldImageManager.get("selector")
 		worldSelector.setImg(selectorImg)
-
-		worldMapLayer0 = world.getMap().getLayer(0)
 	
 		// once images have been loaded, start the world
 		world.start()
@@ -94,6 +99,7 @@ function setupWorld(mapDim){
 
 		var tiles = world.screen2MapCoords(e)
 		if (tiles === -1) return;
+
 		worldSelector.setPos(tiles.tileY, tiles.tileX)
 	});
 
@@ -103,8 +109,10 @@ function setupWorld(mapDim){
 
 		var tiles = world.screen2MapCoords(e)
 		if (tiles === -1) return;
+	
+		// TODO take the MapCell type from the worldObject and let the user define whether something is walkable via the map editor
 		if (selectorValue != -1)
-			worldMapLayer0.setCell(tiles.tileY, tiles.tileX, 1, worldObjects[selectorValue - 1].getID()) 	
+			worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX, MapCell.TYPES.WALKABLE_NON_EMPTY, worldObjects[selectorValue - 1].getID()) 	
 	});
 
 	world.on("leftclick", function(e){
@@ -115,17 +123,20 @@ function setupWorld(mapDim){
 		if (tiles === -1) return;
 
 		if (selectorValue != -1)
-			worldMapLayer0.setCell(tiles.tileY, tiles.tileX, 1, worldObjects[selectorValue - 1].getID()) 
-		// TODO the problem is that the renderer tries to load the picture from the spritesheet. HOWEVER, these pictures are only loaded into the imageManager
+			worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX,  MapCell.TYPES.WALKABLE_NON_EMPTY, worldObjects[selectorValue - 1].getID()) 
 	});
 
 
 	var camera = world.getCamera()
 	world.on("mousewheelforward", function(e){
+		if (e.clientY > world.getScreen().getHeight())
+			return;
 		camera.increaseZoomLevel()	
 	});
 
 	world.on("mousewheelback", function(e){
+		if (e.clientY > world.getScreen().getHeight())
+			return;
 		camera.decreaseZoomLevel()	
 	});
 
@@ -152,4 +163,41 @@ function imageClicked(img){
 	var selectedImg = worldImageManager.get(img.id)
 	worldSelector.setImg(selectedImg)
 }
+
+
+
+function downloadMap(){
+	var jsonified = WorldObject.exportJSON()
+	jsonified += world.getMap().exportJSON()
+
+	var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(jsonified);
+	var dlAnchorElem = document.getElementById('exportLink');
+	dlAnchorElem.setAttribute("href", dataStr);
+	dlAnchorElem.setAttribute("download", "mapLevel.js");
+	//dlAnchorElem.click();
+}
+
+
+function changeSelectedLayer(that){
+	selectedLayer = parseInt(that.value)
+	console.log("Selected layer= " + selectedLayer)
+}
+
+
+function addLayer(){
+
+	// HTML stuff
+	layerCtr += 1	
+	var layerForm = document.getElementById('layers');
+	var radioBtnHtml = '<input type="radio" name="layer" onclick="changeSelectedLayer(this)" value="' + layerCtr + '"> Layer ' + layerCtr + '<br>';
+	layerForm.innerHTML += radioBtnHtml;
+
+	// JIvE stuff
+	var layer = new MapLayer()
+	layer.createEmptyLayer(mapDims, mapDims, MapCell.TYPES.EMPTY)
+	worldMap.addLayer(layer)
+}
+
+
+
 
