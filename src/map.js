@@ -232,8 +232,18 @@ class Map{
 		this._width = 0
 		this._height = 0
 		this._map = []
+
+		this._canvasOffsetTop = 0
+		this._canvasOffsetLeft = 0
 	}
 
+
+	init(){
+		var canvas = document.getElementById('myCanvas').getBoundingClientRect();
+		this._canvasOffsetTop = canvas.top
+		this._canvasOffsetLeft = canvas.left
+	}
+	
 
 	load(){
 
@@ -376,17 +386,20 @@ class Map{
 		var camY = cameraPos.y
 		var zoomLevel = camera.getZoomLevel()
 
+		var clientX = e.clientX - this._canvasOffsetLeft
+		var clientY = e.clientY - this._canvasOffsetTop
+
 		// adjustX=-40 has been set empirically to correct the tile choice
 		var adjustX = -40 / zoomLevel
 
 		var tilex = Math.floor(zoomLevel * (
-				((e.clientX - camX + adjustX) / g_unit_tile_width) +
-				((e.clientY - camY) / g_unit_tile_height)
+				((clientX - camX + adjustX) / g_unit_tile_width) +
+				((clientY - camY) / g_unit_tile_height)
 				))
 
 		var tiley = Math.floor(zoomLevel * (
-				((e.clientY - camY) / g_unit_tile_height) -
-				((e.clientX - camX + adjustX) / g_unit_tile_width)
+				((clientY - camY) / g_unit_tile_height) -
+				((clientX - camX + adjustX) / g_unit_tile_width)
 				))
 
 		if (tilex < 0 || tiley < 0 ||

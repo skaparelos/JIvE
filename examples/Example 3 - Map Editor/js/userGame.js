@@ -32,16 +32,17 @@ function main() {
 	if (g_unit_tile_height !== null)
 		g_unit_tile_height = parseInt(g_unit_tile_height)
 
+	
 	var dim = calculateSideMenuDimensions()
 	world = new World(dim.width, dim.height)
 	worldImageManager = world.getImageManager();
 	worldSpriteSheetManager = world.getSpriteSheet();
 	worldSelector = world.getSelector();
 
-	// drag and drop is now disabled
+	// drag and drop is now disabled (if on comments)
 	//enableDragging()
 
-	initMenus()
+	//initMenus()
 	setupWorld(mapDimInput)
 }
 

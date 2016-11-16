@@ -21,11 +21,53 @@
 	<script src="js/userGame.js"></script>
 	<script src="js/ui.js"></script>
 	<script src="js/mapLevel.js"></script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 </head>
 
 
 <body onload="main()">
-	<div id="hub"></div>
-</body>
 
+	<div id="hub">
+		<ul>
+	  		<li class="dropdown">
+			    <a href="#" class="dropbtn, fa fa-plus"></a>
+			    <div class="dropdown-content">
+			      <a href="#"><label class="custom-file-upload"> <input id="browse" type="file" onchange="previewFiles(this)" multiple> upload... </label></a>
+			      <a href="#">folder</a>
+			      <a href="#">script</a>
+			    </div>
+			</li>
+			<li><a class="fa fa-download"href="#"></a></li>
+		</ul>
+
+	
+
+		<div class="flex-container">
+		
+		  <div id="flexitem1" class="flex-item" style="width:75%;">
+		  	Upload your images/scripts/folders here...
+		  </div>
+
+
+		  <div id="flexitem2" class="flex-item" style="width:25%">
+		  	<form>
+
+				<label for="fname">Map dimensions</label>
+				<input type="text" id="mapdim" value="50">
+				<br>
+
+				<label for="lname">Smallest tile width</label>
+				<input type="text" id="unitwidth" value="128">
+				<br>
+
+				<label for="lname">Smallest tile height</label>
+				<input type="text" id="unitheight" value="64">
+				<br>
+
+			</form>
+		  </div>
+		</div>
+	</div>
+</body>
 </html>

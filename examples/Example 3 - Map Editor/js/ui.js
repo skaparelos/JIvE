@@ -1,20 +1,20 @@
 function calculateSideMenuDimensions(){
 	
 	// set the size of the menu on the side
-	var menuSpace = 400; // px
+	var menuSpace = 400 
 	var screenWidth = document.body.clientWidth
 	var screenHeight = document.body.clientHeight
 
 	// locate the position of the menu
 	var hub = document.getElementById(menuNameHTML)
-	hub.style.right = 0 + "px";
-	hub.style.width = menuSpace + "px";
-	hub.style.height = 100 + "%";
-	hub.style.top = 0 + "px";
+	hub.style.left = 0 + "px"
+	hub.style.width = 100 + "%"
+	hub.style.height = 250 + "px"
+	hub.style.bottom = 0 + "px"
 
 	return {
-		width: screenWidth - menuSpace - 2, // -2 is just some padding for beauty
-		height: screenHeight
+		width: screenWidth ,//- menuSpace - 2,
+		height: screenHeight - 250 - 2
 	}
 }
 
@@ -23,7 +23,7 @@ function calculateSideMenuDimensions(){
  * Initialises the side menu
  */
 function initMenus(){
-
+	
 	addExport2TilesetBtn()
 	addExport2JSONBtn()
 
@@ -211,6 +211,7 @@ function enableDragging(){
  */
 function previewFiles(that) {
 
+	console.log("called")
 	var files = that.files
 	var panelName = that.parentNode.parentNode.id 
 	
@@ -261,7 +262,7 @@ function addSubMenu(menu){
 	
 	if (subMenuName !== "" && subMenuName !== null){
 		this.innerHTML += '<input type="radio" name="radio-item" value="' + subMenuName + '"> ' + subMenuName + '<br>';
-		createSubMenu(accordionMenu, subMenuName);
+		createSubAccordion(accordionMenu, subMenuName);
 	}
 }
 

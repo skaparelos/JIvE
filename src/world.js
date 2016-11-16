@@ -54,6 +54,8 @@ class World extends EventEmitter {
 
 		document.body.insertBefore(this._canvas, document.body.childNodes[0])
 
+		this._map.init()
+
 		this._renderer = new Renderer(this, this._context, 
 			this._screen.getWidth(), this._screen.getHeight(),
 			this._camera, this._imageManager, this._map, this._selector,
@@ -76,11 +78,34 @@ class World extends EventEmitter {
 
 	_initCanvas(){
 		this._canvas = document.createElement('canvas')
+		this._canvas.setAttribute("id", "myCanvas")
+		this._canvas.className = "myCanvas" // this is to be able to change its position
 		this._canvas.width = this._screen.getWidth()
 		this._canvas.height = this._screen.getHeight()
 		this._context = this._canvas.getContext('2d')
 		//document.body.insertBefore(this._canvas, document.body.childNodes[0])
  	}
+
+
+	/**
+	 * Sets the position of the canvas
+	 * to be 
+	 */
+	setCanvasPos(x, y, width, height){
+		if (x !== undefined)
+			this._canvas.style.left = x + "px"
+
+		if (y !== undefined)
+			this._canvas.style.top = y + "px"
+
+		if (width !== undefined)
+			this._canvas.width = width
+
+		if (height !== undefined)
+			this._canvas.height = height
+
+		//TODO inform the viewport for rendering
+	}
 
 
 	/**
@@ -187,6 +212,17 @@ class World extends EventEmitter {
 			// mouse drag
 			if (ih.getLeftMouseDown())
 				this.emit("leftdrag", mouseHover)
+		}
+
+		var isMouseWheelScrolled = ih.isMouseWheelScrolled()
+		if (isMouseWheelScrolled !== false){
+			var deltaY = isMouseWheelScrolled.deltaY
+
+			if (deltaY > 0 )
+				this.emit("mousewheelforward", isMouseWheelScrolled)
+
+			if (deltaY < 0)
+				this.emit("mousewheelback", isMouseWheelScrolled)
 		}
 
 		// call user's update function everytime 

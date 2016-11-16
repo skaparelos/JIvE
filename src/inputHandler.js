@@ -30,6 +30,7 @@ class InputHandler{
 		// Mouse Events
 		this._mouseScrollEvent = null
 		this._leftMouseClickEvent = null
+		this._mouseWheelEvent = null
 
 		// Window Event
 		this._screenResize = false
@@ -50,6 +51,7 @@ class InputHandler{
 		this._docBody.addEventListener('mousedown', this._mouseDown.bind(this), false)
 		this._docBody.addEventListener('mouseup', this._mouseUp.bind(this), false)
 		this._docBody.addEventListener('mousemove', this._mouseHover.bind(this), false)
+		this._docBody.addEventListener('wheel', this._mouseWheel.bind(this), false)
 
 		// Window
 		this._window.addEventListener('resize', this._windowResize.bind(this))
@@ -96,6 +98,10 @@ class InputHandler{
     	}
 	}
 
+
+	_mouseWheel(e){
+		this._mouseWheelEvent = e
+	}
 
 	/**
 	 *  mouse button no longer pressed
@@ -147,10 +153,21 @@ class InputHandler{
 	}
 
 
+	isMouseWheelScrolled(){
+		if (this._mouseWheelEvent === null){
+			return false
+		}else{
+			var ret = this._mouseWheelEvent
+			this._mouseWheelEvent = null
+			return ret
+		}
+	}
+
+
 	isScreenResized(){
-		let temp = this._screenResize
+		var ret = this._screenResize
 		this._screenResize = false
-		return temp
+		return ret
 	}
 
 
