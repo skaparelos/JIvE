@@ -57,7 +57,6 @@ input[type="file"] {
 }
 
 
-
 /* menu buttons */
 
 .menuBtn {	
@@ -222,3 +221,9 @@ li.dropdown {
 	width: 125px; 
 	display: inline-block;
 }
+
+
+#flexitem1 {
+	overflow-y: scroll;
+}
+

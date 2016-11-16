@@ -38,6 +38,12 @@ function setupWorld(mapDim){
 	if (canvas)
 		body.removeChild(canvas)
 
+	// also remove the images that have been loaded
+	var flexitem1 = document.getElementById("flexitem1")
+	while (flexitem1.hasChildNodes()) {
+    	flexitem1.removeChild(flexitem1.lastChild);
+	}
+
 	var dim = calculateSideMenuDimensions()
 	world = new World(dim.width, dim.height)
 	worldImageManager = world.getImageManager();
@@ -83,12 +89,18 @@ function setupWorld(mapDim){
 	})
 	
 	world.on("mousemove", function(e){
+		if (e.clientY > world.getScreen().getHeight())
+			return;
+
 		var tiles = world.screen2MapCoords(e)
 		if (tiles === -1) return;
 		worldSelector.setPos(tiles.tileY, tiles.tileX)
 	});
 
 	world.on("leftdrag", function(e){
+		if (e.clientY > world.getScreen().getHeight())
+			return;
+
 		var tiles = world.screen2MapCoords(e)
 		if (tiles === -1) return;
 		if (selectorValue != -1)
@@ -96,6 +108,9 @@ function setupWorld(mapDim){
 	});
 
 	world.on("leftclick", function(e){
+		if (e.clientY > world.getScreen().getHeight())
+			return;
+
 		var tiles = world.screen2MapCoords(e)
 		if (tiles === -1) return;
 		//layer0.setCell(tiles.tileX, tiles.tileY, selectorValue)

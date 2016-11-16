@@ -277,7 +277,12 @@ function imageLoaded(panelName, img, id){
 	var wo = new WorldObject(id)
 	worldObjects.push(wo)
 
-	var panel = document.getElementById(panelName)
-	addHTML2panel(panel, "<input id='" + id + "' class='floatedImg' type='image' onclick='imageClicked(this)' src='" + img.src + "' />");
+	//var panel = document.getElementById(panelName)
+	//addHTML2panel(panel, "<input id='" + id + "' class='floatedImg' type='image' onclick='imageClicked(this)' src='" + img.src + "' />");
+	var panel = document.getElementById("flexitem1")
+	if (panel.innerHTML.includes("your images"))
+		panel.innerHTML = "<input id='" + id + "' class='floatedImg' type='image' onclick='imageClicked(this)' src='" + img.src + "' />"
+	else // diff is += instead of =
+		panel.innerHTML += "<input id='" + id + "' class='floatedImg' type='image' onclick='imageClicked(this)' src='" + img.src + "' />"
 }
 

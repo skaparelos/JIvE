@@ -288,6 +288,11 @@ class World extends EventEmitter {
 	}
 
 
+	getScreen(){
+		return this._screen
+	}
+
+
 	screen2MapCoords(e){
 		return this._map.screen2MapCoords(e, this._camera)
 	}
