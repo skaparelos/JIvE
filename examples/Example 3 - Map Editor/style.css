@@ -17,6 +17,10 @@ canvas {
 	background-color: #f1f1f1;
 }
 
+::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
+}
 
 .myCanvas {
 	position:absolute;
@@ -114,7 +118,7 @@ div.accordion-panel.show {
 }
 
 
-ul {
+#hub ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -140,7 +144,7 @@ li a, .dropbtn {
 
 /* Change the link color to #111 (black) on hover */
 li a:hover, .dropdown:hover .dropbtn {
-    background-color: #111;
+    background-color: #555;
 }
 
 
@@ -148,6 +152,14 @@ li.dropdown {
     display: inline-block;
 }
 
+i {
+	padding: 2px 2px; 
+}
+
+i:hover {
+ background-color: #555;
+
+}
 
 .dropdown-content {
     display: none;
@@ -193,16 +205,18 @@ li.dropdown {
     background-color: #555;
     height: 100%;
     margin: 2px;
-	padding-top: 10px;
-	padding-left: 10px;
+	padding-top: 2px;
+	padding-left: 4px;
 	color: #999;
+	overflow-y: scroll;
 }
 
 
 .flex-item input[type=text] {
     width: 75px;
-    padding: 4px 4px;
-    margin: 4px 0;
+	height: 20px;
+    padding: 4px 3px;
+    margin: 3px 0;
     box-sizing: border-box;
     border: 1px solid #777;
     -webkit-transition: 0.1s;
@@ -217,13 +231,23 @@ li.dropdown {
 
 
 .flex-item label {
-	padding-bottom: 2px;
+	padding-bottom: 1px;
+	padding-left: 5px;
 	width: 125px; 
 	display: inline-block;
 }
 
 
-#flexitem1 {
-	overflow-y: scroll;
+.flex-item header{
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 5px;
+	margin: 4px 1px;
+	color: white;
+    background-color: #222;
+	width: 95%;
+
 }
+
+
 

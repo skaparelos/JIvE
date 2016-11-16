@@ -113,11 +113,22 @@ function setupWorld(mapDim){
 
 		var tiles = world.screen2MapCoords(e)
 		if (tiles === -1) return;
-		//layer0.setCell(tiles.tileX, tiles.tileY, selectorValue)
+
 		if (selectorValue != -1)
 			worldMapLayer0.setCell(tiles.tileY, tiles.tileX, 1, worldObjects[selectorValue - 1].getID()) 
 		// TODO the problem is that the renderer tries to load the picture from the spritesheet. HOWEVER, these pictures are only loaded into the imageManager
 	});
+
+
+	var camera = world.getCamera()
+	world.on("mousewheelforward", function(e){
+		camera.increaseZoomLevel()	
+	});
+
+	world.on("mousewheelback", function(e){
+		camera.decreaseZoomLevel()	
+	});
+
 
 	// TODO make this work
 	//world.on("keydown=", function(e){

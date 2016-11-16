@@ -293,6 +293,11 @@ class World extends EventEmitter {
 	}
 
 
+	getCamera(){
+		return this._camera
+	}
+
+
 	screen2MapCoords(e){
 		return this._map.screen2MapCoords(e, this._camera)
 	}

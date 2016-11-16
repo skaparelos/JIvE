@@ -1,4 +1,4 @@
-// More like Viewport rather than camera.
+// Represents the viewport
 class Camera{
 
 	constructor(){
@@ -33,14 +33,7 @@ class Camera{
 	 *  happened, false otherwise.
 	 */
 	move(keyAction, dt){
-		let keys = Utils.keyboardKeys
-
-		/*
-		let UP    = keyAction[keys.W] || keyAction[keys.UP]
-		let DOWN  = keyAction[keys.S] || keyAction[keys.DOWN]
-		let LEFT  = keyAction[keys.A] || keyAction[keys.LEFT] 
-		let RIGHT = keyAction[keys.D] || keyAction[keys.RIGHT]
-		*/
+		var keys = Utils.keyboardKeys
 
 		var UP    = this._checkButtonPressed(keyAction, this._upButtons)
 		var DOWN  = this._checkButtonPressed(keyAction, this._downButtons)
@@ -57,20 +50,15 @@ class Camera{
 			if (LEFT)  dx =  this._scrollingSpeed * dt
 			if (RIGHT) dx = -this._scrollingSpeed * dt
 
-			// update the position of the viewpoer 
+			// update the position of the viewport 
 			this._x += dx
 			this._y += dy
 
 		}
-
 		return this
 	}
 
 
-
-	/**
-	 *  Returns the position of the viewport
-	 */
 	getPos(){
 		return {
 			x: this._x,
@@ -84,15 +72,40 @@ class Camera{
 	}
 
 
-	/**
-	 *  Update the zoomLevel when it changes
-	 */
-	//TODO when a change is made update this 
-	setZoomLevel(value){
-		if (this._allowChangeInZoom)
-			this._zoomLevel = value
-		else
+	increaseZoomLevel(){
+		if (!this._isZoomChangeAllowed())
+			return -1;
+
+		if (this._zoomLevel > 1)
+			this._zoomLevel -=1
+		
+		return this._zoomLevel
+	}
+
+
+	decreaseZoomLevel(){
+		if (!this._isZoomChangeAllowed())
+			return -1;
+
+		this._zoomLevel +=1
+		return this._zoomLevel
+	}
+
+
+	_isZoomChangeAllowed(){
+		if(this._allowChangeInZoom){
+			return true
+		}else{
 			console.log("changing the zoom level is not allowed. Check the configuration file")
+			return false
+		}
+	}
+
+
+	setZoomLevel(value){
+		if (this._isZoomChangeAllowed())
+			this._zoomLevel = value
+
 		return this
 	}	
 
