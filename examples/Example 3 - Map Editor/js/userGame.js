@@ -109,7 +109,8 @@ function setupWorld(mapDim){
 
 		var tiles = world.screen2MapCoords(e)
 		if (tiles === -1) return;
-
+	
+		// TODO take the MapCell type from the worldObject and let the user define whether something is walkable via the map editor
 		if (selectorValue != -1)
 			worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX, MapCell.TYPES.WALKABLE_NON_EMPTY, worldObjects[selectorValue - 1].getID()) 	
 	});
