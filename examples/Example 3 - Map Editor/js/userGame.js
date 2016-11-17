@@ -199,5 +199,85 @@ function addLayer(){
 }
 
 
+/**
+ *  function taken from:
+ *  https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
+ */
+function previewFiles(that) {
 
+	console.log("called")
+	var files = that.files
+	var panelName = that.parentNode.parentNode.id 
+	
+	function readAndPreview(file) {
+
+		// Make sure `file.name` matches our extensions criteria
+		if ( /\.(jpe?g|png|gif)$/i.test(file.name) ) {
+			var reader = new FileReader();
+
+			reader.addEventListener("load", function () {
+
+				// use JIvE to load images so that it is easy to draw them on the map
+				var imgPath = this.result
+				worldImageManager.load2MapEditor(file.name, imgPath, panelName, imageLoaded);
+
+				// alternatively you might want to use something like this: (not suggested)
+				//var image = new Image();
+				//image.height = 200;
+				//image.title = file.name;
+				//image.src = this.result;
+				//addHTML2panel(panel, "<input class='floatedImg' type='image' src='" + image.src + "' />");
+
+			}, false);
+
+			reader.readAsDataURL(file);
+		}
+
+	}
+
+	if (files) {
+		[].forEach.call(files, readAndPreview);
+	}
+
+}
+
+
+function imageLoaded(panelName, img, id){
+
+	// load it to the spriteSheet
+	var tempFrames = {}
+	tempFrames[id] = [0, 0, img.width, img.height, 0, 0]
+	worldSpriteSheetManager.load(id, tempFrames)
+	
+	var wo = new WorldObject(id)
+	worldObjects.push(wo)
+
+	//var panel = document.getElementById(panelName)
+	//addHTML2panel(panel, "<input id='" + id + "' class='floatedImg' type='image' onclick='imageClicked(this)' src='" + img.src + "' />");
+	var panel = document.getElementById("flexitem1")
+	if (panel.innerHTML.includes("your images"))
+		panel.innerHTML = "<input id='" + id + "' class='floatedImg' type='image' onclick='imageClicked(this)' src='" + img.src + "' />"
+	else // diff is += instead of =
+		panel.innerHTML += "<input id='" + id + "' class='floatedImg' type='image' onclick='imageClicked(this)' src='" + img.src + "' />"
+}
+
+
+function calculateSideMenuDimensions(){
+	
+	// set the size of the menu on the side
+	var menuSpace = 400 
+	var screenWidth = document.body.clientWidth
+	var screenHeight = document.body.clientHeight
+
+	// locate the position of the menu
+	var hub = document.getElementById(menuNameHTML)
+	hub.style.left = 0 + "px"
+	hub.style.width = 100 + "%"
+	hub.style.height = 250 + "px"
+	hub.style.bottom = 0 + "px"
+
+	return {
+		width: screenWidth ,//- menuSpace - 2,
+		height: screenHeight - 250 - 2
+	}
 
