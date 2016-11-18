@@ -40,18 +40,17 @@
 			<li><a id="exportLink" class="fa fa-download" href="#" onclick="downloadMap()"></a></li>
 		</ul>
 
-	
 
 		<div class="flex-container">
 		
-		  <div id="flexitem1" class="flex-item" style="width:75%;">
-		  	Upload your images/scripts/folders here...
-		  </div>
+		  	<div id="flexitem1" class="flex-item" style="width:70%;">
+		  		Upload your images/scripts/folders here...
+		  	</div>
 
 
-		  <div id="flexitem2" class="flex-item" style="width:25%;">
+		  	<div id="flexitem2" class="flex-item" style="width:30%;">
 
-		  		<div id="flexitem3" class="flex-item" style="top:0px; height:42%;">
+		  		<div id="flexitem21" class="flex-item" style="top:0px; height:105px;">
 		  			<header>Map Properties</header>
 				  	<form>
 						<label for="fname">Map dimensions</label>
@@ -68,16 +67,26 @@
 					</form>
 			  	</div>
 
-		 	  <div id="flexitem4" class="flex-item" style="top:42%;">
+
+		 	  <div id="flexitem22" class="flex-item" style="height:75px;">
 		 	  	<header>
 		 	  		Layers &nbsp; &nbsp; <i class="fa fa-plus" href="#" onclick="addLayer()"></i>
 		 	  	</header>
-		 	  	<form id="layers">
-				  <input type="radio" name="layer" onclick="changeSelectedLayer(this)" value="0" checked="checked"> Layer 0<br>
+		 	  	<form id="layers" style="width:100%;">
+				  <input type="radio" name="layer" onclick="changeSelectedLayer(this)" value="0" checked="checked"> Layer 0
 				</form>
-
 			  </div>
-		  </div>
+
+			  <div id="flexitem23" class="flex-item" style="height: 150px;">
+			  	<header>
+			  		Object Properties
+			  	</header>
+				  	<form>
+						<input id="walkablebox" type="checkbox" name="walkable" value="walkable" onchange="setWalkable(this.checked)">Walkable<br>
+					</form>
+			  </div>
+
+		  	</div>
 
 
 

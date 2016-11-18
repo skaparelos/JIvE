@@ -7,6 +7,7 @@ class WorldObject{
 		this._frame = frame
 		this._drawable = drawable
 		this._layer = layer
+		this._walkable = true
 
 		this._tileX = tileX
 		this._tileY = tileY 
@@ -22,6 +23,16 @@ class WorldObject{
 
 	getID(){
 		return this._id
+	}
+
+
+	setWalkable(walkable){
+		this._walkabe = walkable
+	}
+
+
+	getWalkable(){
+		return this._walkable
 	}
 
 

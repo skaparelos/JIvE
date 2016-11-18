@@ -16,6 +16,7 @@ var mapDims = 50
 
 var layerCtr = 0;
 var selectedLayer = 0
+var selectedWorldObjectID = -1
 
 
 // the name we gave to the html element to add the menu
@@ -45,8 +46,9 @@ function setupWorld(mapDim){
 
 	// also remove the images that have been loaded
 	var flexitem1 = document.getElementById("flexitem1")
-	while (flexitem1.hasChildNodes()) {
-    	flexitem1.removeChild(flexitem1.lastChild);
+    var loadedImgs = document.getElementsByClassName("floatedImg")
+	for (var i in loadedImgs.length){
+		flexitem1.removeChild(loadedImgs[i])
 	}
 
 	var dim = calculateSideMenuDimensions()
@@ -111,8 +113,8 @@ function setupWorld(mapDim){
 		if (tiles === -1) return;
 	
 		// TODO take the MapCell type from the worldObject and let the user define whether something is walkable via the map editor
-		if (selectorValue != -1)
-			worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX, MapCell.TYPES.WALKABLE_NON_EMPTY, worldObjects[selectorValue - 1].getID()) 	
+		if (selectedWorldObjectID != -1)
+			worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX, MapCell.TYPES.WALKABLE_NON_EMPTY, worldObjects[selectedWorldObjectID - 1].getID()) 	
 	});
 
 	world.on("leftclick", function(e){
@@ -122,8 +124,8 @@ function setupWorld(mapDim){
 		var tiles = world.screen2MapCoords(e)
 		if (tiles === -1) return;
 
-		if (selectorValue != -1)
-			worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX,  MapCell.TYPES.WALKABLE_NON_EMPTY, worldObjects[selectorValue - 1].getID()) 
+		if (selectedWorldObjectID != -1)
+			worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX,  MapCell.TYPES.WALKABLE_NON_EMPTY, worldObjects[selectedWorldObjectID - 1].getID()) 
 	});
 
 
@@ -156,12 +158,32 @@ function setupWorld(mapDim){
 
 }
 
+/**
+ *	When the "walkable" propety of a world Object changes,
+ *  this function sets the right value for the world object.
+ */
+function setWalkable(checked){
+	if (selectedWorldObjectID != -1)
+		worldObjects[selectedWorldObjectID - 1].setWalkable(checked)
+}
 
-var selectorValue = -1
+/**
+ *  called when the user clicks an image that he has loaded.
+ */
 function imageClicked(img){
-	selectorValue = img.id
+	selectedWorldObjectID = img.id
 	var selectedImg = worldImageManager.get(img.id)
 	worldSelector.setImg(selectedImg)
+	updateObjectProperties(selectedWorldObjectID)
+}
+
+
+/**
+ *	TODO this should be useful only in case of image loading, to show the correct value
+ */
+function updateObjectProperties(worldObjectID){
+	var walkableCheckBox = document.getElementById("walkablebox")
+	walkableCheckBox.checked = worldObjects[worldObjectID - 1].getWalkable()
 }
 
 
@@ -178,9 +200,11 @@ function downloadMap(){
 }
 
 
+/**
+ *  called when the user chooses a different layer to draw on
+ */
 function changeSelectedLayer(that){
 	selectedLayer = parseInt(that.value)
-	console.log("Selected layer= " + selectedLayer)
 }
 
 
@@ -189,7 +213,7 @@ function addLayer(){
 	// HTML stuff
 	layerCtr += 1	
 	var layerForm = document.getElementById('layers');
-	var radioBtnHtml = '<input type="radio" name="layer" onclick="changeSelectedLayer(this)" value="' + layerCtr + '"> Layer ' + layerCtr + '<br>';
+	var radioBtnHtml = '<input type="radio" name="layer" onclick="changeSelectedLayer(this)" value="' + layerCtr + '"> L' + layerCtr; 
 	layerForm.innerHTML += radioBtnHtml;
 
 	// JIvE stuff
@@ -205,7 +229,6 @@ function addLayer(){
  */
 function previewFiles(that) {
 
-	console.log("called")
 	var files = that.files
 	var panelName = that.parentNode.parentNode.id 
 	
@@ -280,4 +303,5 @@ function calculateSideMenuDimensions(){
 		width: screenWidth ,//- menuSpace - 2,
 		height: screenHeight - 250 - 2
 	}
+}
 
