@@ -60,6 +60,9 @@ input[type="file"] {
 	cursor: pointer;
 }
 
+#layers input[type="radio"] {
+  display: inline-block;    
+}
 
 /* menu buttons */
 
@@ -248,6 +251,7 @@ i:hover {
 	width: 95%;
 
 }
+
 
 
 
