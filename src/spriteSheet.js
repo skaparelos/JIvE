@@ -1,3 +1,9 @@
+/**
+ * The spritesheet class uses the image manager to access the loaded images, but
+ * can access parts of the images loaded by the image managers. e.g.
+ * we can can load a tileset to the image manager and pass the coordinates
+ * of where each tile is in the tileset and draw only that.
+ */
 class SpriteSheet{
 
 	constructor(imageManager, ctx){
@@ -80,6 +86,7 @@ class SpriteSheet{
 	}
 }
 
+// Static
 SpriteSheet.X = 0
 SpriteSheet.Y = 1
 SpriteSheet.WIDTH = 2

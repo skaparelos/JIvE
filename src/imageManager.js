@@ -23,7 +23,8 @@ class ImageManager {
 
 		// used for loading images online in the map editor
 		// start this from 1, to allow for the value 0
-		// to be the isometric sketch map 
+		// to be the isometric sketch map
+		// TODO this is highly dependent. simplify it.
 		this._imageID = 1
 	}
 
@@ -80,7 +81,7 @@ class ImageManager {
 	 *  used for right now.
 	 *  //TODO load to spritesheet as well
 	 */
-	load2MapEditor(key, path, panelName, callback){
+	load2MapEditor(key, path, callback){
 		var img = new Image()
 		var that = this
 
@@ -94,7 +95,7 @@ class ImageManager {
 		img.onload = function(){
 			that._images[id] = img
 			if(callback !== undefined)
-				callback(panelName, img, id)
+				callback(img, id)
 		}
 
 		img.src = path

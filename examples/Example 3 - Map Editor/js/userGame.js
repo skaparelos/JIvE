@@ -2,8 +2,6 @@
  * This file is to be manipulated by the users of JIvE
  * to contain the game and the menu logic
  */
-
-
 var world;
 var worldImageManager;
 var worldSpriteSheetManager;
@@ -13,15 +11,12 @@ var worldObjects = [];
 var worldMap;
 var mapDims = 50
 
-
 var layerCtr = 0;
 var selectedLayer = 0
 var selectedWorldObjectID = -1
 
-
 // the name we gave to the html element to add the menu
 const menuNameHTML = "hub"
-
 
 /**
  * This is the main entry point
@@ -38,6 +33,11 @@ function main() {
 
 function setupWorld(mapDim){
 
+	if (mapDim === undefined)
+		mapDim = mapDims;
+	else
+		mapDims = mapDim;
+
 	// remove canvas if already exists (in case of map dimension resize)
 	var body = document.getElementsByTagName("BODY")[0];
 	var canvas = document.getElementById("myCanvas")
@@ -45,14 +45,14 @@ function setupWorld(mapDim){
 		body.removeChild(canvas)
 
 	// also remove the images that have been loaded
-	var flexitem1 = document.getElementById("flexitem1")
-    var loadedImgs = document.getElementsByClassName("floatedImg")
+	var flexitem1 = document.getElementById("flexitem1");
+    var loadedImgs = document.getElementsByClassName("floatedImg");
 	for (var i in loadedImgs.length){
-		flexitem1.removeChild(loadedImgs[i])
+		flexitem1.removeChild(loadedImgs[i]);
 	}
 
-	var dim = calculateSideMenuDimensions()
-	world = new World(dim.width, dim.height)
+	var dim = calculateSideMenuDimensions();
+	world = new World(dim.width, dim.height);
 	worldImageManager = world.getImageManager();
 	worldSpriteSheetManager = world.getSpriteSheet();
 	worldSelector = world.getSelector();
@@ -158,6 +158,7 @@ function setupWorld(mapDim){
 
 }
 
+
 /**
  *	When the "walkable" propety of a world Object changes,
  *  this function sets the right value for the world object.
@@ -167,8 +168,12 @@ function setWalkable(checked){
 		worldObjects[selectedWorldObjectID - 1].setWalkable(checked)
 }
 
+
 /**
- *  called when the user clicks an image that he has loaded.
+ * called when the user clicks an image that he has loaded.
+ * This function is called whenever a <img> element is clicked. the onclick
+ * function is set to call this function passing (this) as a parameter.
+ * @param img - the image clicked
  */
 function imageClicked(img){
 	selectedWorldObjectID = img.id
@@ -208,6 +213,9 @@ function changeSelectedLayer(that){
 }
 
 
+/**
+ * Adds a new layer in the map.
+ */
 function addLayer(){
 
 	// HTML stuff
@@ -224,14 +232,16 @@ function addLayer(){
 
 
 /**
- *  function taken from:
- *  https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
+ * Used to load an image using the 'browse' button.
+ *
+ * function taken from:
+ * https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
+ *
  */
 function previewFiles(that) {
 
-	var files = that.files
-	var panelName = that.parentNode.parentNode.id 
-	
+	var files = that.files;
+
 	function readAndPreview(file) {
 
 		// Make sure `file.name` matches our extensions criteria
@@ -240,48 +250,49 @@ function previewFiles(that) {
 
 			reader.addEventListener("load", function () {
 
-				// use JIvE to load images so that it is easy to draw them on the map
+				// use JIvE to load images so it is easy to draw them on the map
 				var imgPath = this.result
-				worldImageManager.load2MapEditor(file.name, imgPath, panelName, imageLoaded);
-
-				// alternatively you might want to use something like this: (not suggested)
-				//var image = new Image();
-				//image.height = 200;
-				//image.title = file.name;
-				//image.src = this.result;
-				//addHTML2panel(panel, "<input class='floatedImg' type='image' src='" + image.src + "' />");
-
+				worldImageManager.load2MapEditor(file.name, imgPath,
+					imageLoaded);
 			}, false);
-
 			reader.readAsDataURL(file);
 		}
-
 	}
 
 	if (files) {
 		[].forEach.call(files, readAndPreview);
 	}
-
 }
 
 
-function imageLoaded(panelName, img, id){
+/**
+ * Callback function that is called once an image uploaded by the user has been
+ * loaded. It makes the uploaded image availabe to the user in the menu at the
+ * bottom
+ *
+ * @param img - the image object
+ * @param id - TODO complete this.
+ */
+function imageLoaded(img, id) {
 
-	// load it to the spriteSheet
-	var tempFrames = {}
-	tempFrames[id] = [0, 0, img.width, img.height, 0, 0]
-	worldSpriteSheetManager.load(id, tempFrames)
-	
-	var wo = new WorldObject(id)
-	worldObjects.push(wo)
+    // load it to the spriteSheet
+    var tempFrames = {}
+    tempFrames[id] = [0, 0, img.width, img.height, 0, 0]
+    worldSpriteSheetManager.load(id, tempFrames)
 
-	//var panel = document.getElementById(panelName)
-	//addHTML2panel(panel, "<input id='" + id + "' class='floatedImg' type='image' onclick='imageClicked(this)' src='" + img.src + "' />");
-	var panel = document.getElementById("flexitem1")
-	if (panel.innerHTML.includes("your images"))
-		panel.innerHTML = "<input id='" + id + "' class='floatedImg' type='image' onclick='imageClicked(this)' src='" + img.src + "' />"
-	else // diff is += instead of =
-		panel.innerHTML += "<input id='" + id + "' class='floatedImg' type='image' onclick='imageClicked(this)' src='" + img.src + "' />"
+    var wo = new WorldObject(id)
+    worldObjects.push(wo)
+
+    // show the loaded image to the user by injecting it in the HTML code.
+    var panel = document.getElementById("flexitem1")
+    if (panel.innerHTML.includes("your images"))
+        panel.innerHTML = "<input id='" + id + "' class='floatedImg' " +
+            "type='image' onclick='imageClicked(this)' src='" + img.src + "'/>";
+    else {
+    	// += instead of =
+        panel.innerHTML += "<input id='" + id + "' class='floatedImg' " +
+			"type='image' onclick='imageClicked(this)' src='" + img.src + "'/>";
+    }
 }
 
 

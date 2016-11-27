@@ -58,11 +58,11 @@
 						<br>
 
 						<label for="lname">Smallest tile width</label>
-						<input type="text" id="unitwidth" value="128" maxlength="4">
+						<input type="text" id="unitwidth" value="128" onchange="g_unit_tile_width=this.value; setupWorld();" maxlength="4">
 						<br>
 
 						<label for="lname">Smallest tile height</label>
-						<input type="text" id="unitheight" value="64" maxlength="4">
+						<input type="text" id="unitheight" value="64" onchange="g_unit_tile_height=this.value; setupWorld();" maxlength="4">
 						<br>
 					</form>
 			  	</div>
