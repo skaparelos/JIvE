@@ -2,7 +2,6 @@
  *  The selector is where the mouse points at at any given instance.
  *  i.e. which tile the user has selected
  */
-
 class Selector{
 
 	constructor(){
@@ -11,7 +10,7 @@ class Selector{
 
 
 	setPos(tileY, tileX){
-		this._tileY = tileY
+		this._tileY = tileY;
 		this._tileX = tileX
 	}
 
@@ -20,36 +19,36 @@ class Selector{
 		return {
 			tileX: this._tileX,
 			tileY: this._tileY
-		}
+		};
 	}
 	
 
 	setImg(img){
-		this._img = img
+		this._img = img;
 	}
 
 
 	getImg(){
-		return this._img
+		return this._img;
 	}
 
 	
 	isHidden(){
-		return this._isHidden
+		return this._isHidden;
 	}
 
 
 	setHidden(hidden){
-		this._hidden = hidden
+		this._hidden = hidden;
 	}
 
 
 	clear(){
-		this._tileX = 0
-		this._tileY = 0
+		this._tileX = 0;
+		this._tileY = 0;
 
 		// set to "true" if you don't want it to be drawn
-		this._isHidden = false
+		this._isHidden = false;
 
 		// the image of the selector
 		this._img = null
@@ -79,30 +78,24 @@ class MapCell{
 	// because as it is now we would have to make changes in the renderer as well
 
 
-	constructor(type = 0, entity = null){
+	constructor(type = 0, worldObjectId = null){
 
 		// TODO	do we need the id?
-		this._id = 0
+		this._id = 0;
 
-		//  (This helps path finding)
-		//	Types:
-		//	0 -> empty
-		//  1 -> walkable, but non empty (this is for bg tiles) (e.g might contain a door)
-		//	2 -> non-walkable surface. i.e. either building or tree or etc..
-		//	3 -> sprites 
-		this._type = type
+		// see type analysis below (look for MapCell.TYPES)
+		this._type = type;
 
-		// holds the world object (i.e. building or unit)
-		// TODO i could just keep an ID and use the WorldObject.worldObjects array to access it
 		// the reason that this is an ID, is because it is easier to deal with JSON.
-		// if it wasn't it would unroll all the details of the object. Keep things simpler.
-		this._entity = entity
+		// if it was holding an object reference JSON would unroll all the details of the object.
+		// Keep things simple.
+		this._worldObjectId = worldObjectId
 	}
 
 
-	setMapCell(type, worldObject){
-		this._type = type
-		this._entity = worldObject
+	setMapCell(type, worldObjectId){
+		this._type = type;
+		this._worldObjectId = worldObjectId
 	}
 
 
@@ -110,13 +103,13 @@ class MapCell{
 		return {
 			id: this._id,
 			type: this._type,
-			entity: this._entity
+            worldObjectId: this._worldObjectId
 		}
 	}
 
 
-	getEntity(){
-		return this._entity
+	getWorldObjectId(){
+		return this._worldObjectId
 	}
 
 
@@ -129,17 +122,17 @@ class MapCell{
 // TODO change this and let the user define it
 MapCell.TYPES = {
 	EMPTY: 0, // all empty are walkable
-	WALKABLE_NON_EMPTY : 1, // contains sth that can be walked over. e.g. bg tile, or coin to take or door to go through
-	NON_WALKABLE : 2, // non walkable contain sth like house or tree
+	WALKABLE_NON_EMPTY : 1, // contains something that can be walked over. e.g. a background tile, or coin to take or door to go through
+	NON_WALKABLE : 2, // non walkable contains sth like house or tree
 	SPRITE : 3	// contain a sprite //TODO is this NON_WALKABLE?
-}
+};
 
 
 /* ------------------------------------------------------------------------ */
 
 
 /**
- * TODO: It is not clear yet, wheter a map layer consists of map cells 
+ * TODO: It is not clear yet, whether a map layer consists of map cells
  * (see above class) or not. Since map cells carry more information we should
  * only use them when necessary, otherwise just carry integers to denote
  * tile and terrain. However, it could be better (need to look at this) if each
@@ -154,51 +147,23 @@ MapCell.TYPES = {
  */ 
 class MapLayer{
 
-	constructor(){
-		this._map = []
-	}
+	constructor() {
+        this._map = []
+    }
 
 
 	createEmptyLayer(mapWidth, mapHeight, type = undefined){
 		if (type === undefined)
-			type = MapCell.TYPES.WALKABLE_NON_EMPTY
+			type = MapCell.TYPES.WALKABLE_NON_EMPTY;
 
 		for (var i = 0; i < mapHeight; i++) {
-			this._map[i] = []
+			this._map[i] = [];
 
 			for (var j = 0; j < mapWidth; j++) { 
 				this._map[i][j] = new MapCell(type, 0)
 			} 
 
 		}
-	}
-
-
-	/**
-	 *	If withMapCell is true, then that layer will have a map cell
-	 */ 
-	load(map){
-
-		// TODO fix this function
-		/*
-		if (withMapCell === false){
-			this._map = map
-			this._hasMapCell = false
-		}
-
-		if (withMapCell === true){
-			var mapWidth = map[0].length
-			var mapHeight = map.length
-			this._hasMapCell = true
-
-			for (var i = 0; i < mapHeight; i++) {
-				this._map[i] = []
-				for (var j = 0; j < mapWidth; j++) { 
-					this._map[i][j] = new MapCell(map[i][j])
-				} 
-			}
-		}
-		*/
 	}
 
 
@@ -237,65 +202,74 @@ class MapLayer{
 class Map{
 
 	constructor(){
-		this._width = 0
-		this._height = 0
-		this._map = []
+		this._width = 0;
+		this._height = 0;
+        this._layerCtr = 0;
+        this._map = [];
 
-		this._canvasOffsetTop = 0
+		// TODO shouldn't these two be in the camera?
+		this._canvasOffsetTop = 0;
 		this._canvasOffsetLeft = 0
 	}
 
 
 	init(){
 		var canvas = document.getElementById('myCanvas').getBoundingClientRect();
-		this._canvasOffsetTop = canvas.top
+		this._canvasOffsetTop = canvas.top;
 		this._canvasOffsetLeft = canvas.left
 	}
 	
 
 	load(){
 
-		//TODO DOES NOT WORK WITH LAYERS
-
 		// load worldObjects here and then the map. This is to ensure that they
 		// happen in order and that the map is not loaded before the worldObjects
-		WorldObject.load(g_worldObjects)
+		WorldObject.load(g_worldObjects);
 
 		// now load the map
-		var mapJSONed = JSON.parse(g_mapLevels)
+		var mapJSONed = JSON.parse(g_mapLevels);
 		
-		this._height = mapJSONed["_height"]
-		this._width = mapJSONed["_width"]
+		this._height = mapJSONed["_height"];
+		this._width = mapJSONed["_width"];
+		this._layerCtr = mapJSONed["_layerCtr"];
 
 		if (this._width !== this._height)
-			console.log("ERROR! height does not match width!")
+			console.log("ERROR! height does not match width!");
 
-		//create empty map layer
-		var layer = new MapLayer()
-		layer.createEmptyLayer(this._width, this._height)
+		for (var mapLayer = 0; mapLayer < this._layerCtr; mapLayer++) {
 
-		var map = mapJSONed["_map"][0]["_map"]
-		for (var row = 0; row < this._height; row++){
-			for (var col = 0; col < this._width; col++){
-				var c = map[row][col]
-				layer.setCell(row, col, c["_type"], c["_entity"])
-			}
-		}
+            // create empty map layer
+            var layer = new MapLayer();
+            layer.createEmptyLayer(this._width, this._height);
 
-		this.addLayer(layer)
+			// first "_map" is to access this the Map._map.
+			// second one is to access MapLayer._map
+			var map = mapJSONed["_map"][mapLayer]["_map"];
+
+            for (var row = 0; row < this._height; row++) {
+                for (var col = 0; col < this._width; col++) {
+                    var c = map[row][col];
+                    layer.setCell(row, col, c["_type"], c["_worldObjectId"])
+                }
+            }
+
+            this.addLayer(layer);
+        }
+
 	}
 
 
 	addLayer(mapLayer){
-		this._map.push(mapLayer)
+		this._map.push(mapLayer);
+		this._layerCtr += 1;
 
-		// we update the width and height everytime since we do not
-		// know the total number of layers in advance (these should be the same
-		// for each layer)
-		// TODO use a singleton 
-		this._width = mapLayer.getLayerMap()[0].length
-		this._height = mapLayer.getLayerMap().length
-		console.log('map width = ' + this._width + ' height = ' + this._height)
+		// width and height should be the same for each layer
+        // however, we update the width and height everytime since we do not
+        // know the total number of layers in advance
+		// we could have used a singleton instead
+		this._width = mapLayer.getLayerMap()[0].length;
+		this._height = mapLayer.getLayerMap().length;
+		console.log('map width = ' + this._width + ' height = ' + this._height);
 
 		// Set maximum scroll based on the map size
 		// TODO add this in camera.js
@@ -331,31 +305,31 @@ class Map{
 			in a 200x200 map we drop from 40.000 iterations to about 1000. 
 		*/
 
-		var mapH = this._height
-		var mapW = this._width
-		var world = this._world
+		var mapH = this._height;
+		var mapW = this._width;
+		var world = this._world;
 		
-		var start_row = 0
-		var start_col = 0
-		var end_row = mapH
-		var end_col = mapW
+		var start_row = 0;
+		var start_col = 0;
+		var end_row = mapH;
+		var end_col = mapW;
 
-		var res = this.screen2MapCoords(eLeftUp, camera)
+		var res = this.screen2MapCoords(eLeftUp, camera);
 		if (res != -1) {
 			start_col = res.tileX
 		}
 
-		res = this.screen2MapCoords(eRightUp, camera)
+		res = this.screen2MapCoords(eRightUp, camera);
 		if (res != -1) {
 			start_row = res.tileY
 		}
 
-		res = this.screen2MapCoords(eLeftDown, camera)
+		res = this.screen2MapCoords(eLeftDown, camera);
 		if (res != -1) {
 			end_row = (res.tileY + 2 > mapH) ? mapH : res.tileY + 2
 		}
 
-		res = this.screen2MapCoords(eRightDown, camera)
+		res = this.screen2MapCoords(eRightDown, camera);
 		if (res != -1) {
 			end_col = (res.tileX + 1 > mapW) ? mapW : res.tileX + 1
 		}
@@ -386,37 +360,37 @@ class Map{
 			screenY = (tileY + tileX) * unittileHeight / zoomLevel / 2 + camY;
 		*/
 
-		var mapWidth = this._width
-		var mapHeight = this._height
+		var mapWidth = this._width;
+		var mapHeight = this._height;
 
-		var cameraPos = camera.getPos()
-		var camX = cameraPos.x
-		var camY = cameraPos.y
-		var zoomLevel = camera.getZoomLevel()
+		var cameraPos = camera.getPos();
+		var camX = cameraPos.x;
+		var camY = cameraPos.y;
+		var zoomLevel = camera.getZoomLevel();
 
-		var clientX = e.clientX - this._canvasOffsetLeft
-		var clientY = e.clientY - this._canvasOffsetTop
+		var clientX = e.clientX - this._canvasOffsetLeft;
+		var clientY = e.clientY - this._canvasOffsetTop;
 
 		// adjustX=-40 has been set empirically to correct the tile choice
-		var adjustX = -40 / zoomLevel
+		var adjustX = -40 / zoomLevel;
 
 		var tilex = Math.floor(zoomLevel * (
 				((clientX - camX + adjustX) / g_unit_tile_width) +
 				((clientY - camY) / g_unit_tile_height)
-				))
+				));
 
 		var tiley = Math.floor(zoomLevel * (
 				((clientY - camY) / g_unit_tile_height) -
 				((clientX - camX + adjustX) / g_unit_tile_width)
-				))
+				));
 
 		if (tilex < 0 || tiley < 0 ||
 			tilex >= mapWidth || tiley >= mapHeight)
-			return -1
+			return -1;
 
 		if (tilex == undefined || tiley == undefined ||
 				isNaN(tilex) || isNaN(tiley))
-			return -1
+			return -1;
 
 		return {
 			tileY: tiley,
@@ -426,28 +400,28 @@ class Map{
 
 	
 	getLayer(num){
-		return this._map[num]
+		return this._map[num];
 	}
 
 
 	getMapLayers(){
-		return this._map
+		return this._map;
 	}
 
 
 	getWidth(){
-		return this._width
+		return this._width;
 	}
 
 
 	getHeight(){
-		return this._height
+		return this._height;
 	}
 
 	
 	exportJSON(){
 		var jsonified = "var g_mapLevels = '" + JSON.stringify(this) + "'\n";
-		return jsonified
+		return jsonified;
 	}
 
 }

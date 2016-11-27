@@ -26,7 +26,7 @@ class BaseBuilding extends BaseEntityHP{
 
 
 class BaseUnit extends BaseEntityHP{
-	constuctor(x, y, hp){
+	constructor(x, y, hp){
 		super(x, y, hp)
 	}
 }

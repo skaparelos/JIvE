@@ -21,22 +21,22 @@ class WorldObject{
 
 
 	getFrame(){
-		return this._frame
+		return this._frame;
 	}
 
 
 	getID(){
-		return this._id
+		return this._id;
 	}
 
 
 	setWalkable(walkable){
-		this._walkabe = walkable
+		this._walkabe = walkable;
 	}
 
 
 	getWalkable(){
-		return this._walkable
+		return this._walkable;
 	}
 
 
@@ -54,11 +54,11 @@ class WorldObject{
 	static exportJSON(){
 		if (WorldObject.worldObjects.length == 0) return;
 		var jsonified = "var g_worldObjects = '" + JSON.stringify(WorldObject.worldObjects) + "';\n";
-		return jsonified
+		return jsonified;
 	}
 }
 
 
 // Static
-WorldObject._id = 0
-WorldObject.worldObjects = []
+WorldObject._id = 0;
+WorldObject.worldObjects = [];
