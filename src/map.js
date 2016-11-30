@@ -80,16 +80,13 @@ class MapCell{
 
 	constructor(type = 0, worldObjectId = null){
 
-		// TODO	do we need the id?
-		this._id = 0;
-
 		// see type analysis below (look for MapCell.TYPES)
 		this._type = type;
 
 		// the reason that this is an ID, is because it is easier to deal with JSON.
-		// if it was holding an object reference JSON would unroll all the details of the object.
+		// if it was holding an object reference, JSON would unroll all the details of the object.
 		// Keep things simple.
-		this._worldObjectId = worldObjectId
+		this._worldObjectId = worldObjectId;
 	}
 
 
@@ -101,7 +98,6 @@ class MapCell{
 
 	getMapCell(){
 		return {
-			id: this._id,
 			type: this._type,
             worldObjectId: this._worldObjectId
 		}
@@ -113,18 +109,24 @@ class MapCell{
 	}
 
 
-	getType(){
-		return this._type
-	}
 
 }
 
 // TODO change this and let the user define it
 MapCell.TYPES = {
-	EMPTY: 0, // all empty are walkable
-	WALKABLE_NON_EMPTY : 1, // contains something that can be walked over. e.g. a background tile, or coin to take or door to go through
-	NON_WALKABLE : 2, // non walkable contains sth like house or tree
-	SPRITE : 3	// contain a sprite //TODO is this NON_WALKABLE?
+
+    // all empty are walkable
+	EMPTY: 0,
+
+    // contains something that can be walked over. e.g. a background tile, or
+	// coin to take or door to go through
+	WALKABLE_NON_EMPTY : 1,
+
+    // non walkable contains sth like house or tree
+	NON_WALKABLE : 2,
+
+    // contain a sprite //TODO is this NON_WALKABLE?
+	SPRITE : 3
 };
 
 
@@ -148,6 +150,9 @@ MapCell.TYPES = {
 class MapLayer{
 
 	constructor() {
+
+		// this is a 2D array, where each cell holds a reference to an object
+		// of the MapCell class
         this._map = []
     }
 
@@ -167,17 +172,13 @@ class MapLayer{
 	}
 
 
-	/**
-	 *  Returns true if the current map layer has map cells or not
-	 *  This is used in order to know how to access the mapLayer
-	 */
-	hasMapCell(){
-		return this._hasMapCell
+	getCell(row, col){
+		return this._map[row][col].getMapCell();
 	}
 
 
 	getLayerMap(){
-		return this._map
+		return this._map;
 	}
 
 
@@ -205,6 +206,12 @@ class Map{
 		this._width = 0;
 		this._height = 0;
         this._layerCtr = 0;
+
+        // this is a 3D array.
+		// [i][j][k]
+		// i -> is the layer index
+		// j -> is the row index
+		// k -> is the column index
         this._map = [];
 
 		// TODO shouldn't these two be in the camera?
@@ -307,8 +314,7 @@ class Map{
 
 		var mapH = this._height;
 		var mapW = this._width;
-		var world = this._world;
-		
+
 		var start_row = 0;
 		var start_col = 0;
 		var end_row = mapH;
@@ -416,6 +422,11 @@ class Map{
 
 	getHeight(){
 		return this._height;
+	}
+
+
+	getLayersNo(){
+		return this._layerCtr;
 	}
 
 	

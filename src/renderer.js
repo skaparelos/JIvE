@@ -1,6 +1,6 @@
 class Renderer{
 
-	constructor(world, ctx, screenWidth, screenHeight, camera, 
+	constructor(world, ctx, screenWidth, screenHeight, camera,
 			imageManager, map, selector, spriteSheet){
 
 		this._world = world;
@@ -75,8 +75,8 @@ class Renderer{
 	drawWholeScreen(){
 
 		// identify what portion of the map is visible to the user
-		var fourEdges = this._map.identifyVisibleMapBounds(this._camera, 
-				this._eventLeftUp, this._eventLeftDown, this._eventRightUp, 
+		var fourEdges = this._map.identifyVisibleMapBounds(this._camera,
+				this._eventLeftUp, this._eventLeftDown, this._eventRightUp,
 				this._eventRightDown)
 
 		this.clearWholeScreen();
@@ -89,34 +89,36 @@ class Renderer{
 	 */
 	drawMapLayers(fourEdges){
 
+		// the range of rows and cols that we need to look for drawing
 		var startRow = fourEdges.start_row;
 		var endRow   = fourEdges.end_row;
 		var startCol = fourEdges.start_col;
 		var endCol   = fourEdges.end_col;
-	
-		var mapLayers = this._map.getMapLayers();
-		var totalLayers = mapLayers.length;
 
-		//get camera position
-		var cameraPos = this._camera.getPos();
-		var camX = cameraPos.x;
-		var camY = cameraPos.y;
-		var zoomLevel = this._camera.getZoomLevel();
+        // get camera position
+        var cameraPos = this._camera.getPos();
+        var camX = cameraPos.x;
+        var camY = cameraPos.y;
+        var zoomLevel = this._camera.getZoomLevel();
+
+		// get the map layers
+		var totalLayers = this._map.getLayersNo();
 
 		// TODO do it like this? or just go through the world items?
-		for (var layer in mapLayers){
-			var mapLayer = mapLayers[layer].getLayerMap();
+		for (var layer = 0; layer < totalLayers; layer++){
+			var mapLayer = this._map.getLayer(layer);
 
-			for (var row = startRow; row < endRow; row++) { 
+			for (var row = startRow; row < endRow; row++) {
 
 				for (var col = startCol; col < endCol; col++) {
-					var mapCell = mapLayer[row][col].getMapCell();
+					var mapCell = mapLayer.getCell(row, col);
+					var worldObjectId = mapCell.worldObjectId;
 
 					if (mapCell.type !== MapCell.TYPES.EMPTY &&
-						mapCell.worldObjectId !== null) {
-							
+                        worldObjectId !== null ){
+						//TODO
+						//WorldObject.worldObjects[worldObjectId].isDrawable()) {
 
-						var worldObjectId = mapCell.worldObjectId;
 						var val = WorldObject.worldObjects[worldObjectId].getFrame();
 						var imgDim = this._spriteSheet.getFrameDimensions(val);
 						var imgWidth = imgDim.width;
@@ -161,11 +163,10 @@ class Renderer{
 	} // end of drawMaps() 
 
 
-
     /**
-	 * Calculates the drawing coordinates of an image, given its map position
-	 * (i.e. row, col), its width & height, as well as the camera position and
-	 * the zoom level.
+	 * Calculates the drawing coordinates of an image given the tile position
+	 * (i.e. row, col), the image width & height, as well as the camera position
+	 * and the zoom level.
 	 *
 	 * TODO optimise this is called extremely often!!
      * TODO this is called for N layers and recalculates the same thing
@@ -196,11 +197,10 @@ class Renderer{
 		var widthZoom  = Math.floor(imgWidth / zoomLevel);
 		var heightZoom = Math.floor(imgHeight / zoomLevel);
 
-		// make this adjustment to position the image correctly
-		// (this is to correctly draw any image)
+		// make these two adjustments to position the image correctly
+		// (this is to correctly draw any image in the center of the tile)
 		screenX = Math.floor(screenX - imgWidth / (zoomLevel * 2)
 			+ g_unit_tile_width / (zoomLevel * 2));
-
 		screenY = Math.floor(screenY - imgHeight / zoomLevel
 			+ g_unit_tile_height / zoomLevel);
 		

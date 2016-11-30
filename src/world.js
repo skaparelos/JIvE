@@ -4,41 +4,41 @@ var g_running = true
 class World extends EventEmitter {
 
 	constructor(screenWidth, screenHeight){
-		super()
+		super();
 
-		this._screen = new Screen(screenWidth, screenHeight)
-		this._period = this._screen.getPeriod()
+		this._screen = new Screen(screenWidth, screenHeight);
+		this._period = this._screen.getPeriod();
 
-		this._map = new Map()
-		this._camera = new Camera()
-		this._inputHandler = new InputHandler()
+		this._map = new Map();
+		this._camera = new Camera();
+		this._inputHandler = new InputHandler();
 
 		// canvas stuff
-		this._canvas = null
-		this._context = null
-		this._initCanvas()
+		this._canvas = null;
+		this._context = null;
+		this._initCanvas();
 
-		this._imageManager = new ImageManager()
-		this._selector = new Selector()
-		this._spriteSheet = new SpriteSheet(this._imageManager, this._context)
+		this._imageManager = new ImageManager();
+		this._selector = new Selector();
+		this._spriteSheet = new SpriteSheet(this._imageManager, this._context);
 
-		this._previousLeftMouseClick = null
-		this._previousMouseScroll = null
+		this._previousLeftMouseClick = null;
+		this._previousMouseScroll = null;
 
 		// the user's set update function. this is a callback
-		this._userUpdateFunc = null
+		this._userUpdateFunc = null;
 
 		// used to control how often is requestAnimFrame called
-		this._then = Date.now()
+		this._then = Date.now();
 
 		// deltaTime can be used to make a game frame independent
 		// keeps the time it took between the last two frame updates
 		// measured in ms
-		this._deltaTime = -1
+		this._deltaTime = -1;
 
 		// DEBUG
 		if(g_DEBUG === true){
-			this.__FPS = 0
+			this.__FPS = 0;
 			this.__startTime = -1;
 		}
 		// END DEBUG
@@ -52,14 +52,14 @@ class World extends EventEmitter {
 	 */
 	init(){
 
-		document.body.insertBefore(this._canvas, document.body.childNodes[0])
+		document.body.insertBefore(this._canvas, document.body.childNodes[0]);
 
-		this._map.init()
+		this._map.init();
 
 		this._renderer = new Renderer(this, this._context, 
 			this._screen.getWidth(), this._screen.getHeight(),
 			this._camera, this._imageManager, this._map, this._selector,
-			this._spriteSheet)
+			this._spriteSheet);
 	}
 
 

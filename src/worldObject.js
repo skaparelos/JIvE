@@ -40,6 +40,16 @@ class WorldObject{
 	}
 
 
+	isDrawable(){
+		return this._drawable;
+	}
+
+
+	setDrawable(drawable){
+		this._drawable = drawable;
+	}
+
+
 	static load(worldObjects){
 		var objectsJSONed = JSON.parse(worldObjects)
 
