@@ -9,12 +9,10 @@ class Canvas{
     }
 
     _initCanvas(width, height){
-
-        // TODO remove corresponding code from world.js
         this._canvas = document.createElement('canvas');
         this._canvas.setAttribute("id", "myCanvas");
 
-        // this is to be able to change its position
+        // this is to be able to change the position of the canvas
         this._canvas.className = "myCanvas";
         this.updateCanvasSize(width, height);
     }
