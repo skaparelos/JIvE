@@ -213,20 +213,8 @@ class Map{
 		// j -> is the row index
 		// k -> is the column index
         this._map = [];
-
-		// TODO shouldn't these two be in the camera?
-		//TODO REMOVE THESE!!!!
-		this._canvasOffsetTop = 0;
-		this._canvasOffsetLeft = 0;
 	}
 
-
-	init(){
-		var canvas = document.getElementById('myCanvas').getBoundingClientRect();
-		this._canvasOffsetTop = canvas.top;
-		this._canvasOffsetLeft = canvas.left
-	}
-	
 
 	load(){
 
@@ -310,8 +298,8 @@ class Map{
 		var camY = cam.y;
 		var zoomLevel = cam.zoomLevel;
 
-		var clientX = e.clientX - this._canvasOffsetLeft;
-		var clientY = e.clientY - this._canvasOffsetTop;
+		var clientX = e.clientX - cam.canvasOffsetLeft;
+		var clientY = e.clientY - cam.canvasOffsetTop;
 
 		// adjustX=-40 has been set empirically to correct the tile choice
 		var adjustX = -40 / zoomLevel;

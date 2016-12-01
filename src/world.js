@@ -47,8 +47,12 @@ class World extends EventEmitter {
 	 */
 	init(){
         this._canvas.init();
-		this._map.init();
-        this._camera = new Camera(this._screen.getWidth(), this._screen.getHeight());
+
+        var offsets = this._canvas.getCanvas();
+        this._camera = new Camera(this._screen.getWidth(),
+			this._screen.getHeight(), offsets.canvasOffsetTop,
+			offsets.canvasOffsetLeft);
+
 		this._renderer = new Renderer(this._canvas.getCtx(), this._camera,
 			this._map, this._spriteSheet, this._selector);
 	}

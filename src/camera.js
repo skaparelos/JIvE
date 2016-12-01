@@ -1,7 +1,7 @@
 // Represents the viewport
 class Camera{
 
-	constructor(width, height){
+	constructor(width, height, offsetTop, offsetLeft){
 		
 		// Set the viewport to the origin	
 		this._x = 0;
@@ -9,6 +9,9 @@ class Camera{
 		this._width = 0;
 		this._height = 0;
         this.updateCameraSize(width, height);
+
+		this._canvasOffsetTop = offsetTop;
+		this._canvasOffsetLeft = offsetLeft;
 
 		this._scrollingSpeed = g_camera_settings["scrollingSpeed"];
 		this._zoomLevel = g_camera_settings["initialZoomLevel"];
@@ -154,7 +157,9 @@ class Camera{
 			y: this._y,
 			width: this._width,
 			height: this._height,
-			zoomLevel: this._zoomLevel
+			zoomLevel: this._zoomLevel,
+			canvasOffsetTop: this._canvasOffsetTop,
+			canvasOffsetLeft: this._canvasOffsetLeft
 		};
 	}
 
@@ -168,7 +173,7 @@ class Camera{
 
 
 	getZoomLevel(){
-		return this._zoomLevel
+		return this._zoomLevel;
 	}
 
 

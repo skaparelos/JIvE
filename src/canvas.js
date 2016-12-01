@@ -20,7 +20,6 @@ class Canvas{
 
     init(){
         document.body.insertBefore(this._canvas, document.body.childNodes[0]);
-        // TODO remove corresponding code from map.js
         var canv = document.getElementById('myCanvas').getBoundingClientRect();
         this._canvasOffsetTop = canv.top;
         this._canvasOffsetLeft = canv.left
