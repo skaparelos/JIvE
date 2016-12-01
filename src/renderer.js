@@ -1,13 +1,7 @@
 class Renderer{
 
-	constructor(ctx, screenWidth, screenHeight, camera, map, selector,
-				spriteSheet){
-
+	constructor(ctx, camera, map, spriteSheet, selector){
 		this._ctx = ctx;
-
-		// TODO get from camera
-        this._screenWidth = screenWidth;
-        this._screenHeight = screenHeight;
 
 		// how much off the screen to draw
 		this._offset = g_unit_tile_width / 2;
@@ -18,8 +12,8 @@ class Renderer{
 		// we need the map to be able to access the map levels directly
 		// rather than passing them as parameters. This should be faster
 		this._map = map;
-		this._selector = selector;
 		this._spriteSheet = spriteSheet;
+        this._selector = selector;
 	}
 
 

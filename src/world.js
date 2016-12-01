@@ -8,19 +8,14 @@ class World extends EventEmitter {
 
 		this._screen = new Screen(screenWidth, screenHeight);
 		this._period = this._screen.getPeriod();
-
 		this._map = new Map();
         this._selector = new Selector();
-
 		this._inputHandler = new InputHandler();
-
-		// canvas stuff
-		this._canvas = null;
-		this._context = null;
-		this._initCanvas();
+		this._canvas = new Canvas(screenWidth, screenHeight);
 
 		this._imageManager = new ImageManager();
-		this._spriteSheet = new SpriteSheet(this._imageManager, this._context);
+		this._spriteSheet = new SpriteSheet(this._imageManager,
+			this._canvas.getCtx());
 
 		this._previousLeftMouseClick = null;
 		this._previousMouseScroll = null;
@@ -51,17 +46,16 @@ class World extends EventEmitter {
 	 *  some input regarding the size of the maps etc..
 	 */
 	init(){
-		document.body.insertBefore(this._canvas, document.body.childNodes[0]);
+        this._canvas.init();
 		this._map.init();
         this._camera = new Camera(this._screen.getWidth(), this._screen.getHeight());
-		this._renderer = new Renderer(this._context, this._screen.getWidth(),
-			this._screen.getHeight(), this._camera, this._map, this._selector,
-			this._spriteSheet);
+		this._renderer = new Renderer(this._canvas.getCtx(), this._camera,
+			this._map, this._spriteSheet, this._selector);
 	}
 
 
 	start() {
-		this.init()
+		this.init();
 
 		// DEBUG
 		if (g_DEBUG === true){
@@ -73,55 +67,14 @@ class World extends EventEmitter {
 	}
 
 
-	_initCanvas(){
-		this._canvas = document.createElement('canvas')
-		this._canvas.setAttribute("id", "myCanvas")
-		this._canvas.className = "myCanvas" // this is to be able to change its position
-		this._canvas.width = this._screen.getWidth()
-		this._canvas.height = this._screen.getHeight()
-		this._context = this._canvas.getContext('2d')
-		//document.body.insertBefore(this._canvas, document.body.childNodes[0])
- 	}
-
-
 	/**
-	 * Sets the position of the canvas
-	 * to be 
-	 */
-	setCanvasPos(x, y, width, height){
-		if (x !== undefined)
-			this._canvas.style.left = x + "px"
-
-		if (y !== undefined)
-			this._canvas.style.top = y + "px"
-
-		if (width !== undefined)
-			this._canvas.width = width
-
-		if (height !== undefined)
-			this._canvas.height = height
-
-		//TODO inform the viewport for rendering
-	}
-
-
-	/**
-	 *  updates the canvas size
-	 */
-	_updateCanvasSize(width, height) {
-		this._canvas.width = width;
-		this._canvas.height = height;
-		this._context = this._canvas.getContext('2d');
-	}
-
-
-	/**
-	 *  gets the new screen size and notifies the components in need
+	 *  gets the new screen size and notifies the components that need to be
+	 *  notified for the screen resize
 	 */
 	_screenResize(){
 		// TODO we need to get these correctly. The user might not use the whole screen as canvas
 		var size = this._screen.getFullScreen();
-		this._updateCanvasSize(size.width, size.height);
+		this._canvas.updateCanvasSize(size.width, size.height);
 		this._camera.updateCameraSize(size.width, size.height);
 	}
 
@@ -229,9 +182,7 @@ class World extends EventEmitter {
 	}// end of update()
 
 
-
 	/*** The following functions can be used by the user to develop his/her game: ***/
-
 
 	/**
 	 * Get the image manager to load the custom images

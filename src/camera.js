@@ -24,7 +24,7 @@ class Camera{
 	updateCameraSize(width, height){
 		this._width = width;
 		this._height = height;
-		this._setCustomCornerScreenEvents(width, height);
+		this._setCornerScreenEvents(width, height);
 	}
 
 
@@ -41,7 +41,7 @@ class Camera{
      *  |           |
      *  E-----------E
      */
-    _setCustomCornerScreenEvents(width, height){
+    _setCornerScreenEvents(width, height){
         this._eventLeftUp = {clientX : 0, clientY : 0};
         this._eventRightUp = {clientX : width, clientY : 0};
         this._eventLeftDown = {clientX : 0, clientY : height};
@@ -51,17 +51,11 @@ class Camera{
 
     /**
      *  This function finds which parts of the map are shown to the player
-     *  and returns them. i.e. which portion of the map the user sees.
+     *  and returns them. bounded by start-end rows and cols.
+	 *  i.e. which portion of the map the user sees.
      *
-     *  It does so by calculating the 4 edges of the screen and finding the
+     *  It does so by using the 4 edges of the screen and finding the
      *  their corresponding map cells.
-     *
-     *  e.g. screen with four Edges (E)
-     *  E-----------E
-     *  |           |
-     *  |           |
-     *  |           |
-     *  E-----------E
      *
      *  imagine that the map is bigger than the screen
      *  so that the screen only shows a portion of the map.

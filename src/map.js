@@ -217,7 +217,7 @@ class Map{
 		// TODO shouldn't these two be in the camera?
 		//TODO REMOVE THESE!!!!
 		this._canvasOffsetTop = 0;
-		this._canvasOffsetLeft = 0
+		this._canvasOffsetLeft = 0;
 	}
 
 
