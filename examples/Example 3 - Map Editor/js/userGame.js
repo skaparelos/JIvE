@@ -64,6 +64,8 @@ function setupWorld(mapDim){
 
 	// TODO fix this
 	// do not remove this from here in the map editor
+	// this is done to initialise a world object with id = 0,
+	// which is the white-black tile used to draw the editor
 	var wo = new WorldObject(0);
 	
 	// Load the map layers
@@ -285,6 +287,11 @@ function imageLoaded(img, id) {
     tempFrames[id] = [0, 0, img.width, img.height, 0, 0];
     worldSpriteSheetManager.load(id, tempFrames);
 
+    // TODO this is wrong. here we create a new world object for each image.
+	// what if the image is a unit? it has to move. If we create N units
+	// we need N worldObjects.
+	// This doesn't even work with buildings, because each must have each own
+	// health, etc..
     var wo = new WorldObject(id);
     worldObjects.push(wo);
 

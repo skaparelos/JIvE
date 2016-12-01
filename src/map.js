@@ -215,6 +215,7 @@ class Map{
         this._map = [];
 
 		// TODO shouldn't these two be in the camera?
+		//TODO REMOVE THESE!!!!
 		this._canvasOffsetTop = 0;
 		this._canvasOffsetLeft = 0
 	}
@@ -286,74 +287,9 @@ class Map{
 
 
 	/**
-	 *  This function finds which parts of the map are shown to the player
-	 *  and returns them. i.e. which portion of the map the user sees.
-	 *
-	 *  It does so by calculating the 4 edges of the screen and finding the
-	 *  their corresponding map cells.
-	 * 
-	 *  e.g. screen with four Edges (E)
-	 *  E-----------E
-	 *  |           |
-	 *  |           |
-     *  |           |
-	 *  E-----------E
-	 *
-	 *  imagine that the map is bigger than the screen
-	 *  so that the screen only shows a portion of the map.
-	 */
-	identifyVisibleMapBounds(camera, eLeftUp, eLeftDown, eRightUp, eRightDown){
-
-		/*
-			Check the 4 edges of the screen to see which tiles are there.
-			Then draw the tiles that can appear on the screen and nothing more
-
-			This is a big reduction:
-			in a 200x200 map we drop from 40.000 iterations to about 1000. 
-		*/
-
-		var mapH = this._height;
-		var mapW = this._width;
-
-		var start_row = 0;
-		var start_col = 0;
-		var end_row = mapH;
-		var end_col = mapW;
-
-		var res = this.screen2MapCoords(eLeftUp, camera);
-		if (res != -1) {
-			start_col = res.tileX
-		}
-
-		res = this.screen2MapCoords(eRightUp, camera);
-		if (res != -1) {
-			start_row = res.tileY
-		}
-
-		res = this.screen2MapCoords(eLeftDown, camera);
-		if (res != -1) {
-			end_row = (res.tileY + 2 > mapH) ? mapH : res.tileY + 2
-		}
-
-		res = this.screen2MapCoords(eRightDown, camera);
-		if (res != -1) {
-			end_col = (res.tileX + 1 > mapW) ? mapW : res.tileX + 1
-		}
-
-		return {
-			start_row:  start_row,
-			end_row: end_row,
-			start_col: start_col,
-			end_col: end_col
-		};
-	}
-
-
-
-	/**
 	 * Translates screen coordinates to map coordinates
 	 * Runs in O(1).
-	 * 
+	 *
 	 * @param e A click event.
 	 *
 	 * Outputs the cell in the map that was clicked
@@ -369,10 +305,10 @@ class Map{
 		var mapWidth = this._width;
 		var mapHeight = this._height;
 
-		var cameraPos = camera.getPos();
-		var camX = cameraPos.x;
-		var camY = cameraPos.y;
-		var zoomLevel = camera.getZoomLevel();
+		var cam = camera.getCamera();
+		var camX = cam.x;
+		var camY = cam.y;
+		var zoomLevel = cam.zoomLevel;
 
 		var clientX = e.clientX - this._canvasOffsetLeft;
 		var clientY = e.clientY - this._canvasOffsetTop;
@@ -414,6 +350,13 @@ class Map{
 		return this._map;
 	}
 
+
+	getSize(){
+		return{
+			width: this._width,
+			height: this._height
+		};
+	}
 
 	getWidth(){
 		return this._width;

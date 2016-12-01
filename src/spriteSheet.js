@@ -7,9 +7,9 @@
 class SpriteSheet{
 
 	constructor(imageManager, ctx){
-		this._frames = {}
-		this._imageManager = imageManager
-		this._ctx = ctx
+		this._frames = {};
+		this._imageManager = imageManager;
+		this._ctx = ctx;
 	}
 
 
@@ -33,8 +33,8 @@ class SpriteSheet{
 	 */
 	load(imageName, frames){
 		for (var i in frames){
-			this._frames[i] = frames[i]
-			this._frames[i].push(imageName)
+			this._frames[i] = frames[i];
+			this._frames[i].push(imageName);
 		}
 	}
 
@@ -46,13 +46,13 @@ class SpriteSheet{
 	 *
 	 */
 	getFrameDimensions(frameName){
-		var f = this._frames[frameName]
+		var f = this._frames[frameName];
 		if (f === undefined)
-			console.log("UNDEFINED!!")
+			console.log("UNDEFINED!!");
 		return {
 			width: f[SpriteSheet.WIDTH],
 			height: f[SpriteSheet.HEIGHT]
-		}
+		};
 	}
 
 
