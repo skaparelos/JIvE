@@ -4,8 +4,8 @@
  */
 class Player {
 	constructor(){
-		this._username = "player 1"
-		this._id = 1
-		this._colour = "blue"
+		this._username = "player 1";
+		this._id = 1;
+		this._colour = "blue";
 	}
 }
