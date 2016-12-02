@@ -61,22 +61,8 @@ class Selector{
 
 /**
  *  A map cell represents the contents of each cell in a map
- *
- *  TODO
- *  at the moment not all layers have mapCells. particularly the background 
- *  layer does not need one
- *  
  */
 class MapCell{
-
-	//TODO think: keep the image of the imagecell here? I don't think it's a good
-	// think to do as we will be wasting space
-	
-	// TODO think: i could put here initX, initY, and screenX, screenY 
-	// and have an update function
-	// this is more compact.
-	// because as it is now we would have to make changes in the renderer as well
-
 
 	constructor(type = 0, worldObjectId = null){
 
@@ -134,14 +120,8 @@ MapCell.TYPES = {
 
 
 /**
- * TODO: It is not clear yet, whether a map layer consists of map cells
- * (see above class) or not. Since map cells carry more information we should
- * only use them when necessary, otherwise just carry integers to denote
- * tile and terrain. However, it could be better (need to look at this) if each
- * map layer consisted solely of mapcells. 
- *
- * A map layer represents a layer. e.g. background is one layer
- * non-moving objects can be a second layer (e.g. buildings and trees)
+ * A map layer represents a layer. e.g. background is one layer,
+ * non-moving objects can be a second layer (e.g. buildings and trees),
  * sprites might be a third layer. etc..
  *
  * Note: all mapLayers must have the same dimensions. Dimensions are available
