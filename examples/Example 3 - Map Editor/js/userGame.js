@@ -82,7 +82,6 @@ function setupWorld(mapDim){
 	im = world.getImageManager();
 	im.load(g_selector_images);
 
-
 	// put the callback in the last one, otherwise it might not work
 	im.load(g_basic_tilesets, function(){
 
@@ -94,61 +93,59 @@ function setupWorld(mapDim){
 		worldSelector.setImg(selectorImg);
 	
 		// once images have been loaded, start the world
-		world.start()
-	});
-	
-	world.on("mousemove", function(e){
-		if (e.clientY > world.getScreen().getHeight())
-			return;
+		world.start();
 
-		var tiles = world.screen2MapCoords(e);
-		if (tiles === -1) return;
+		world.on("mousemove", function(e){
+			if (e.clientY > world.getScreen().getHeight())
+				return;
 
-		worldSelector.setPos(tiles.tileY, tiles.tileX)
-	});
+			var tiles = world.screen2MapCoords(e);
+			if (tiles === -1) return;
 
-	world.on("leftdrag", function(e){
-		if (e.clientY > world.getScreen().getHeight())
-			return;
+			worldSelector.setPos(tiles.tileY, tiles.tileX)
+		});
 
-		var tiles = world.screen2MapCoords(e);
-		if (tiles === -1) return;
-	
-		// TODO take the MapCell type from the worldObject and let the user define whether something is walkable via the map editor
-		if (selectedWorldObjectID != -1)
-			worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX,
-				MapCell.TYPES.WALKABLE_NON_EMPTY,
-				worldObjects[selectedWorldObjectID - 1].getID());
-	});
+		world.on("leftdrag", function(e){
+			if (e.clientY > world.getScreen().getHeight())
+				return;
 
-	world.on("leftclick", function(e){
-		if (e.clientY > world.getScreen().getHeight())
-			return;
+			var tiles = world.screen2MapCoords(e);
+			if (tiles === -1) return;
 
-		var tiles = world.screen2MapCoords(e);
-		if (tiles === -1) return;
+			// TODO take the MapCell type from the worldObject and let the user define whether something is walkable via the map editor
+			if (selectedWorldObjectID != -1)
+				worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX,
+					MapCell.TYPES.WALKABLE_NON_EMPTY,
+					worldObjects[selectedWorldObjectID - 1].getID());
+		});
 
-		if (selectedWorldObjectID != -1)
-			worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX,
-				MapCell.TYPES.WALKABLE_NON_EMPTY,
-				worldObjects[selectedWorldObjectID - 1].getID());
-	});
+		world.on("leftclick", function(e){
+			if (e.clientY > world.getScreen().getHeight())
+				return;
 
+			var tiles = world.screen2MapCoords(e);
+			if (tiles === -1) return;
 
-	var camera = world.getCamera();
-	world.on("mousewheelforward", function(e){
-		if (e.clientY > world.getScreen().getHeight())
-			return;
-		camera.increaseZoomLevel();
-	});
-
-	world.on("mousewheelback", function(e){
-		if (e.clientY > world.getScreen().getHeight())
-			return;
-		camera.decreaseZoomLevel();
-	});
+			if (selectedWorldObjectID != -1)
+				worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX,
+					MapCell.TYPES.WALKABLE_NON_EMPTY,
+					worldObjects[selectedWorldObjectID - 1].getID());
+		});
 
 
+		var camera = world.getCamera();
+		world.on("mousewheelforward", function(e){
+			if (e.clientY > world.getScreen().getHeight())
+				return;
+			camera.increaseZoomLevel();
+		});
+
+		world.on("mousewheelback", function(e){
+			if (e.clientY > world.getScreen().getHeight())
+				return;
+			camera.decreaseZoomLevel();
+		});
+    });
 	// TODO make this work
 	//world.on("keydown=", function(e){
 	//	console.log("it works!!")

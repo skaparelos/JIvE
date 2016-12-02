@@ -1,3 +1,6 @@
+/**
+ * This class is responsible for handling the HTML canvas
+ */
 class Canvas{
 
     constructor(width, height){
@@ -22,7 +25,7 @@ class Canvas{
         document.body.insertBefore(this._canvas, document.body.childNodes[0]);
         var canv = document.getElementById('myCanvas').getBoundingClientRect();
         this._canvasOffsetTop = canv.top;
-        this._canvasOffsetLeft = canv.left
+        this._canvasOffsetLeft = canv.left;
     }
 
 

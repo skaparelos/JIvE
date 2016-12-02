@@ -45,7 +45,7 @@ class World extends EventEmitter {
 	 *  Place here all the things that require the user to have entered
 	 *  some input regarding the size of the maps etc..
 	 */
-	init(){
+	_init(){
         this._canvas.init();
 
         var offsets = this._canvas.getCanvas();
@@ -59,7 +59,7 @@ class World extends EventEmitter {
 
 
 	start() {
-		this.init();
+		this._init();
 
 		// DEBUG
 		if (g_DEBUG === true){
@@ -67,7 +67,7 @@ class World extends EventEmitter {
 		}
 		// END DEBUG
 
-		this._gameLoopReqAnim()
+		this._gameLoopReqAnim();
 	}
 
 
@@ -246,6 +246,8 @@ class World extends EventEmitter {
 
 
 	getCamera(){
+		if (this._camera === undefined)
+			console.log("UNDEFINED CAMERA");
 		return this._camera;
 	}
 
