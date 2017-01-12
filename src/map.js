@@ -94,8 +94,6 @@ class MapCell{
 		return this._worldObjectId
 	}
 
-
-
 }
 
 // TODO change this and let the user define it
@@ -111,7 +109,7 @@ MapCell.TYPES = {
     // non walkable contains sth like house or tree
 	NON_WALKABLE : 2,
 
-    // contain a sprite //TODO is this NON_WALKABLE?
+    // contain a sprite
 	SPRITE : 3
 };
 
@@ -187,7 +185,7 @@ class Map{
 		this._height = 0;
         this._layerCtr = 0;
 
-        // this is a 3D array.
+        // _map is a 3D array.
 		// [i][j][k]
 		// i -> is the layer index
 		// j -> is the row index
@@ -264,7 +262,7 @@ class Map{
 	*/
 	screen2MapCoords(e, camera) {
 
-		/*  Solve the drawing functions for tileX, tileY
+		/*  Solve the drawing equations for tileX, tileY
 			These are the 2 drawing equations:
 			screenX = (tileX - tileY) * unittileWidth / zoomLevel / 2 + camX;
 			screenY = (tileY + tileX) * unittileHeight / zoomLevel / 2 + camY;
@@ -326,6 +324,7 @@ class Map{
 		};
 	}
 
+
 	getWidth(){
 		return this._width;
 	}
@@ -339,7 +338,7 @@ class Map{
 	getLayersNo(){
 		return this._layerCtr;
 	}
-
+	
 	
 	exportJSON(){
 		var jsonified = "var g_mapLevels = '" + JSON.stringify(this) + "'\n";

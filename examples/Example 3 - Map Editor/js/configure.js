@@ -78,7 +78,7 @@ var g_unit_tile_height = 64;
 \***************************/
 
 /* Images must be in the IMAGES_DIR folder that you set in g_game_settings 
- * (see top of this documents */	
+ * (see top of this document) */
 
 
 const g_selector_images = {
@@ -97,9 +97,10 @@ const g_first_tileset_frames = {
 
 
 const g_second_tileset_frames = {
-	"5" : [0, 0, 128, 110, 0, 0],
-	"4" : [128, 0, 128, 110, 0, 0],
-	"3" : [256, 0, 128, 110, 0, 0],
-	"2" : [0, 110, 128, 64, 0, 0],
-	"1" : [128, 110, 128, 64, 0, 0]	
+	"5" : [0, 0, 128, 110, 0, 0], //red house
+	"4" : [128, 0, 128, 110, 0, 0], // green house
+	"3" : [256, 0, 128, 110, 0, 0], // blue house
+	"2" : [0, 110, 128, 64, 0, 0], // dirt tile
+	"1" : [128, 110, 128, 64, 0, 0] // green tile
+	//"selector" : [256, 110, 128, 64, 0, 0]  //non selector
 };

@@ -1,5 +1,5 @@
 /**
- * This file is to be manipulated by the users of JIvE
+ * This file is to be manipulated by those who develop using JIvE
  * to contain the game and the menu logic
  */
 var world;
@@ -8,7 +8,6 @@ var worldSpriteSheetManager;
 var worldSelector;
 var worldObjects = [];
 var worldMap;
-var mapDims = 50;
 
 var layerCtr = 0;
 var selectedLayer = 0;
@@ -21,45 +20,39 @@ const menuNameHTML = "hub";
  * This is the main entry point
  */
 function main() {
-
-	// drag and drop is now disabled (if on comments)
-	//enableDragging()
-
-	//initMenus()
-	setupWorld(mapDims)
+	deletePrevious();
+    var mapDim = parseInt(document.getElementById("mapdim").value);
+	setupWorld(mapDim)
 }
 
 
+/**
+ * Deletes the previously used canvas and the images uploaded by the user
+ */
+function deletePrevious(){
+    // remove canvas if already exists (in case the user created
+    // a new map with different dimensions)
+    var body = document.getElementsByTagName("BODY")[0];
+    var canvas = document.getElementById("myCanvas");
+    if (canvas)
+        body.removeChild(canvas);
+
+    // in the same case, also remove the images that have been loaded
+    var flexitem1 = document.getElementById("flexitem1");
+    var loadedImgs = document.getElementsByClassName("floatedImg");
+    for (var i in loadedImgs.length){
+        flexitem1.removeChild(loadedImgs[i]);
+    }
+}
+
 function setupWorld(mapDim){
 
-	if (mapDim === undefined)
-		mapDim = mapDims;
-	else
-		mapDims = mapDim;
-
-	// remove canvas if already exists (in case the user created
-	// a new map with different dimensions)
-	var body = document.getElementsByTagName("BODY")[0];
-	var canvas = document.getElementById("myCanvas");
-	if (canvas)
-		body.removeChild(canvas);
-
-	// in that case, also remove the images that have been loaded
-	var flexitem1 = document.getElementById("flexitem1");
-    var loadedImgs = document.getElementsByClassName("floatedImg");
-	for (var i in loadedImgs.length){
-		flexitem1.removeChild(loadedImgs[i]);
-	}
-
+	// create the world
 	var dim = calculateSideMenuDimensions();
 	world = new World(dim.width, dim.height);
 	worldImageManager = world.getImageManager();
 	worldSpriteSheetManager = world.getSpriteSheet();
 	worldSelector = world.getSelector();
-
-	//TODO check for error
-	mapDim = parseInt(mapDim);
-
 	worldMap = world.getMap();
 
 	// TODO fix this
@@ -80,9 +73,14 @@ function setupWorld(mapDim){
 
 	// Load images to the world
 	im = world.getImageManager();
+
+	//TODO put the selector in a tileset. Sometimes is called last and as
+	// a result the callback is undefined. and thus, the map doesn't appear on screen
+	//TODO change this in configure.js and include it in the tileset.
 	im.load(g_selector_images);
 
-	// put the callback in the last one, otherwise it might not work
+	// put the callback function in the last image load, otherwise it
+	// might not work correctly.
 	im.load(g_basic_tilesets, function(){
 
 		worldSpriteSheetManager.load("first_tileset", g_first_tileset_frames);
@@ -94,58 +92,10 @@ function setupWorld(mapDim){
 	
 		// once images have been loaded, start the world
 		world.start();
+        addListeners();
 
-		world.on("mousemove", function(e){
-			if (e.clientY > world.getScreen().getHeight())
-				return;
-
-			var tiles = world.screen2MapCoords(e);
-			if (tiles === -1) return;
-
-			worldSelector.setPos(tiles.tileY, tiles.tileX)
-		});
-
-		world.on("leftdrag", function(e){
-			if (e.clientY > world.getScreen().getHeight())
-				return;
-
-			var tiles = world.screen2MapCoords(e);
-			if (tiles === -1) return;
-
-			// TODO take the MapCell type from the worldObject and let the user define whether something is walkable via the map editor
-			if (selectedWorldObjectID != -1)
-				worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX,
-					MapCell.TYPES.WALKABLE_NON_EMPTY,
-					worldObjects[selectedWorldObjectID - 1].getID());
-		});
-
-		world.on("leftclick", function(e){
-			if (e.clientY > world.getScreen().getHeight())
-				return;
-
-			var tiles = world.screen2MapCoords(e);
-			if (tiles === -1) return;
-
-			if (selectedWorldObjectID != -1)
-				worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX,
-					MapCell.TYPES.WALKABLE_NON_EMPTY,
-					worldObjects[selectedWorldObjectID - 1].getID());
-		});
-
-
-		var camera = world.getCamera();
-		world.on("mousewheelforward", function(e){
-			if (e.clientY > world.getScreen().getHeight())
-				return;
-			camera.increaseZoomLevel();
-		});
-
-		world.on("mousewheelback", function(e){
-			if (e.clientY > world.getScreen().getHeight())
-				return;
-			camera.decreaseZoomLevel();
-		});
     });
+
 	// TODO make this work
 	//world.on("keydown=", function(e){
 	//	console.log("it works!!")
@@ -161,6 +111,60 @@ function setupWorld(mapDim){
 
 }
 
+
+function addListeners(){
+
+    world.on("mousemove", function(e){
+        if (e.clientY > world.getScreen().getHeight())
+            return;
+
+        var tiles = world.screen2MapCoords(e);
+        if (tiles === -1) return;
+
+        worldSelector.setPos(tiles.tileY, tiles.tileX)
+    });
+
+    world.on("leftdrag", function(e){
+        if (e.clientY > world.getScreen().getHeight())
+            return;
+
+        var tiles = world.screen2MapCoords(e);
+        if (tiles === -1) return;
+
+        // TODO take the MapCell type from the worldObject and let the user
+		// define whether something is walkable via the map editor
+        if (selectedWorldObjectID != -1)
+            worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX,
+                MapCell.TYPES.WALKABLE_NON_EMPTY,
+                worldObjects[selectedWorldObjectID - 1].getID());
+    });
+
+    world.on("leftclick", function(e){
+        if (e.clientY > world.getScreen().getHeight())
+            return;
+
+        var tiles = world.screen2MapCoords(e);
+        if (tiles === -1) return;
+
+        if (selectedWorldObjectID != -1)
+            worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX,
+                MapCell.TYPES.WALKABLE_NON_EMPTY,
+                worldObjects[selectedWorldObjectID - 1].getID());
+    });
+
+    var camera = world.getCamera();
+    world.on("mousewheelforward", function(e){
+        if (e.clientY > world.getScreen().getHeight())
+            return;
+        camera.increaseZoomLevel();
+    });
+
+    world.on("mousewheelback", function(e){
+        if (e.clientY > world.getScreen().getHeight())
+            return;
+        camera.decreaseZoomLevel();
+    });
+}
 
 /**
  *	When the "walkable" propety of a world Object changes,
@@ -213,7 +217,7 @@ function downloadMap(){
  *  called when the user chooses a different layer to draw on
  */
 function changeSelectedLayer(that){
-	selectedLayer = parseInt(that.value)
+	selectedLayer = parseInt(that.value);
 }
 
 
@@ -305,6 +309,10 @@ function imageLoaded(img, id) {
 }
 
 
+/**
+ * Calculates the size of the menu and the map editor.
+ * @returns {{width: number, height: number}}
+ */
 function calculateSideMenuDimensions(){
 	
 	// set the size of the menu on the side

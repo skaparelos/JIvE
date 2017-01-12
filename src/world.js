@@ -120,8 +120,10 @@ class World extends EventEmitter {
 		let ih = this._inputHandler
 		let keyAction = ih.getKeyAction()
 
+        // camera movement
 		// TODO maybe this needs a beter explanation
-		// elapsed/10 so that if FPS = 60 and elapsed = 16.6ms
+		// dt is the elapsed time
+		// we divide dt by 10 so that if FPS = 60 and dt = 16.6ms
 		// then this will be called 60 times per second and 
 		// over one second we will have 1.66 * 60 = 100
 		// then 100*scrollingSpeed will give us the desired number
@@ -130,8 +132,6 @@ class World extends EventEmitter {
 		// The end result is that if we change FPS the scrolling speed
 		// remains the same, while if we don't include this, then the 
 		// scrolling speed is frame dependent
-
-		// camera movement
 		this._camera.move(keyAction, dt/10);
 
 		// Handle screen resize 

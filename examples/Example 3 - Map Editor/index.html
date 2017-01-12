@@ -34,8 +34,10 @@
 			    <a href="#" class="dropbtn, fa fa-plus"></a>
 			    <div class="dropdown-content">
 			      <a href="#"><label class="custom-file-upload"> <input id="browse" type="file" onchange="previewFiles(this)" multiple> upload... </label></a>
+			      <!--
 			      <a href="#">folder</a>
 			      <a href="#">script</a>
+			      !-->
 			    </div>
 			</li>
 			<li><a id="exportLink" class="fa fa-download" href="#" onclick="downloadMap()"></a></li>
@@ -54,16 +56,16 @@
 		  		<div id="flexitem21" class="flex-item" style="top:0px; height:105px;">
 		  			<header>Map Properties</header>
 				  	<form>
-						<label for="fname">Map dimensions</label>
-						<input type="text" id="mapdim" value="50" onchange="setupWorld(this.value)" maxlength="4">
+						<label>Map dimensions</label>
+						<input type="text" id="mapdim" value="20" onchange="main()" maxlength="4">
 						<br>
 
-						<label for="lname">Smallest tile width</label>
-						<input type="text" id="unitwidth" value="128" onchange="g_unit_tile_width=this.value; setupWorld();" maxlength="4">
+						<label>Smallest tile width</label>
+						<input type="text" id="unitwidth" value="128" onchange="g_unit_tile_width=this.value; setupWorld();" maxlength="4" disabled>
 						<br>
 
-						<label for="lname">Smallest tile height</label>
-						<input type="text" id="unitheight" value="64" onchange="g_unit_tile_height=this.value; setupWorld();" maxlength="4">
+						<label>Smallest tile height</label>
+						<input type="text" id="unitheight" value="64" onchange="g_unit_tile_height=this.value; setupWorld();" maxlength="4" disabled>
 						<br>
 					</form>
 			  	</div>
@@ -83,7 +85,20 @@
 			  		Object Properties
 			  	</header>
 				  	<form>
-						<input id="walkablebox" type="checkbox" name="walkable" value="walkable" onchange="setWalkable(this.checked)">Walkable<br>
+						<input id="wo_walkable" type="checkbox" name="walkable" value="walkable" onchange="setWalkable(this.checked)">Walkable
+						<br>
+
+						Here enter the conceptual size of the object. e.g. a tree might be 4 tiles height and 1 tile width, but
+						it's only the base that we cannot walk, so you should enter 1,1 in the next. A house could be 1x1 or 2x2 or 3x3 ...
+						<br>
+
+						<label>Tile Width (base)</label>
+						<input type="text" id="wo_tile_width" value="1" onchange="" maxlength="100">
+						<br>
+
+						<label>Tile Height</label>
+						<input type="text" id="wo_tile_width" value="1" onchange="" maxlength="100" >
+						<br>
 					</form>
 			  </div>
 
