@@ -6,25 +6,27 @@
 class ImageManager {
 
 	constructor(){
-		this._images = {}
+		this._images = {};
 		
 		// holds the number of images that have been loaded
-		this._imgsLoaded = 0
+		this._imgsLoaded = 0;
 
-		// holds the number of images that have not been identified
+		// holds the number of images that have been identified
 		// for loading but have not been loaded yet
-		this._imgs2Load = 0
+		this._imgs2Load = 0;
 
 		// If all images from those identified for loading have been loaded 
 		// then, this is equal to true.
-		this._loaded = false
+		this._loaded = false;
 
-		this._imagesPath = g_game_settings["IMAGES_DIR"]
+		// holds the root folder to look for images in
+		this._imagesPath = g_game_settings["IMAGES_DIR"];
 
 		// used for loading images online in the map editor
 		// start this from 1, to allow for the value 0
-		// to be the isometric sketch map 
-		this._imageID = 1
+		// to be the isometric sketch map
+		// TODO this is highly dependent. simplify it.
+		this._imageID = 1;
 	}
 
 
@@ -39,35 +41,35 @@ class ImageManager {
 	 */
 	load(imgs, callback){
 		if (typeof callback !== "function" && callback !== undefined) 
-			console.log("The callback must be a function")
+			console.log("The callback must be a function");
 		
 		//get the number of images to load
 		for(let i in imgs){
-			this._imgs2Load += 1
+			this._imgs2Load += 1;
 		}
 
 		for (let key in imgs){
-			this._loadImage(key, imgs[key], callback)
+			this._loadImage(key, imgs[key], callback);
 		}
 	}
 
 
 	_loadImage(key, path, callback){
-		var img = new Image()
-		var that = this
+		var img = new Image();
+		var that = this;
 
 		img.onload = function(){
-			that._images[key] = img
-			that._imgsLoaded += 1
+			that._images[key] = img;
+			that._imgsLoaded += 1;
 			
 			if (that._imgsLoaded === that._imgs2Load){
-				that._loaded = true
+				that._loaded = true;
 				if(callback !== undefined)
-					callback()
+					callback();
 			}
 		}
 
-		img.src = this._imagesPath + path
+		img.src = this._imagesPath + path;
 	} 
 
 
@@ -80,24 +82,24 @@ class ImageManager {
 	 *  used for right now.
 	 *  //TODO load to spritesheet as well
 	 */
-	load2MapEditor(key, path, panelName, callback){
-		var img = new Image()
-		var that = this
+	load2MapEditor(key, path, callback){
+		var img = new Image();
+		var that = this;
 
-		var id = this._imageID
-		this._imageID += 1
+		var id = this._imageID;
+		this._imageID += 1;
 
 		// keep track of the name of the image
-		if (!this._originalImageName) this._originalImageName = {}
-		this._originalImageName[id] = key
+		if (!this._originalImageName) this._originalImageName = {};
+		this._originalImageName[id] = key;
 
 		img.onload = function(){
-			that._images[id] = img
+			that._images[id] = img;
 			if(callback !== undefined)
-				callback(panelName, img, id)
+				callback(img, id);
 		}
 
-		img.src = path
+		img.src = path;
 
 	}
 
@@ -111,9 +113,9 @@ class ImageManager {
 		if (!this._originalImageName) return;
 	
 		for(var i in this._images){
-			console.log("id = " + i + ") " + this._originalImageName[i])
+			console.log("id = " + i + ") " + this._originalImageName[i]);
 		}
-		alert("See output in console!")
+		alert("See output in console!");
 
 	}
 
@@ -134,7 +136,7 @@ class ImageManager {
 	
 
 	clear(){
-		this._images = {}
+		this._images = {};
 	}
 
 }

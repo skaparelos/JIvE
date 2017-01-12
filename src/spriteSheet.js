@@ -1,9 +1,15 @@
+/**
+ * The spritesheet class uses the image manager to access the loaded images, but
+ * can access parts of the images loaded by the image managers. e.g.
+ * we can can load a tileset to the image manager and pass the coordinates
+ * of where each tile is in the tileset and draw only that.
+ */
 class SpriteSheet{
 
 	constructor(imageManager, ctx){
-		this._frames = {}
-		this._imageManager = imageManager
-		this._ctx = ctx
+		this._frames = {};
+		this._imageManager = imageManager;
+		this._ctx = ctx;
 	}
 
 
@@ -27,8 +33,8 @@ class SpriteSheet{
 	 */
 	load(imageName, frames){
 		for (var i in frames){
-			this._frames[i] = frames[i]
-			this._frames[i].push(imageName)
+			this._frames[i] = frames[i];
+			this._frames[i].push(imageName);
 		}
 	}
 
@@ -40,13 +46,13 @@ class SpriteSheet{
 	 *
 	 */
 	getFrameDimensions(frameName){
-		var f = this._frames[frameName]
+		var f = this._frames[frameName];
 		if (f === undefined)
-			console.log("UNDEFINED!!")
+			console.log("UNDEFINED!!");
 		return {
 			width: f[SpriteSheet.WIDTH],
 			height: f[SpriteSheet.HEIGHT]
-		}
+		};
 	}
 
 
@@ -80,6 +86,7 @@ class SpriteSheet{
 	}
 }
 
+// Static
 SpriteSheet.X = 0
 SpriteSheet.Y = 1
 SpriteSheet.WIDTH = 2

@@ -67,10 +67,10 @@ const g_camera_settings = {
 \***************************/
 
 /* UNIT TILE WIDTH (smallest possible width) */
-var g_unit_tile_width = 128
+var g_unit_tile_width = 128;
 
 /* UNIT TILE HEIGHT (smallest possible height) */
-var g_unit_tile_height = 64
+var g_unit_tile_height = 64;
 
 
 /***************************\
@@ -83,17 +83,17 @@ var g_unit_tile_height = 64
 
 const g_selector_images = {
 	"selector" : "non_selector.png"
-}
+};
 
 
 const g_basic_tilesets = {
 	"first_tileset" :  "selector.png",
 	"second_tileset" : "tileset.png",
-}
+};
 
 const g_first_tileset_frames = {
 	"0" : [0, 0, 128, 64, 0, 0]
-}
+};
 
 
 const g_second_tileset_frames = {
@@ -102,23 +102,4 @@ const g_second_tileset_frames = {
 	"3" : [256, 0, 128, 110, 0, 0],
 	"2" : [0, 110, 128, 64, 0, 0],
 	"1" : [128, 110, 128, 64, 0, 0]	
-}
-
-
-/***************************\
-*         Maps              *
-\***************************/
-
-/**
- *  Load your own map:
- *  1) Create your map using Tiled and export it as map.csv
- *  2) run the following command in terminal:
- *       awk '{print "["$0"],"}' map.csv
- *  3) Copy Paste it here
- */
-
-// load your map levels here
-var g_level0_map = [
-]
-
-
+};

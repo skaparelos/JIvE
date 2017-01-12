@@ -1,4 +1,4 @@
-// TODO extends eventEmitter so that we can add events like onclick
+/*
 class BaseEntity extends EventEmitter {
 	constructor(x, y){
 		this._id = id
@@ -26,9 +26,9 @@ class BaseBuilding extends BaseEntityHP{
 
 
 class BaseUnit extends BaseEntityHP{
-	constuctor(x, y, hp){
+	constructor(x, y, hp){
 		super(x, y, hp)
 	}
 }
-
+*/
 

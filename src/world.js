@@ -1,44 +1,39 @@
 // @global Game state
-var g_running = true
+var g_running = true;
 
 class World extends EventEmitter {
 
 	constructor(screenWidth, screenHeight){
-		super()
+		super();
 
-		this._screen = new Screen(screenWidth, screenHeight)
-		this._period = this._screen.getPeriod()
+		this._screen = new Screen(screenWidth, screenHeight);
+		this._period = this._screen.getPeriod();
+		this._map = new Map();
+        this._selector = new Selector();
+		this._inputHandler = new InputHandler();
+		this._canvas = new Canvas(screenWidth, screenHeight);
 
-		this._map = new Map()
-		this._camera = new Camera()
-		this._inputHandler = new InputHandler()
+		this._imageManager = new ImageManager();
+		this._spriteSheet = new SpriteSheet(this._imageManager,
+			this._canvas.getCtx());
 
-		// canvas stuff
-		this._canvas = null
-		this._context = null
-		this._initCanvas()
+		this._previousLeftMouseClick = null;
+		this._previousMouseScroll = null;
 
-		this._imageManager = new ImageManager()
-		this._selector = new Selector()
-		this._spriteSheet = new SpriteSheet(this._imageManager, this._context)
-
-		this._previousLeftMouseClick = null
-		this._previousMouseScroll = null
-
-		// the user's set update function. this is a callback
-		this._userUpdateFunc = null
+		// the user's set update function. this is a callback set by the user
+		this._userUpdateFunc = null;
 
 		// used to control how often is requestAnimFrame called
-		this._then = Date.now()
+		this._then = Date.now();
 
 		// deltaTime can be used to make a game frame independent
 		// keeps the time it took between the last two frame updates
 		// measured in ms
-		this._deltaTime = -1
+		this._deltaTime = -1;
 
 		// DEBUG
 		if(g_DEBUG === true){
-			this.__FPS = 0
+			this.__FPS = 0;
 			this.__startTime = -1;
 		}
 		// END DEBUG
@@ -50,21 +45,21 @@ class World extends EventEmitter {
 	 *  Place here all the things that require the user to have entered
 	 *  some input regarding the size of the maps etc..
 	 */
-	init(){
+	_init(){
+        this._canvas.init();
 
-		document.body.insertBefore(this._canvas, document.body.childNodes[0])
+        var offsets = this._canvas.getCanvas();
+        this._camera = new Camera(this._screen.getWidth(),
+			this._screen.getHeight(), offsets.canvasOffsetTop,
+			offsets.canvasOffsetLeft);
 
-		this._map.init()
-
-		this._renderer = new Renderer(this, this._context, 
-			this._screen.getWidth(), this._screen.getHeight(),
-			this._camera, this._imageManager, this._map, this._selector,
-			this._spriteSheet)
+		this._renderer = new Renderer(this._canvas.getCtx(), this._camera,
+			this._map, this._spriteSheet, this._selector);
 	}
 
 
 	start() {
-		this.init()
+		this._init();
 
 		// DEBUG
 		if (g_DEBUG === true){
@@ -72,62 +67,19 @@ class World extends EventEmitter {
 		}
 		// END DEBUG
 
-		this._gameLoopReqAnim()
-	}
-
-
-	_initCanvas(){
-		this._canvas = document.createElement('canvas')
-		this._canvas.setAttribute("id", "myCanvas")
-		this._canvas.className = "myCanvas" // this is to be able to change its position
-		this._canvas.width = this._screen.getWidth()
-		this._canvas.height = this._screen.getHeight()
-		this._context = this._canvas.getContext('2d')
-		//document.body.insertBefore(this._canvas, document.body.childNodes[0])
- 	}
-
-
-	/**
-	 * Sets the position of the canvas
-	 * to be 
-	 */
-	setCanvasPos(x, y, width, height){
-		if (x !== undefined)
-			this._canvas.style.left = x + "px"
-
-		if (y !== undefined)
-			this._canvas.style.top = y + "px"
-
-		if (width !== undefined)
-			this._canvas.width = width
-
-		if (height !== undefined)
-			this._canvas.height = height
-
-		//TODO inform the viewport for rendering
+		this._gameLoopReqAnim();
 	}
 
 
 	/**
-	 *  updates the canvas size
-	 */
-	_updateCanvasSize(width, height) {
-		this._canvas.width = width
-		this._canvas.height = height
-		this._context = this._canvas.getContext('2d')
-	}
-
-
-	/**
-	 *  gets the new screen size and notifies the components in need
+	 *  gets the new screen size and notifies the components that need to be
+	 *  notified for the screen resize
 	 */
 	_screenResize(){
-
-		// TODO we need to get these correctly. The user might not use the 
-		// whole screen as canvas
-		var size = this._screen.getFullScreen()
-		this._updateCanvasSize(size.width, size.height)
-		this._renderer.updateScreen(size.width, size.height)
+		// TODO we need to get these correctly. The user might not use the whole screen as canvas
+		var size = this._screen.getFullScreen();
+		this._canvas.updateCanvasSize(size.width, size.height);
+		this._camera.updateCameraSize(size.width, size.height);
 	}
 
 
@@ -180,11 +132,11 @@ class World extends EventEmitter {
 		// scrolling speed is frame dependent
 
 		// camera movement
-		this._camera.move(keyAction, dt/10)
+		this._camera.move(keyAction, dt/10);
 
 		// Handle screen resize 
 		if (ih.isScreenResized()) {
-			this._screenResize()
+			this._screenResize();
 		}
 
 		// Handle keydown
@@ -195,65 +147,65 @@ class World extends EventEmitter {
 		}
 
 		// Handle left mouse click
-		var leftClick  = ih.getLeftMouseClick()
-		var isClicking = (leftClick !== this._previousLeftMouseClick)
-		if (isClicking) {
-			this._previousLeftMouseClick = leftClick
-			this.emit("leftclick", leftClick)
+		var leftClick  = ih.getLeftMouseClick();
+		var isLeftClicking = (leftClick !== this._previousLeftMouseClick);
+		if (isLeftClicking) {
+			this._previousLeftMouseClick = leftClick;
+			this.emit("leftclick", leftClick);
 		}
 
 		// handle mouse hover and mouse dragging
-		var mouseHover = ih.getMouseHover()
-		var isHovering = (mouseHover !== this._previousMouseScroll)
+		var mouseHover = ih.getMouseHover();
+		var isHovering = (mouseHover !== this._previousMouseScroll);
 		if (isHovering) {
-			this._previousMouseScroll = mouseHover
-			this.emit("mousemove", mouseHover)
+			this._previousMouseScroll = mouseHover;
+			this.emit("mousemove", mouseHover);
 
 			// mouse drag
 			if (ih.getLeftMouseDown())
-				this.emit("leftdrag", mouseHover)
+				this.emit("leftdrag", mouseHover);
 		}
 
-		var isMouseWheelScrolled = ih.isMouseWheelScrolled()
+		var isMouseWheelScrolled = ih.isMouseWheelScrolled();
 		if (isMouseWheelScrolled !== false){
-			var deltaY = isMouseWheelScrolled.deltaY
+			var deltaY = isMouseWheelScrolled.deltaY;
 
 			if (deltaY > 0 )
-				this.emit("mousewheelforward", isMouseWheelScrolled)
+				this.emit("mousewheelforward", isMouseWheelScrolled);
 
 			if (deltaY < 0)
-				this.emit("mousewheelback", isMouseWheelScrolled)
+				this.emit("mousewheelback", isMouseWheelScrolled);
 		}
 
 		// call user's update function everytime 
 		// this update function is called
 		if (this._userUpdateFunc !== null){
-			this._userUpdateFunc(this._deltaTime)
+			this._userUpdateFunc(this._deltaTime);
 		}
 
 	}// end of update()
 
 
-
 	/*** The following functions can be used by the user to develop his/her game: ***/
-	
+
 	/**
 	 * Get the image manager to load the custom images
 	 */
 	getImageManager(){
-		return this._imageManager
+		return this._imageManager;
 	}
 
 	
 	getSpriteSheet(){
-		return this._spriteSheet
+		return this._spriteSheet;
 	}
+
 
 	/**
 	 *  Get the map to load each map layer
 	 */
 	getMap(){
-		return this._map
+		return this._map;
 	}
 
 
@@ -261,12 +213,12 @@ class World extends EventEmitter {
 	 *  Get the selector to set where the mouse is pointing at in the map
 	 */
 	getSelector(){
-		return this._selector
+		return this._selector;
 	}
 
 
 	setCameraZoomLevel(level){
-		this._camera.setZoomLevel(level)
+		this._camera.setZoomLevel(level);
 	}
 
 
@@ -275,31 +227,33 @@ class World extends EventEmitter {
 	 */
 	setUserUpdateFunction(func){
 		if (typeof callback !== "function"){
-			console.log("The callback must be a function")
+			console.log("The callback must be a function");
 			return;
 		}
 
-		this._userUpdateFunc = func
+		this._userUpdateFunc = func;
 	}
 
 	
 	getDeltaTime(){
-		return this._deltaTime
+		return this._deltaTime;
 	}
 
 
 	getScreen(){
-		return this._screen
+		return this._screen;
 	}
 
 
 	getCamera(){
-		return this._camera
+		if (this._camera === undefined)
+			console.log("UNDEFINED CAMERA");
+		return this._camera;
 	}
 
 
 	screen2MapCoords(e){
-		return this._map.screen2MapCoords(e, this._camera)
+		return this._map.screen2MapCoords(e, this._camera);
 	}
 
 } // end of World class

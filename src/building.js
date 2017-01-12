@@ -1,4 +1,4 @@
-class Building {
+/*class Building {
 	constructor(type, tile_width, tile_height){
 		this.id = -1
 		this.type = type
@@ -14,12 +14,12 @@ class Building {
 		  |   |   |
 		   --- ---
 		  we only want to draw the house at origin (org), not 4 times.
-		 */
+
 		this.toDraw = true
 	}
 	
 	set_image(image_path){
 		  this.image = new cImage(-1, image_path)
 	}
-}
+}*/
 
