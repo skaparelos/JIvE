@@ -1,65 +1,4 @@
 /**
- *  The selector is where the mouse points at at any given instance.
- *  i.e. which tile the user has selected
- */
-class Selector{
-
-	constructor(){
-		this.clear()
-	}
-
-
-	setPos(tileY, tileX){
-		this._tileY = tileY;
-		this._tileX = tileX
-	}
-
-
-	getPos(){
-		return {
-			tileX: this._tileX,
-			tileY: this._tileY
-		};
-	}
-	
-
-	setImg(img){
-		this._img = img;
-	}
-
-
-	getImg(){
-		return this._img;
-	}
-
-	
-	isHidden(){
-		return this._isHidden;
-	}
-
-
-	setHidden(hidden){
-		this._hidden = hidden;
-	}
-
-
-	clear(){
-		this._tileX = 0;
-		this._tileY = 0;
-
-		// set to "true" if you don't want it to be drawn
-		this._isHidden = false;
-
-		// the image of the selector
-		this._img = null
-	}
-}
-
-
-/* ------------------------------------------------------------------------ */
-
-
-/**
  *  A map cell represents the contents of each cell in a map
  */
 class MapCell{
@@ -93,6 +32,8 @@ class MapCell{
 	getWorldObjectId(){
 		return this._worldObjectId
 	}
+
+
 
 }
 
@@ -185,7 +126,7 @@ class Map{
 		this._height = 0;
         this._layerCtr = 0;
 
-        // _map is a 3D array.
+        // this is a 3D array.
 		// [i][j][k]
 		// i -> is the layer index
 		// j -> is the row index
@@ -262,7 +203,7 @@ class Map{
 	*/
 	screen2MapCoords(e, camera) {
 
-		/*  Solve the drawing equations for tileX, tileY
+		/*  Solve the drawing functions for tileX, tileY
 			These are the 2 drawing equations:
 			screenX = (tileX - tileY) * unittileWidth / zoomLevel / 2 + camX;
 			screenY = (tileY + tileX) * unittileHeight / zoomLevel / 2 + camY;

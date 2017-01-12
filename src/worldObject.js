@@ -4,11 +4,12 @@
  */
 class WorldObject{
 
-	constructor(frame, drawable, layer, tileX, tileY, tileWidth, tileHeight){
+	constructor(frameName, drawable, layer, tileX, tileY, tileWidth, tileHeight){
 		WorldObject.worldObjects[WorldObject._id] = this;
 		this._id = WorldObject._id++;
-		
-		this._frame = frame;
+
+        // frame nickname inside tileset (set in configure.js)
+		this._frameName = frameName;
 		this._drawable = drawable;
 		this._layer = layer;
 		this._walkable = true;
@@ -20,8 +21,8 @@ class WorldObject{
 	}
 
 
-	getFrame(){
-		return this._frame;
+	getFrameName(){
+		return this._frameName;
 	}
 
 
@@ -54,7 +55,7 @@ class WorldObject{
     draw(spriteSheet, row , col, camX, camY, zoomLevel, screenOffset,
          screenWidth, screenHeight){
 
-        var imgDim = spriteSheet.getFrameDimensions(this._frame);
+        var imgDim = spriteSheet.getFrameDimensions(this._frameName);
         var imgWidth = imgDim.width;
         var imgHeight = imgDim.height;
 
@@ -66,7 +67,7 @@ class WorldObject{
             coords.x < screenWidth + screenOffset &&
             coords.y < screenHeight + screenOffset){
 
-            spriteSheet.drawFrame(this._frame, coords.x, coords.y,
+            spriteSheet.drawFrame(this._frameName, coords.x, coords.y,
                 coords.width, coords.height);
         }
     }
@@ -77,7 +78,7 @@ class WorldObject{
 
 		for (var object in objectsJSONed){
 			var o = objectsJSONed[object];
-			new WorldObject(o._frame, o._drawable, o._layer, o._tileX, o._tileY,
+			new WorldObject(o._frameName, o._drawable, o._layer, o._tileX, o._tileY,
 				o._tileWidth, o._tileHeight);
 		}
 	}

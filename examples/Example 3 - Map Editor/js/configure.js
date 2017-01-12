@@ -78,7 +78,11 @@ var g_unit_tile_height = 64;
 \***************************/
 
 /* Images must be in the IMAGES_DIR folder that you set in g_game_settings 
- * (see top of this document) */
+ * (see top of this document)
+ *
+ * set the locations of the various frames within the tileset
+ * [x, y, width, height, anchorX, anchorY] (anchorX, anchorY are used for animation)
+ * */
 
 
 const g_selector_images = {

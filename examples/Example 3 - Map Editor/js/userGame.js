@@ -59,7 +59,8 @@ function setupWorld(mapDim){
 	// do not remove this from here in the map editor
 	// this is done to initialise a world object with id = 0,
 	// which is the white-black tile used to draw the editor
-	var wo = new WorldObject(0);
+	new WorldObject(0); // white-black
+	var sel = new WorldObject(1); // the selector
 	
 	// Load the map layers
 	var layer0 = new MapLayer();
@@ -114,12 +115,22 @@ function setupWorld(mapDim){
 
 function addListeners(){
 
+
+//	world.on("draw", function(e){
+
+//	});
+
+	//world.on("cameramove")
+
     world.on("mousemove", function(e){
         if (e.clientY > world.getScreen().getHeight())
             return;
 
         var tiles = world.screen2MapCoords(e);
-        if (tiles === -1) return;
+        if (tiles === -1) {
+            worldSelector.setPos(-1, -1);
+        	return;
+        }
 
         worldSelector.setPos(tiles.tileY, tiles.tileX)
     });
@@ -129,8 +140,10 @@ function addListeners(){
             return;
 
         var tiles = world.screen2MapCoords(e);
-        if (tiles === -1) return;
-
+        if (tiles === -1) {
+            worldSelector.setPos(-1, -1);
+            return;
+        }
         // TODO take the MapCell type from the worldObject and let the user
 		// define whether something is walkable via the map editor
         if (selectedWorldObjectID != -1)

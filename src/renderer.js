@@ -76,15 +76,14 @@ class Renderer{
 
 		// draw tile selector
 		var selectorImg = this._selector.getImg();
-		if (this._selector.isHidden() === false && selectorImg !== null){
-			var selectorPos = this._selector.getPos();
-			var row = selectorPos.tileY;
-			var col = selectorPos.tileX;
+        var selectorPos = this._selector.getPos();
+        var row = selectorPos.tileY;
+        var col = selectorPos.tileX;
+		if (this._selector.isHidden() === false && selectorImg !== null
+			&& row !== -1 && col !== -1 ){
+
 			var img = null;
 
-			// TODO drawing the selector is something the user has to do
-			// this shouldn't be here
-	
 			var coords = WorldObject.drawingCoords(row, col, selectorImg.width,
 				selectorImg.height, camX, camY, zoomLevel);
 			this._ctx.drawImage(selectorImg, coords.x, coords.y, coords.width,
