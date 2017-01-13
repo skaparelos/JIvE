@@ -37,8 +37,11 @@ const g_DEBUG = g_game_settings["DEBUG"]
 
 // Camera Settings
 const g_camera_settings = {
+
 	"scrollingSpeed" : 15,
+
 	"initialZoomLevel" : 2,
+
 	"allowChangeInZoomLevel" : true,
 
 	// which keys to use for which movement
@@ -86,25 +89,20 @@ var g_unit_tile_height = 64;
 
 
 const g_selector_images = {
-	"selector" : "non_selector.png"
+	"selector" : "red_selector.png"
 };
 
 
 const g_basic_tilesets = {
-	"first_tileset" :  "selector.png",
-	"second_tileset" : "tileset.png",
+	"first_tileset" :  "editorTile.png" //,
+	//"second_tileset" : "tileset.png",
 };
 
 const g_first_tileset_frames = {
-	"0" : [0, 0, 128, 64, 0, 0]
+	"black-white-tile" : [0, 0, 128, 64, 0, 0]
 };
+const g_black_white_tile = "black-white-tile";
 
 
-const g_second_tileset_frames = {
-	"5" : [0, 0, 128, 110, 0, 0], //red house
-	"4" : [128, 0, 128, 110, 0, 0], // green house
-	"3" : [256, 0, 128, 110, 0, 0], // blue house
-	"2" : [0, 110, 128, 64, 0, 0], // dirt tile
-	"1" : [128, 110, 128, 64, 0, 0] // green tile
-	//"selector" : [256, 110, 128, 64, 0, 0]  //non selector
-};
+//const g_second_tileset_frames = {
+//};

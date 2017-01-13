@@ -6,7 +6,6 @@ var world;
 var worldImageManager;
 var worldSpriteSheetManager;
 var worldSelector;
-var worldObjects = [];
 var worldMap;
 
 var layerCtr = 0;
@@ -59,8 +58,8 @@ function setupWorld(mapDim){
 	// do not remove this from here in the map editor
 	// this is done to initialise a world object with id = 0,
 	// which is the white-black tile used to draw the editor
-	new WorldObject(0); // white-black
-	var sel = new WorldObject(1); // the selector
+	new WorldObject("black-white-tile"); // white-black
+	//var sel = new WorldObject(1); // the selector
 	
 	// Load the map layers
 	var layer0 = new MapLayer();
@@ -85,7 +84,7 @@ function setupWorld(mapDim){
 	im.load(g_basic_tilesets, function(){
 
 		worldSpriteSheetManager.load("first_tileset", g_first_tileset_frames);
-		worldSpriteSheetManager.load("second_tileset", g_second_tileset_frames);
+		//worldSpriteSheetManager.load("second_tileset", g_second_tileset_frames);
 
 		worldSelector = world.getSelector();
 		var selectorImg = worldImageManager.get("selector");
@@ -96,31 +95,29 @@ function setupWorld(mapDim){
         addListeners();
 
     });
-
-	// TODO make this work
-	//world.on("keydown=", function(e){
-	//	console.log("it works!!")
-	//});
-
-	/*world.on("keydown", function(e){
-		if (e.keyCode == Utils.key("="))
-			world.setCameraZoomLevel(1);
-
-		if (e.keyCode == Utils.key("-"))
-			world.setCameraZoomLevel(3);
-	});*/
-
 }
 
 
 function addListeners(){
 
 
-//	world.on("draw", function(e){
-
-//	});
+	//	world.on("draw", function(e){
+	//	});
 
 	//world.on("cameramove")
+
+    // TODO make this work
+    //world.on("keydown=", function(e){
+    //	console.log("it works!!")
+    //});
+
+	/*world.on("keydown", function(e){
+	 if (e.keyCode == Utils.key("="))
+	 world.setCameraZoomLevel(1);
+
+	 if (e.keyCode == Utils.key("-"))
+	 world.setCameraZoomLevel(3);
+	 });*/
 
     world.on("mousemove", function(e){
         if (e.clientY > world.getScreen().getHeight())
@@ -149,7 +146,7 @@ function addListeners(){
         if (selectedWorldObjectID != -1)
             worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX,
                 MapCell.TYPES.WALKABLE_NON_EMPTY,
-                worldObjects[selectedWorldObjectID - 1].getID());
+                WorldObject.worldObjects[selectedWorldObjectID].getFrameName());
     });
 
     world.on("leftclick", function(e){
@@ -162,7 +159,7 @@ function addListeners(){
         if (selectedWorldObjectID != -1)
             worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX,
                 MapCell.TYPES.WALKABLE_NON_EMPTY,
-                worldObjects[selectedWorldObjectID - 1].getID());
+                WorldObject.worldObjects[selectedWorldObjectID].getFrameName());
     });
 
     var camera = world.getCamera();
@@ -185,7 +182,7 @@ function addListeners(){
  */
 function setWalkable(checked){
 	if (selectedWorldObjectID != -1)
-		worldObjects[selectedWorldObjectID - 1].setWalkable(checked)
+        WorldObject.worldObjects[selectedWorldObjectID].setWalkable(checked)
 }
 
 
@@ -197,7 +194,8 @@ function setWalkable(checked){
  */
 function imageClicked(img){
 	selectedWorldObjectID = img.id;
-	var selectedImg = worldImageManager.get(img.id);
+	console.log("IMG ID = " + img.id)
+	var selectedImg = worldImageManager.get("selector"); // img.id
 	worldSelector.setImg(selectedImg);
 	updateObjectProperties(selectedWorldObjectID)
 }
@@ -208,7 +206,7 @@ function imageClicked(img){
  */
 function updateObjectProperties(worldObjectID){
 	var walkableCheckBox = document.getElementById("walkablebox");
-	walkableCheckBox.checked = worldObjects[worldObjectID - 1].getWalkable()
+	walkableCheckBox.checked = WorldObject.worldObjects[worldObjectID].getWalkable()
 }
 
 
@@ -273,8 +271,11 @@ function previewFiles(that) {
 
 				// use JIvE to load images so it is easy to draw them on the map
 				var imgPath = this.result;
-				worldImageManager.load2MapEditor(file.name, imgPath,
-					imageLoaded);
+
+				//remove the filename extension
+				var fileName = file.name.replace(/\.[^/.]+$/, "");
+				worldImageManager.load2MapEditor(fileName, imgPath, imageLoaded);
+
 			}, false);
 			reader.readAsDataURL(file);
 		}
@@ -294,29 +295,31 @@ function previewFiles(that) {
  * @param img - the image object
  * @param id - TODO complete this.
  */
-function imageLoaded(img, id) {
+function imageLoaded(img, id, fileName) {
+
+	if (fileName === undefined || fileName == "")
+		fileName = id;
 
     // load it to the spriteSheet
     var tempFrames = {};
-    tempFrames[id] = [0, 0, img.width, img.height, 0, 0];
-    worldSpriteSheetManager.load(id, tempFrames);
+    tempFrames[fileName] = [0, 0, img.width, img.height, 0, 0];
+    worldSpriteSheetManager.load(fileName, tempFrames);
 
     // TODO this is wrong. here we create a new world object for each image.
 	// what if the image is a unit? it has to move. If we create N units
 	// we need N worldObjects.
 	// This doesn't even work with buildings, because each must have each own
 	// health, etc..
-    var wo = new WorldObject(id);
-    worldObjects.push(wo);
+    new WorldObject(fileName);
 
     // show the loaded image to the user by injecting it in the HTML code.
     var panel = document.getElementById("flexitem1");
     if (panel.innerHTML.includes("your images"))
-        panel.innerHTML = "<input id='" + id + "' class='floatedImg' " +
+        panel.innerHTML = "<input id='" + fileName + "' class='floatedImg' " +
             "type='image' onclick='imageClicked(this)' src='" + img.src + "'/>";
     else {
     	// += instead of =
-        panel.innerHTML += "<input id='" + id + "' class='floatedImg' " +
+        panel.innerHTML += "<input id='" + fileName + "' class='floatedImg' " +
 			"type='image' onclick='imageClicked(this)' src='" + img.src + "'/>";
     }
 }

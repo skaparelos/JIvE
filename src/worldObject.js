@@ -5,17 +5,13 @@
 class WorldObject{
 
 	constructor(frameName, drawable, layer, tileX, tileY, tileWidth, tileHeight){
-		WorldObject.worldObjects[WorldObject._id] = this;
+		WorldObject.worldObjects[frameName] = this;
 		this._id = WorldObject._id++;
 
         // frame nickname inside tileset (set in configure.js)
 		this._frameName = frameName;
-		this._drawable = drawable;
-		this._layer = layer;
 		this._walkable = true;
 
-		this._tileX = tileX;
-		this._tileY = tileY;
 		this._tileWidth = tileWidth;
 		this._tileHeight = tileHeight;
 	}
@@ -40,15 +36,6 @@ class WorldObject{
 		return this._walkable;
 	}
 
-
-	isDrawable(){
-		return this._drawable;
-	}
-
-
-	setDrawable(drawable){
-		this._drawable = drawable;
-	}
 
 
 	// TODO do we need row, col ? or access this._tileX, this._tileY?
@@ -139,6 +126,7 @@ class WorldObject{
             height: heightZoom
         }
     }
+
 }
 
 

@@ -83,6 +83,7 @@ class ImageManager {
 	 *  //TODO load to spritesheet as well
 	 */
 	load2MapEditor(key, path, callback){
+
 		var img = new Image();
 		var that = this;
 
@@ -94,9 +95,9 @@ class ImageManager {
 		this._originalImageName[id] = key;
 
 		img.onload = function(){
-			that._images[id] = img;
+			that._images[key] = img;
 			if(callback !== undefined)
-				callback(img, id);
+				callback(img, id, key);
 		}
 
 		img.src = path;
