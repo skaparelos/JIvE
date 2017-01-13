@@ -16,7 +16,7 @@ var selectedLayer = 0;
 
 // holds the nickname of the basic object currently chose
 // -1 means no object is chosen
-var selectedBasicObjectID = -1;
+var selectedBasicObjectNickName = -1;
 
 // the name we gave to the html element to add the menu
 const menuNameHTML = "hub";
@@ -36,6 +36,7 @@ function main() {
  * Deletes the previously used canvas and the images uploaded by the user
  */
 function deletePrevious(){
+
     // remove canvas if already exists (in case the user created
     // a new map with different dimensions)
     var body = document.getElementsByTagName("BODY")[0];
@@ -61,13 +62,12 @@ function setupWorld(mapDim){
 	worldSelector = world.getSelector();
 	worldMap = world.getMap();
 
-	// TODO fix this
+	// TODO think if there is an alternative
 	// do not remove this from here in the map editor
-	// this is done to initialise a world object with id = 0,
-	// which is the white-black tile used to draw the editor
+	// this is done to initialise a basic object which is the black white tile
+	// that you when editing the map
 	new BasicObject("black-white-tile"); // white-black
-	//var sel = new BasicObject(1); // the selector
-	
+
 	// Load the map layers
 	var layer0 = new MapLayer();
 	
@@ -107,12 +107,6 @@ function setupWorld(mapDim){
 
 function addListeners(){
 
-
-	//	world.on("draw", function(e){
-	//	});
-
-	//world.on("cameramove")
-
     // TODO make this work
     //world.on("keydown=", function(e){
     //	console.log("it works!!")
@@ -150,10 +144,10 @@ function addListeners(){
         }
         // TODO take the MapCell type from the worldObject and let the user
 		// define whether something is walkable via the map editor
-        if (selectedBasicObjectID != -1)
+        if (selectedBasicObjectNickName != -1)
             worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX,
                 MapCell.TYPES.WALKABLE_NON_EMPTY,
-                BasicObject.worldObjects[selectedBasicObjectID].getNickName());
+                BasicObject.worldObjects[selectedBasicObjectNickName].getNickName());
     });
 
     world.on("leftclick", function(e){
@@ -163,10 +157,10 @@ function addListeners(){
         var tiles = world.screen2MapCoords(e);
         if (tiles === -1) return;
 
-        if (selectedBasicObjectID != -1)
+        if (selectedBasicObjectNickName != -1)
             worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX,
                 MapCell.TYPES.WALKABLE_NON_EMPTY,
-                BasicObject.worldObjects[selectedBasicObjectID].getNickName());
+                BasicObject.worldObjects[selectedBasicObjectNickName].getNickName());
     });
 
     var camera = world.getCamera();
@@ -188,8 +182,8 @@ function addListeners(){
  *  this function sets the right value for the world object.
  */
 function setWalkable(checked){
-	if (selectedBasicObjectID != -1)
-        BasicObject.worldObjects[selectedBasicObjectID].setWalkable(checked)
+	if (selectedBasicObjectNickName != -1)
+        BasicObject.worldObjects[selectedBasicObjectNickName].setWalkable(checked)
 }
 
 
@@ -200,11 +194,12 @@ function setWalkable(checked){
  * @param img - the image clicked
  */
 function imageClicked(img){
-	selectedBasicObjectID = img.id;
-	console.log("IMG ID = " + img.id)
-	var selectedImg = worldImageManager.get("selector"); // img.id
+
+	//get the id of the clicked image (which is the image nickname)
+	selectedBasicObjectNickName = img.id;
+	var selectedImg = worldImageManager.get(selectedBasicObjectNickName);
 	worldSelector.setImg(selectedImg);
-	updateObjectProperties(selectedBasicObjectID)
+	updateObjectProperties(selectedBasicObjectNickName);
 }
 
 
@@ -247,7 +242,9 @@ function addLayer(){
 	// HTML stuff
 	layerCtr += 1;
 	var layerForm = document.getElementById('layers');
-	var radioBtnHtml = '<input type="radio" name="layer" onclick="changeSelectedLayer(this)" value="' + layerCtr + '"> L' + layerCtr; 
+	var radioBtnHtml = '<input type="radio" ' +
+		'name="layer" onclick="changeSelectedLayer(this)" ' +
+		'value="' + layerCtr + '"> L' + layerCtr;
 	layerForm.innerHTML += radioBtnHtml;
 
 	// JIvE stuff
@@ -301,14 +298,12 @@ function previewFiles(that) {
  * bottom
  *
  * @param img -
- * @param id -
  * @param fileName -
  */
-function imageLoaded(img, id, fileName) {
+function imageLoaded(img, fileName) {
 
 	if (fileName === undefined || fileName == "") {
-        fileName = id;
-        console.log("An image is saved using its id.");
+        console.log("An image doesn't have a name. Error!");
     }
 
     // load it to the spriteSheet

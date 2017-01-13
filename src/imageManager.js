@@ -21,12 +21,6 @@ class ImageManager {
 
 		// holds the root folder to look for images in
 		this._imagesPath = g_game_settings["IMAGES_DIR"];
-
-		// used for loading images online in the map editor
-		// start this from 1, to allow for the value 0
-		// to be the isometric sketch map
-		// TODO this is highly dependent. simplify it.
-		this._imageID = 1;
 	}
 
 
@@ -87,36 +81,13 @@ class ImageManager {
 		var img = new Image();
 		var that = this;
 
-		var id = this._imageID;
-		this._imageID += 1;
-
-		// keep track of the name of the image
-		if (!this._originalImageName) this._originalImageName = {};
-		this._originalImageName[id] = key;
-
 		img.onload = function(){
 			that._images[key] = img;
 			if(callback !== undefined)
-				callback(img, id, key);
+				callback(img, key);
 		}
 
 		img.src = path;
-
-	}
-
-
-	/**
-	 *  This is used in the map editor to export all images in a tileset
-	 *	
-	 */
-	exportImages(){
-	
-		if (!this._originalImageName) return;
-	
-		for(var i in this._images){
-			console.log("id = " + i + ") " + this._originalImageName[i]);
-		}
-		alert("See output in console!");
 
 	}
 
