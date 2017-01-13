@@ -64,9 +64,9 @@ class Renderer{
                         worldObjectId !== null ){
 
                         //TODO
-                        //WorldObject.worldObjects[worldObjectId].isDrawable()) {
+                        //BasicObject.worldObjects[worldObjectId].isDrawable()) {
 
-                        WorldObject.worldObjects[worldObjectId].draw(
+                        BasicObject.worldObjects[worldObjectId].draw(
                         	this._spriteSheet, row, col, camX, camY, zoomLevel,
 							this._offset, viewPortWidth, viewPortHeight);
 					}
@@ -84,7 +84,7 @@ class Renderer{
 
 			var img = null;
 
-			var coords = WorldObject.drawingCoords(row, col, selectorImg.width,
+			var coords = BasicObject.drawingCoords(row, col, selectorImg.width,
 				selectorImg.height, camX, camY, zoomLevel);
 			this._ctx.drawImage(selectorImg, coords.x, coords.y, coords.width,
 				coords.height);

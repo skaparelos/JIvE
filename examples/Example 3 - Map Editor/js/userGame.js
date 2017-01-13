@@ -8,12 +8,19 @@ var worldSpriteSheetManager;
 var worldSelector;
 var worldMap;
 
+// counts the number of layers the user has created
 var layerCtr = 0;
+
+// points to the selected layer
 var selectedLayer = 0;
-var selectedWorldObjectID = -1;
+
+// holds the nickname of the basic object currently chose
+// -1 means no object is chosen
+var selectedBasicObjectID = -1;
 
 // the name we gave to the html element to add the menu
 const menuNameHTML = "hub";
+
 
 /**
  * This is the main entry point
@@ -58,8 +65,8 @@ function setupWorld(mapDim){
 	// do not remove this from here in the map editor
 	// this is done to initialise a world object with id = 0,
 	// which is the white-black tile used to draw the editor
-	new WorldObject("black-white-tile"); // white-black
-	//var sel = new WorldObject(1); // the selector
+	new BasicObject("black-white-tile"); // white-black
+	//var sel = new BasicObject(1); // the selector
 	
 	// Load the map layers
 	var layer0 = new MapLayer();
@@ -143,10 +150,10 @@ function addListeners(){
         }
         // TODO take the MapCell type from the worldObject and let the user
 		// define whether something is walkable via the map editor
-        if (selectedWorldObjectID != -1)
+        if (selectedBasicObjectID != -1)
             worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX,
                 MapCell.TYPES.WALKABLE_NON_EMPTY,
-                WorldObject.worldObjects[selectedWorldObjectID].getFrameName());
+                BasicObject.worldObjects[selectedBasicObjectID].getNickName());
     });
 
     world.on("leftclick", function(e){
@@ -156,10 +163,10 @@ function addListeners(){
         var tiles = world.screen2MapCoords(e);
         if (tiles === -1) return;
 
-        if (selectedWorldObjectID != -1)
+        if (selectedBasicObjectID != -1)
             worldMap.getLayer(selectedLayer).setCell(tiles.tileY, tiles.tileX,
                 MapCell.TYPES.WALKABLE_NON_EMPTY,
-                WorldObject.worldObjects[selectedWorldObjectID].getFrameName());
+                BasicObject.worldObjects[selectedBasicObjectID].getNickName());
     });
 
     var camera = world.getCamera();
@@ -181,8 +188,8 @@ function addListeners(){
  *  this function sets the right value for the world object.
  */
 function setWalkable(checked){
-	if (selectedWorldObjectID != -1)
-        WorldObject.worldObjects[selectedWorldObjectID].setWalkable(checked)
+	if (selectedBasicObjectID != -1)
+        BasicObject.worldObjects[selectedBasicObjectID].setWalkable(checked)
 }
 
 
@@ -193,11 +200,11 @@ function setWalkable(checked){
  * @param img - the image clicked
  */
 function imageClicked(img){
-	selectedWorldObjectID = img.id;
+	selectedBasicObjectID = img.id;
 	console.log("IMG ID = " + img.id)
 	var selectedImg = worldImageManager.get("selector"); // img.id
 	worldSelector.setImg(selectedImg);
-	updateObjectProperties(selectedWorldObjectID)
+	updateObjectProperties(selectedBasicObjectID)
 }
 
 
@@ -205,8 +212,8 @@ function imageClicked(img){
  *	TODO this should be useful only in case of image loading, to show the correct value
  */
 function updateObjectProperties(worldObjectID){
-	var walkableCheckBox = document.getElementById("walkablebox");
-	walkableCheckBox.checked = WorldObject.worldObjects[worldObjectID].getWalkable()
+	var walkableCheckBox = document.getElementById("bo_walkable");
+	walkableCheckBox.checked = BasicObject.worldObjects[worldObjectID].getWalkable()
 }
 
 
@@ -214,7 +221,7 @@ function updateObjectProperties(worldObjectID){
  * Exports and downloads the map file to the user.
  */
 function downloadMap(){
-	var jsonified = WorldObject.exportJSON();
+	var jsonified = BasicObject.exportJSON();
 	jsonified += world.getMap().exportJSON();
 
 	var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(jsonified);
@@ -245,7 +252,8 @@ function addLayer(){
 
 	// JIvE stuff
 	var layer = new MapLayer();
-	layer.createEmptyLayer(mapDims, mapDims, MapCell.TYPES.EMPTY);
+    var mapDim = parseInt(document.getElementById("mapdim").value);
+	layer.createEmptyLayer(mapDim, mapDim, MapCell.TYPES.EMPTY);
 	worldMap.addLayer(layer)
 }
 
@@ -292,25 +300,24 @@ function previewFiles(that) {
  * loaded. It makes the uploaded image availabe to the user in the menu at the
  * bottom
  *
- * @param img - the image object
- * @param id - TODO complete this.
+ * @param img -
+ * @param id -
+ * @param fileName -
  */
 function imageLoaded(img, id, fileName) {
 
-	if (fileName === undefined || fileName == "")
-		fileName = id;
+	if (fileName === undefined || fileName == "") {
+        fileName = id;
+        console.log("An image is saved using its id.");
+    }
 
     // load it to the spriteSheet
     var tempFrames = {};
     tempFrames[fileName] = [0, 0, img.width, img.height, 0, 0];
     worldSpriteSheetManager.load(fileName, tempFrames);
 
-    // TODO this is wrong. here we create a new world object for each image.
-	// what if the image is a unit? it has to move. If we create N units
-	// we need N worldObjects.
-	// This doesn't even work with buildings, because each must have each own
-	// health, etc..
-    new WorldObject(fileName);
+    // create a new basic object with the file name as identifier
+    new BasicObject(fileName);
 
     // show the loaded image to the user by injecting it in the HTML code.
     var panel = document.getElementById("flexitem1");

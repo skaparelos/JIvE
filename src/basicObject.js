@@ -1,24 +1,32 @@
 /**
- * WorldObject represents an entity that the user has placed in the map.
- * It can be a tile, a house, a tree, a unit, etc.
+ * BasicObjects are the finite set of objects that are used to create a or a game
+ *
+ * For example: in a game we might have 10 blue houses and 20 red houses.
+ * We would have two basic objects: one representing the blue house and another
+ * one representing the red house.
+ *
+ * WorldObjects class and its instances are used to create multiple instances
+ * of each basic object. So we would have 10 worldObjects representing the blue
+ * houses and 20 worldobjects representing the red houses.
+ *
+ * A basicObject can be a tile, a house, a tree, a unit, etc.
  */
-class WorldObject{
+class BasicObject{
 
-	constructor(frameName, drawable, layer, tileX, tileY, tileWidth, tileHeight){
-		WorldObject.worldObjects[frameName] = this;
-		this._id = WorldObject._id++;
+	constructor(nickName, tileWidth, tileHeight, walkable = true){
+		BasicObject.worldObjects[nickName] = this;
+		this._id = BasicObject._id++;
 
-        // frame nickname inside tileset (set in configure.js)
-		this._frameName = frameName;
-		this._walkable = true;
+		this._nickName = nickName; // tileset's nickname (see configure.js)
+		this._walkable = walkable;
 
 		this._tileWidth = tileWidth;
 		this._tileHeight = tileHeight;
 	}
 
 
-	getFrameName(){
-		return this._frameName;
+	getNickName(){
+		return this._nickName;
 	}
 
 
@@ -42,11 +50,11 @@ class WorldObject{
     draw(spriteSheet, row , col, camX, camY, zoomLevel, screenOffset,
          screenWidth, screenHeight){
 
-        var imgDim = spriteSheet.getFrameDimensions(this._frameName);
+        var imgDim = spriteSheet.getFrameDimensions(this._nickName);
         var imgWidth = imgDim.width;
         var imgHeight = imgDim.height;
 
-        var coords = WorldObject.drawingCoords(row, col, imgWidth, imgHeight,
+        var coords = BasicObject.drawingCoords(row, col, imgWidth, imgHeight,
             camX, camY, zoomLevel);
 
         if (coords.x > 0 - screenOffset &&
@@ -54,26 +62,26 @@ class WorldObject{
             coords.x < screenWidth + screenOffset &&
             coords.y < screenHeight + screenOffset){
 
-            spriteSheet.drawFrame(this._frameName, coords.x, coords.y,
+            spriteSheet.drawFrame(this._nickName, coords.x, coords.y,
                 coords.width, coords.height);
         }
     }
 
 
-	static load(worldObjects){
-		var objectsJSONed = JSON.parse(worldObjects)
+	static load(BasicObjects){
+		var objectsJSONed = JSON.parse(BasicObjects)
 
 		for (var object in objectsJSONed){
 			var o = objectsJSONed[object];
-			new WorldObject(o._frameName, o._drawable, o._layer, o._tileX, o._tileY,
+			new BasicObject(o._nickName, o._drawable, o._layer, o._tileX, o._tileY,
 				o._tileWidth, o._tileHeight);
 		}
 	}
 
 
 	static exportJSON(){
-		if (WorldObject.worldObjects.length == 0) return;
-		var jsonified = "var g_worldObjects = '" + JSON.stringify(WorldObject.worldObjects) + "';\n";
+		if (BasicObject.worldObjects.length == 0) return;
+		var jsonified = "var g_worldObjects = '" + JSON.stringify(BasicObject.worldObjects) + "';\n";
 		return jsonified;
 	}
 
@@ -131,5 +139,5 @@ class WorldObject{
 
 
 // Static
-WorldObject._id = 0;
-WorldObject.worldObjects = {};
+BasicObject._id = 0;
+BasicObject.worldObjects = {};

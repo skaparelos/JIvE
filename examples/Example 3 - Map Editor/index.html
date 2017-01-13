@@ -16,7 +16,7 @@
 	<script src="../../src/imageManager.js"></script>
 
 	<script src="../../src/world.js"></script>
-	<script src="../../src/worldObject.js"></script>
+	<script src="../../src/basicObject.js"></script>
 	<script src="../../src/canvas.js"></script>
 
 	<script src="../../src/map/map.js"></script>
@@ -54,7 +54,7 @@
 		<div class="flex-container">
 		
 		  	<div id="flexitem1" class="flex-item" style="width:70%;">
-		  		Upload your images/scripts/folders here...
+		  		Upload your images/scripts/folders here... <br> Move using wasd, or the arrows. Scroll to zoom in/zoom out.
 		  	</div>
 
 
@@ -92,7 +92,7 @@
 			  		Object Properties
 			  	</header>
 				  	<form>
-						<input id="wo_walkable" type="checkbox" name="walkable" value="walkable" onchange="setWalkable(this.checked)">Walkable
+						<input id="bo_walkable" type="checkbox" name="walkable" value="walkable" onchange="setWalkable(this.checked)">Walkable
 						<br>
 
 						Here enter the conceptual size of the object. e.g. a tree might be 4 tiles height and 1 tile width, but
@@ -100,11 +100,11 @@
 						<br>
 
 						<label>Tile Width (base)</label>
-						<input type="text" id="wo_tile_width" value="1" onchange="" maxlength="100">
+						<input type="text" id="bo_tile_width" value="1" onchange="alert('TODO')" maxlength="100">
 						<br>
 
 						<label>Tile Height</label>
-						<input type="text" id="wo_tile_width" value="1" onchange="" maxlength="100" >
+						<input type="text" id="bo_tile_width" value="1" onchange="alert('TODO') " maxlength="100" >
 						<br>
 					</form>
 			  </div>
