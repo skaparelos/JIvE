@@ -94,8 +94,17 @@ const g_first_tileset_frames = {
     "black-white-tile" : [128, 0, 128, 64, 0, 0]
 };
 
+const g_coins_frames = {
+	"grey-coin-1" : [0,   0, 77, 80, 0, 0],
+	"grey-coin-2" : [107, 0, 77, 80, 0, 0],
+	"grey-coin-3" : [214, 0, 77, 80, 0, 0],
+	"grey-coin-4" : [321, 0, 77, 80, 0, 0],
+	"grey-coin-5" : [428, 0, 77, 80, 0, 0]
+};
+
 const g_images = {
-	"first_tileset" :  ["editor_tileset.png", g_first_tileset_frames] //,
+	"first_tileset" :  ["editor_tileset.png", g_first_tileset_frames],
+	"grey-coins"    :  ["coins.png", g_coins_frames]
 	//"second_tileset" : "tileset.png",
 };
 

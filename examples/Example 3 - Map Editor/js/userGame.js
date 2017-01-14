@@ -2,6 +2,7 @@
  * This file is to be manipulated by those who develop using JIvE
  * to contain the game and the menu logic
  */
+
 var world;
 var worldImageManager;
 var worldSpriteSheetManager;
@@ -85,6 +86,7 @@ function loadImages(){
 
         //worldSpriteSheetManager.load("first_tileset", g_first_tileset_frames);
         //worldSpriteSheetManager.load("second_tileset", g_second_tileset_frames);
+
 
 		// TODO selector class waits for an image, while the selector image
 		// we have loaded is a frame. That means that it is a frame and needs

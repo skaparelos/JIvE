@@ -37,7 +37,6 @@ class MapCell{
 
 }
 
-// TODO change this and let the user define it
 MapCell.TYPES = {
 
     // all empty are walkable

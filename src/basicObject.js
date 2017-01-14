@@ -17,13 +17,27 @@ class BasicObject{
 		BasicObject.worldObjects[nickName] = this;
 		this._id = BasicObject._id++;
 
+		//TODO this is sth the user must set
 		this._nickName = nickName; // tileset's nickname (see configure.js)
 		this._walkable = walkable;
 
 		this._tileWidth = tileWidth;
 		this._tileHeight = tileHeight;
+
+		// The names of the frames associated with this basicObject.
+		this._frames = {};
+		// TODO currentFrame is sth that worldObjects have
+		//this._currentFrame = 0;
 	}
 
+
+	addFrame(frameName){
+		this._frames.push(frameName);
+	}
+
+	clearFrames(){
+		this._frames = {};
+	}
 
 	getNickName(){
 		return this._nickName;
@@ -69,18 +83,18 @@ class BasicObject{
 
 	static load(BasicObjects){
 		var objectsJSONed = JSON.parse(BasicObjects)
-
 		for (var object in objectsJSONed){
 			var o = objectsJSONed[object];
-			new BasicObject(o._nickName, o._drawable, o._layer, o._tileX, o._tileY,
-				o._tileWidth, o._tileHeight);
+			new BasicObject(o._nickName, o._drawable, o._layer, o._tileX,
+				o._tileY, o._tileWidth, o._tileHeight);
 		}
 	}
 
 
 	static exportJSON(){
 		if (BasicObject.worldObjects.length == 0) return;
-		var jsonified = "var g_worldObjects = '" + JSON.stringify(BasicObject.worldObjects) + "';\n";
+		var jsonified = "var g_worldObjects = '" +
+			JSON.stringify(BasicObject.worldObjects) + "';\n";
 		return jsonified;
 	}
 
