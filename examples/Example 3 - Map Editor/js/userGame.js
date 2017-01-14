@@ -54,9 +54,9 @@ function deletePrevious(){
 
 function setupWorld(mapDim){
 
-	// create the world
 	var dim = calculateSideMenuDimensions();
 	world = new World(dim.width, dim.height);
+
 	worldImageManager = world.getImageManager();
 	worldSpriteSheetManager = world.getSpriteSheet();
 	worldSelector = world.getSelector();
@@ -68,39 +68,34 @@ function setupWorld(mapDim){
 	// that you when editing the map
 	new BasicObject("black-white-tile"); // white-black
 
-	// Load the map layers
+	// create a map layer
 	var layer0 = new MapLayer();
-	
 	// code to make map editor work:
 	layer0.createEmptyLayer(mapDim, mapDim);
 	worldMap.addLayer(layer0);
-
 	// code to test loading
 	//world.getMap().load()
 
-	// Load images to the world
-	im = world.getImageManager();
+	loadImages();
+}
 
-	//TODO put the selector in a tileset. Sometimes is called last and as
-	// a result the callback is undefined. and thus, the map doesn't appear on screen
-	//TODO change this in configure.js and include it in the tileset.
-	im.load(g_selector_images);
+function loadImages(){
 
-	// put the callback function in the last image load, otherwise it
-	// might not work correctly.
-	im.load(g_basic_tilesets, function(){
+    worldImageManager.load(g_images, worldSpriteSheetManager, function(){
 
-		worldSpriteSheetManager.load("first_tileset", g_first_tileset_frames);
-		//worldSpriteSheetManager.load("second_tileset", g_second_tileset_frames);
+        //worldSpriteSheetManager.load("first_tileset", g_first_tileset_frames);
+        //worldSpriteSheetManager.load("second_tileset", g_second_tileset_frames);
 
-		worldSelector = world.getSelector();
-		var selectorImg = worldImageManager.get("selector");
-		worldSelector.setImg(selectorImg);
-	
-		// once images have been loaded, start the world
-		world.start();
+		// TODO selector class waits for an image, while the selector image
+		// we have loaded is a frame. That means that it is a frame and needs
+		// to be accessed from the spritesheet
+        worldSelector = world.getSelector();
+        var selectorImg = worldImageManager.get("selector");
+        worldSelector.setImg(selectorImg);
+
+        // once images have been loaded, start the world and add listeners to it
+        world.start();
         addListeners();
-
     });
 }
 

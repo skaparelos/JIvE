@@ -63,6 +63,9 @@ class Renderer{
 					if (mapCell.type !== MapCell.TYPES.EMPTY &&
                         worldObjectId !== null ){
 
+						// TODO make this draw worldObjects instead of basic
+						// objects
+
                         //TODO
                         //BasicObject.worldObjects[worldObjectId].isDrawable()) {
 
@@ -75,7 +78,7 @@ class Renderer{
 		}
 
 		// draw tile selector
-		var selectorImg = this._selector.getImg();
+		/*var selectorImg = this._selector.getImg();
         var selectorPos = this._selector.getPos();
         var row = selectorPos.tileY;
         var col = selectorPos.tileX;
@@ -89,5 +92,6 @@ class Renderer{
 			this._ctx.drawImage(selectorImg, coords.x, coords.y, coords.width,
 				coords.height);
 		}
+		*/
 	} // end of drawMaps()
 }

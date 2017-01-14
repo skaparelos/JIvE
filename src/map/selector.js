@@ -3,6 +3,8 @@
  *  i.e. which tile the user has selected. It also previews the world object
  *  the user wants to load
  */
+
+// TODO make this extend a world object and draw it as such
 class Selector{
 
     constructor(){

@@ -7,7 +7,7 @@
  *
  * WorldObjects class and its instances are used to create multiple instances
  * of each basic object. So we would have 10 worldObjects representing the blue
- * houses and 20 worldobjects representing the red houses.
+ * houses and 20 worldObjects representing the red houses.
  *
  * A basicObject can be a tile, a house, a tree, a unit, etc.
  */
@@ -43,7 +43,6 @@ class BasicObject{
 	getWalkable(){
 		return this._walkable;
 	}
-
 
 
 	// TODO do we need row, col ? or access this._tileX, this._tileY?

@@ -1,6 +1,6 @@
 /**
- * The spritesheet class uses the image manager to access the loaded images, but
- * can access parts of the images loaded by the image managers. e.g.
+ * The spritesheet (tileset) class uses the image manager to access the loaded
+ * images, but can access parts of the images loaded by the image managers. e.g.
  * we can can load a tileset to the image manager and pass the coordinates
  * of where each tile is in the tileset and draw only that.
  */
@@ -14,7 +14,7 @@ class SpriteSheet{
 
 
 	/**
-	 *  This function takes the name of a spritesheet image and the coordinates 
+	 *  This function takes the name of a tileset image and the coordinates
 	 *  of each image in the sprite sheet. 
 	 *
 	 *  @param imageName - the name of the spritesheet image
@@ -77,10 +77,6 @@ class SpriteSheet{
 	}
 
 
-	/**
-	 *  Deletes the loaded spriteSheets
-	 *
-	 */
 	clear(){
 		this._frames = {}
 	}

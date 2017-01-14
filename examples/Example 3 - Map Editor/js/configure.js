@@ -87,22 +87,16 @@ var g_unit_tile_height = 64;
  * [x, y, width, height, anchorX, anchorY] (anchorX, anchorY are used for animation)
  * */
 
+const g_black_white_tile = "black-white-tile";
 
-const g_selector_images = {
-	"selector" : "red_selector.png"
+const g_first_tileset_frames = {
+    "selector" : [0, 0, 128, 64, 0, 0],
+    "black-white-tile" : [128, 0, 128, 64, 0, 0]
 };
 
-
-const g_basic_tilesets = {
-	"first_tileset" :  "editorTile.png" //,
+const g_images = {
+	"first_tileset" :  ["editor_tileset.png", g_first_tileset_frames] //,
 	//"second_tileset" : "tileset.png",
 };
 
-const g_first_tileset_frames = {
-	"black-white-tile" : [0, 0, 128, 64, 0, 0]
-};
-const g_black_white_tile = "black-white-tile";
 
-
-//const g_second_tileset_frames = {
-//};

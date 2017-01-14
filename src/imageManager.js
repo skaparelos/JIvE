@@ -33,9 +33,10 @@ class ImageManager {
      *           the image manager is done loading.
      *  
 	 */
-	load(imgs, callback){
+	load(imgs, spriteSheet = undefined, callback){
+
 		if (typeof callback !== "function" && callback !== undefined) 
-			console.log("The callback must be a function");
+			console.log("The callback to the load function is not a function");
 		
 		//get the number of images to load
 		for(let i in imgs){
@@ -43,11 +44,32 @@ class ImageManager {
 		}
 
 		for (let key in imgs){
-			this._loadImage(key, imgs[key], callback);
+
+			// if the user is trying to load a single image
+			if (imgs[key].length == 1 || spriteSheet === undefined)
+				this._loadImage(key, imgs[key], callback);
+
+			// if the user is trying to load a tileset
+			if (imgs[key].length == 2) {
+                this._loadImage(key, imgs[key][0], undefined);
+                spriteSheet.load(key, imgs[key][1]);
+                if(callback !== undefined)
+                	callback();
+            }
 		}
 	}
 
 
+    /**
+	 * Due to how closure work we had to create this function which actually
+	 * loads an image to the image manager. This is called by the load()
+	 * function above for each to be loaded.
+	 *
+     * @param key
+     * @param path
+     * @param callback
+     * @private
+     */
 	_loadImage(key, path, callback){
 		var img = new Image();
 		var that = this;
@@ -88,7 +110,6 @@ class ImageManager {
 		}
 
 		img.src = path;
-
 	}
 
 
