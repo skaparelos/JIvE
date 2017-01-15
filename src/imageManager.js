@@ -33,7 +33,7 @@ class ImageManager {
      *           the image manager is done loading.
      *  
 	 */
-	load(imgs, spriteSheet = undefined, callback){
+	load(imgs, spriteSheet, callback){
 
 		if (typeof callback !== "function" && callback !== undefined) 
 			console.log("The callback to the load function is not a function");
@@ -45,17 +45,29 @@ class ImageManager {
 
 		for (let key in imgs){
 
-			// if the user is trying to load a single image
-			if (imgs[key].length == 1 || spriteSheet === undefined)
-				this._loadImage(key, imgs[key], callback);
+			// if the user is trying to load a single image instead of spritesheet
+            // in that, treat it as a spritesheet with frames
+            // equal to the size of the image
+			if (imgs[key].length == 1) {
 
-			// if the user is trying to load a tileset
-			if (imgs[key].length == 2) {
-                this._loadImage(key, imgs[key][0], undefined);
-                spriteSheet.load(key, imgs[key][1]);
-                if(callback !== undefined)
-                	callback();
+				// this needs a callback function since we set the frame
+				// to be the size of the image, but we cannot know the size of
+				// the image in advance, because it has not been loaded.
+				// we must wait for onload to load the image
+                this._loadImage(key, imgs[key], callback, function(img){
+                    var tempFrame = {};
+                    tempFrame[key] = [0, 0, img.width, img.height, 0, 0];
+                    spriteSheet.load(key, tempFrame);
+				});
             }
+
+			// if the user is trying to load a spritesheet
+			if (imgs[key].length == 2) {
+                this._loadImage(key, imgs[key][0], callback)
+				spriteSheet.load(key, imgs[key][1]);
+
+            }
+
 		}
 	}
 
@@ -70,31 +82,35 @@ class ImageManager {
      * @param callback
      * @private
      */
-	_loadImage(key, path, callback){
+	_loadImage(key, path, callback, innerCallback = undefined){
 		var img = new Image();
 		var that = this;
 
 		img.onload = function(){
 			that._images[key] = img;
 			that._imgsLoaded += 1;
-			
+
+			// before removing this from here remember that img.onload is async
 			if (that._imgsLoaded === that._imgs2Load){
 				that._loaded = true;
-				if(callback !== undefined)
-					callback();
+				if(callback !== undefined) {
+					if (innerCallback !== undefined)
+						innerCallback(this);
+                    callback();
+                }
 			}
 		}
 
 		img.src = this._imagesPath + path;
-	} 
+	}
 
 
 	/**
 	 *  This function is used to load images by loading them using a 'browse'
 	 *  menu.
-	 *  
-	 *  This function was created to be used with the online map editor. It 
-	 *  could have other functionality as well, but this is what it is mainly 
+	 *
+	 *  This function was created to be used with the online map editor. It
+	 *  could have other functionality as well, but this is what it is mainly
 	 *  used for right now.
 	 *  //TODO load to spritesheet as well
 	 */

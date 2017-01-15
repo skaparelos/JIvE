@@ -17,19 +17,19 @@ canvas {
 	background-color: #f1f1f1;
 }
 
-::-webkit-scrollbar {
-    width: 0px;  /* remove scrollbar space */
-    background: transparent;  /* optional: just make scrollbar invisible */
-}
-
 .myCanvas {
 	position:absolute;
 }
 
 
-#hub{ 
+#hub{
 	position:absolute;
-	background-color: #333; 
+	background-color: #555;
+}
+
+::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
 }
 
 
@@ -72,53 +72,19 @@ input[type="file"] {
 }
 
 
+/* Style the tab content */
+.tabcontent {
+	display: none;
+	padding-left: 4px;
+	/*border: 2px solid #333;*/
+	color: #999;
+	border-top: none;
+}
+
 /*.menuBtn:hover {
 	background-color: #3b2b2b;
 	color: white;
 }*/
-
-
-
-
-/**** Accordion stuff ****/
-
-button.accordion {
-	padding: 18px;
-	background-color: black;
-	color: #444;
-	cursor: pointer;
-	width: 100%;
-	border: none;
-	text-align: left;
-	outline: none;
-	font-size: 15px;
-	transition: 0.2s;
-}
-
-button.accordion.active{
-	background-color: black;
-}
-
-button.accordion:hover {
-	background-color: #ddd;
-}
-
-div.accordion-panel {
-	padding-top: 5px;
-	padding-left: 5px;
-	padding-right: 5px;
-	padding-bottom: 5px;
-	display: none;
-	max-height: 300px;
-	background-color: white;
-	color: black;
-	overflow-y: scroll;
-}
-
-
-div.accordion-panel.show {
-	display: block;
-}
 
 
 #hub ul {
@@ -155,14 +121,17 @@ li.dropdown {
     display: inline-block;
 }
 
+
 i {
 	padding: 2px 2px; 
 }
+
 
 i:hover {
  background-color: #555;
 
 }
+
 
 .dropdown-content {
     display: none;
@@ -197,10 +166,10 @@ i:hover {
 
 .flex-container {
     display: -webkit-flex;
-    display: flex;
     width: 100%;
     height: 100%;
-    background-color: #333;
+    background-color: #444;
+	margin: 2px;
 }
 
 
@@ -208,9 +177,6 @@ i:hover {
     background-color: #555;
     height: 100%;
     margin: 2px;
-	padding-top: 2px;
-	padding-left: 4px;
-	color: #999;
 	overflow-y: scroll;
 }
 
@@ -229,7 +195,7 @@ i:hover {
 
 
 .flex-item input[type=text]:focus {
-    border: 1px solid #999;	
+    border: 1px solid #999;
 }
 
 
@@ -251,7 +217,4 @@ i:hover {
 	width: 95%;
 
 }
-
-
-
 

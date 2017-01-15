@@ -103,9 +103,9 @@ const g_coins_frames = {
 };
 
 const g_images = {
-	"first_tileset" :  ["editor_tileset.png", g_first_tileset_frames],
-	"grey-coins"    :  ["coins.png", g_coins_frames]
-	//"second_tileset" : "tileset.png",
+	"map-tileset" :  ["editor_tileset.png", g_first_tileset_frames],
+	"grey-coins"  :  ["coins.png", g_coins_frames],
+	"dirt-tile"   :  ["dirt.png"]
 };
 
 

@@ -35,9 +35,11 @@ class BasicObject{
 		this._frames.push(frameName);
 	}
 
+
 	clearFrames(){
 		this._frames = {};
 	}
+
 
 	getNickName(){
 		return this._nickName;
