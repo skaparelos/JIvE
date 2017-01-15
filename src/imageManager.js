@@ -24,6 +24,10 @@ class ImageManager {
 	}
 
 
+	getImages(){
+		return this._images;
+	}
+
 	/**
 	 * This function is called to load images.
 	 * The user can set a callback to be called once the images have been loaded

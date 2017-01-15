@@ -13,6 +13,10 @@ class SpriteSheet{
 	}
 
 
+	getFrames(){
+		return this._frames;
+	}
+
 	/**
 	 *  This function takes the name of a tileset image and the coordinates
 	 *  of each image in the sprite sheet. 

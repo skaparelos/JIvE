@@ -17,19 +17,24 @@ function showTab(evt, tabName) {
     evt.currentTarget.className += " active";
 
     activeTab = tabName;
+
+    if(tabName == "Assets")
+        showAllAssets();
 }
 
 
 function showAllEntities(){
-
     for (var bo in BasicObject.worldObjects){
-        console.log("he");
+
     }
 }
 
 
 function showAllAssets(){
-
+    var imgs = worldImageManager.getImages();
+    for (var i in imgs){
+        attachImage("flexitem1", imgs[i], i);
+    }
 
 }
 
@@ -121,14 +126,23 @@ function imageLoaded(img, fileName) {
     new BasicObject(fileName);
 
     // show the loaded image to the user by injecting it in the HTML code.
-    var panel = document.getElementById("flexitem1");
+    attachImage("flexitem1", img, fileName)
+
+}
+
+
+function attachImage(elementId, img, fileName){
+
+    var panel = document.getElementById(elementId);
     if (panel.innerHTML.includes("your images"))
         panel.innerHTML = "<input id='" + fileName + "' class='floatedImg' " +
-            "type='image' onclick='imageClicked(this)' src='" + img.src + "'/>";
+            "type='image' style='max-width:150px; max-height:150px;' " +
+            "onclick='imageClicked(this)' src='" + img.src + "'/>";
     else {
         // += instead of =
         panel.innerHTML += "<input id='" + fileName + "' class='floatedImg' " +
-            "type='image' onclick='imageClicked(this)' src='" + img.src + "'/>";
+            "type='image' style='max-width:150px; max-height:150px;' " +
+            "onclick='imageClicked(this)' src='" + img.src + "'/>";
     }
 }
 
