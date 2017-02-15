@@ -84,7 +84,7 @@ class BasicObject{
 
 
 	static load(BasicObjects){
-		var objectsJSONed = JSON.parse(BasicObjects)
+		var objectsJSONed = JSON.parse(BasicObjects);
 		for (var object in objectsJSONed){
 			var o = objectsJSONed[object];
 			new BasicObject(o._nickName, o._drawable, o._layer, o._tileX,

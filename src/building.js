@@ -1,4 +1,5 @@
 /*class Building {
+
 	constructor(type, tile_width, tile_height){
 		this.id = -1
 		this.type = type

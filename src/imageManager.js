@@ -28,6 +28,7 @@ class ImageManager {
 		return this._images;
 	}
 
+
 	/**
 	 * This function is called to load images.
 	 * The user can set a callback to be called once the images have been loaded
@@ -144,7 +145,7 @@ class ImageManager {
 	 *  when you are using the load() function (see above)
 	 */	
 	isDoneLoading(){
-		return this._loaded
+		return this._loaded;
 	}
 	
 
