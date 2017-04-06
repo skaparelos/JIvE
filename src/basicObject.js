@@ -1,5 +1,5 @@
 /**
- * BasicObjects are the finite set of objects that are used to create a or a game
+ * BasicObjects are the finite set of objects that are used to create a game
  *
  * For example: in a game we might have 10 blue houses and 20 red houses.
  * We would have two basic objects: one representing the blue house and another
@@ -14,6 +14,7 @@
 class BasicObject{
 
 	constructor(nickName, tileWidth, tileHeight, walkable = true){
+        
 		BasicObject.worldObjects[nickName] = this;
 		this._id = BasicObject._id++;
 

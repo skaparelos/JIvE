@@ -8,7 +8,7 @@ class Camera{
 		this._y = 0;
 		this._width = 0;
 		this._height = 0;
-        this.updateCameraSize(width, height);
+		this.updateCameraSize(width, height);
 
 		this._canvasOffsetTop = offsetTop;
 		this._canvasOffsetLeft = offsetLeft;
