@@ -23,7 +23,7 @@ class Jive{
 
 		// reqAnimFrame is capped to 60FPS. In order to control FPS, we call
 		// the drawing function every _period
-    	requestAnimationFrame(this.reqAnimFrame.bind(this)) 
+		requestAnimationFrame(this.reqAnimFrame.bind(this)) 
 
 		var now = Date.now()
 		this._deltaTime = now - this._then
