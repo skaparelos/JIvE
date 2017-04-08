@@ -37,6 +37,9 @@ A game map (e.g. like the age of empires map) consists of many layers. The first
 
 ## Screenshots
 Current:
+![alt tag]()
+
+Previous:
 ![alt tag](https://github.com/skaparelos/JIvE/blob/master/examples/screenshots/3-menu-added-houses.png)
 
 Tile Selection (128x64 tiles, zoom in):
