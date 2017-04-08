@@ -41,6 +41,7 @@ class ImageLoader {
 
 		for (var i = 0; i < totalLoad; i++){
 			var imgName = imgsLoadList[i];
+			
 			if (this.images[imgName] == null){
 				var img = new Image();
 
