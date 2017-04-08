@@ -1,17 +1,36 @@
 
 /**
-  This class is responsible for loading images
+* This class is responsible for loading images.
 */
 class ImageLoader {
 
 	constructor(){
+
+		// Holds the names of the images loaded
+		// and their Img objects. The loaded images can be
+		// atlases, spritesheets, or self-contained images.
+		// {"imageName": imageObject}
 		this.images = {};
 	}
 
+
+	/**
+	* Given an image name return the image object
+	* if it has been loaded
+	*/
 	get(imageName){
 		return this.images[imageName];
 	}
 
+
+	/**
+	* use this function to load a list of images given in
+	* text strings. e.g.
+	* imgsLoadList = ["image1.png", "imgs/img3.png"]
+	* 
+	* @param imgsLoadList, a list.
+	* @param callback, a function to call once done with loading
+	*/
 	loadImages(imgsLoadList, callback){
 
 		if (typeof callback !== "function" && callback !== undefined) 
