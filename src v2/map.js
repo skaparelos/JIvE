@@ -7,3 +7,9 @@ can do map.getWidth() and actually call the map.getWidth()
 where it actually calls tiledmap.getWidth();
 
 */
+
+
+class Map{
+
+	
+}
