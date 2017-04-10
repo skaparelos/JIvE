@@ -1,40 +1,44 @@
+var JIVE = {};
+
+JIVE.Map = function () {
+	return new TiledMap();
+};
+
+JIVE.Renderer = function (map){
+	return new TiledMapRenderer(map);
+};
+
+JIVE.ImageLoader = function (){
+	return new ImageLoader();
+};
+
+JIVE.Canvas = function (){
+	return new Canvas();
+};
+
+/*
 class Jive{
 
 	constructor(fileURI){
 
 		this.entities = []
 
-		//this.canvas = new Canvas();
-		//this.canvas.initFullScreen();
-
+		// the imageLoader is used to load the images needed.
 		this.imageLoader = new ImageLoader();
+
 		this.tiledMap = new TiledMap();
 		this.tiledMapRenderer = new TiledMapRenderer(this.tiledMap);
 
-		var that = this;
-		this.tiledMap.loadJSON(fileURI, this.imageLoader, function(){
-			that._then = Date.now();
-			that.reqAnimFrame();
-		});
-
+		this.tiledMap.loadJSON(fileURI, this.imageLoader, function(){});
 	}
 
-	reqAnimFrame(){
 
-		// reqAnimFrame is capped to 60FPS. In order to control FPS, we call
-		// the drawing function every _period
-		requestAnimationFrame(this.reqAnimFrame.bind(this)) 
+	Map(){
+		return new TiledMap();
+	}
 
-		var now = Date.now()
-		this._deltaTime = now - this._then
-
-		if (this._deltaTime >= 16) {
-
-			this.update(this._deltaTime)
-			this.draw()
-
-        	this._then = now - (this._deltaTime % 16)
-		} 
+	Renderer(map){
+		return new TiledMapRenderer(map)
 	}
 
 	update(dt){
@@ -42,6 +46,7 @@ class Jive{
 	}
 
 	draw(){
+		if ( !this.tiledMap.isLoaded() ) return;
 		this.tiledMapRenderer.draw(this.imageLoader, Jive.canvas.getCtx());
 	}
 
@@ -50,3 +55,4 @@ class Jive{
 
 Jive.camera = null;
 Jive.canvas = new Canvas();
+*/

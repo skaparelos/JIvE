@@ -42,8 +42,29 @@
 	<script>	
 
 	url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/tiled2.json"
-	Jive.canvas.initFullScreen();
-	var j = new Jive(url);
+	var canvas, ctx, imageLoader, map, renderer;
+
+	init()
+	animate()
+
+	function init(){
+		canvas = JIVE.Canvas().initFullScreen();
+		ctx = canvas.getCtx();
+		imageLoader = JIVE.ImageLoader();
+		map = JIVE.Map();
+		renderer = JIVE.Renderer(map);
+		map.loadJSON(url, imageLoader, function(){ 
+			// alternatively we could do:
+			// animate();
+		});
+	}
+
+	function animate(){
+		requestAnimationFrame(animate)
+
+		if (map.isLoaded())
+			renderer.draw(imageLoader, ctx);
+	}
 
 
 	</script>

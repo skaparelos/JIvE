@@ -26,6 +26,10 @@ class TiledMap{
 		// {"gid": [imageName, x, y, w, h]}
 		this.gid2ImagePos = {};
 
+		this.loaded = false;
+
+		return this;
+
 	}
 
 
@@ -34,9 +38,13 @@ class TiledMap{
 		var map = Utils.xhrGet(fileURI, function(data){
 			that.parseMap(data.responseText);
 			that.loadImages(imageLoader, callback)
+			that.loaded = true;
 		})
 	}
 
+	isLoaded(){
+		return this.loaded;
+	}
 
 	getGID(gid){
 		return this.gid2ImagePos[gid];
@@ -55,6 +63,7 @@ class TiledMap{
 
 	getTileWidth(){ return this.tileWidth; }
 	getTileHeight(){ return this.tileHeight; }
+
 
 	loadImages(imageLoader, callback){
 
@@ -116,12 +125,11 @@ class TiledMap{
 				var widthStep = tileSets[tileset]["tilewidth"];
 				for (var w = 0; w < imageWidth; w += widthStep){
 
-					this.gid2ImagePos[gid] = {"imagename":imageName, "x":w, "y":h, "w":widthStep, "h":heightStep};
+					this.gid2ImagePos[gid] = {"imagename":imageName, 
+						"x":w, "y":h, "w":widthStep, "h":heightStep};
 					gid++;
 				}
 			}
 		}
-
 	}
-
 }
