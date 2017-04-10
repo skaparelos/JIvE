@@ -41,8 +41,7 @@
 
 	<script>	
 
-	//url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/tiled2.json"
-	url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/dim3.json"
+	url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/tiled2.json"
 	var canvas, ctx, imageLoader, map, renderer;
 
 	init()
@@ -55,7 +54,6 @@
 		map = JIVE.Map();
 		renderer = JIVE.Renderer(map);
 		map.loadJSON(url, imageLoader, function(){ 
-			// alternatively we could do:
 			animate();
 		});
 	}
