@@ -21,7 +21,7 @@ class Utils{
 	 *
 	 * Outputs the cell in the map that was clicked
 	*/
-	static screen2MapCoords(e, camera, mapWidth, mapHeight) {
+	static screen2MapCoords(e, map, camera) {
 
 		/*  Solve the drawing functions for tileX, tileY
 			These are the 2 drawing equations:
@@ -32,22 +32,28 @@ class Utils{
 		var cam = camera.getCamera();
 		var camX = cam.x;
 		var camY = cam.y;
-		var zoomLevel = cam.zoomLevel;
+		var zoomLvl = cam.zoomLvl;
 
-		var clientX = e.clientX - cam.canvasOffsetLeft;
-		var clientY = e.clientY - cam.canvasOffsetTop;
+		var m = map.getMap();
+		var mapWidth = m["mapwidth"];
+		var mapHeight = m["mapheight"];
+		var unitTileWidth = m["tilewidth"];
+		var unitTileHeight = m["tileheight"];
+
+		var clientX = e.clientX; /* - cam.canvasOffsetLeft; // TODO*/
+		var clientY = e.clientY; /* - cam.canvasOffsetTop; // TODO*/
 
 		// adjustX=-40 has been set empirically to correct the tile choice
-		var adjustX = -40 / zoomLevel;
+		var adjustX = -40 / zoomLvl;
 
-		var tilex = Math.floor(zoomLevel * (
-				((clientX - camX + adjustX) / g_unit_tile_width) +
-				((clientY - camY) / g_unit_tile_height)
+		var tilex = Math.floor(zoomLvl * (
+				((clientX - camX + adjustX) / unitTileWidth) +
+				((clientY - camY) / unitTileHeight)
 				));
 
-		var tiley = Math.floor(zoomLevel * (
-				((clientY - camY) / g_unit_tile_height) -
-				((clientX - camX + adjustX) / g_unit_tile_width)
+		var tiley = Math.floor(zoomLvl * (
+				((clientY - camY) / unitTileHeight) -
+				((clientX - camX + adjustX) / unitTileWidth)
 				));
 
 		if (tilex < 0 || tiley < 0 ||

@@ -26,8 +26,16 @@ class Canvas{
 	}
 
 	updateCanvasSize(width, height) {
-		this.canvas.width = width;
-		this.canvas.height = height;
+		// in the case that this function is called from 
+		// the input handler, the input handler automatically
+		// tries to pass an event as the first parameter
+		// which is of type object. In that case just ignore it
+		// and set the width correctly.
+		if (typeof(width) === 'object')
+			width = undefined
+
+		this.canvas.width = width || document.body.clientWidth;
+		this.canvas.height = height || document.body.clientHeight;
 		this.ctx = this.canvas.getContext('2d');
 		return this;
 	}

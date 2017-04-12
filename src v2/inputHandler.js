@@ -18,6 +18,16 @@ class InputHandler extends EventEmitter{
 		document.body.addEventListener('keydown', this.handleKeyDown.bind(this), false) 
 		document.body.addEventListener('keyup', this.handleKeyUp.bind(this), false)
 
+		// Mouse
+		document.body.addEventListener('contextmenu', function(e){
+			e.preventDefault();
+		}, false);
+		document.body.addEventListener('mousedown', this.handleMouseDown.bind(this), false)
+		document.body.addEventListener('mouseup', this.handleMouseUp.bind(this), false)
+
+		// Window
+		window.addEventListener('resize', JIVE._canvas.updateCanvasSize.bind(this))
+
 		return this;
 	}
 
@@ -35,6 +45,7 @@ class InputHandler extends EventEmitter{
 		return this;
 	}
 
+
 	handleKeyUp(e){
 		var action = this.bindings[e.keyCode];
 		if (action)
@@ -42,6 +53,22 @@ class InputHandler extends EventEmitter{
 	}
 
 	handleKeyDown(e){
+		var action = this.bindings[e.keyCode];
+		if (action){
+			this.actions[action] = true;
+			this.emit(action, e);
+		}
+	}
+
+	handleMouseUp(e){
+		var action = this.bindings[e.button];
+		if (action){
+			this.actions[action] = false;
+			this.emit(action, e);
+		}
+	}
+
+	handleMouseDown(e){
 		var action = this.bindings[e.keyCode];
 		if (action){
 			this.actions[action] = true;

@@ -10,41 +10,50 @@ class TiledMapRenderer{
 	}
 
 
-	draw(tiledMap, camera, imageLoader){
-
-		imageLoader = imageLoader || JIVE._imageLoader;
+	draw(map, camera, imageLoader){
 
 		var ctx = this.canvas.getCtx();
 		this.clearScreen(ctx);
 
-		var cam = camera.getCamera();
+		imageLoader = imageLoader || JIVE._imageLoader;
 
-		var map = tiledMap.getMap();
-		var layersNo = map["layersNo"];
-		var mapW = map["mapwidth"];
-		var mapH = map["mapheight"];
-		var unitTileWidth = map["tilewidth"];
-		var unitTileHeight = map["tileheight"];
+		var cam = camera.getCamera();
+		var camX = cam.x;
+		var camY = cam.y;
+		var camZL = cam.zoomLvl;
+		var bounds = camera.getViewport(map);
+
+		var m = map.getMap();
+		var layersNo = m["layersNo"];
+		var unitTileWidth = m["tilewidth"];
+		var unitTileHeight = m["tileheight"];
 
 		for (var layer = 0; layer < layersNo; layer++){
 
-			for (var h = cam.y; h < cam.y+cam.h /*mapH*/; h++){
+			for (var h = bounds.startRow; h < bounds.endRow; h++){
 
-				for (var w = cam.x; w < cam.x + cam.w /*mapW*/; w++){
+				for (var w = bounds.startCol; w < bounds.endCol; w++){
 
-					var gidValue = map["map"][layer][h][w];
+					var gidValue = m["map"][layer][h][w];
 
 					if (gidValue != 0){
 
-						var gid = tiledMap.getGID(gidValue);
+						var gid = map.getGID(gidValue);
 
-						var coords = Utils.map2ScreenCoords(h, w, gid["w"], 
-							gid["h"], 300, 100, 1, unitTileWidth, unitTileHeight);
+						var coords = Utils.map2ScreenCoords(
+							h, w, 
+							gid["w"], gid["h"], 
+							camX, camY, camZL, 
+							unitTileWidth, unitTileHeight
+							);
 
-						ctx.drawImage(imageLoader.get(gid["imagename"]), 
-							gid["x"], gid["y"], gid["w"], gid["h"], 
+						ctx.drawImage(
+							imageLoader.get(gid["imagename"]), 
+							gid["x"], gid["y"], 
+							gid["w"], gid["h"], 
 							coords.x, coords.y, 
-							gid["w"], gid["h"]);
+							gid["w"], gid["h"]
+							);
 
 					}
 				}

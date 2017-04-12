@@ -128,3 +128,10 @@ JIVE.Keys = {
 	"=": 187,
 	"-": 189
 }
+
+
+JIVE.Mouse = {
+	LEFT: 0,
+	MIDDLE: 1,
+	RIGHT: 2,
+}
