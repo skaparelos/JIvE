@@ -4,12 +4,16 @@
 <head>
 	<meta charset="UTF-8" />
 	<title>JIvE library</title>
-	<script type="text/javascript" src="canvas.js"></script>
-	<script src="jive.js"></script>
-	<script src="tiledMap.js"></script>
+	<script src="canvas.js"></script>
 	<script src="imageLoader.js"></script>
+	<script src="eventEmitter.js"></script>
+	<script src="camera.js"></script>
+	<script src="tiledMap.js"></script>
 	<script src="tiledMapRenderer.js"></script>
 	<script src="utils.js"></script>
+	<script src="inputHandler.js"></script>
+	<script src="jive.js"></script>
+
 
 	<style>
 
@@ -41,28 +45,40 @@
 
 	<script>	
 
-	url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/tiled2.json"
-	var canvas, ctx, imageLoader, map, renderer;
-
-	init()
-	//animate()
+	//url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/tiled2.json"
+	url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/dim3.json"
+	var map, renderer, camera, inputHandler;
 
 	function init(){
-		canvas = JIVE.Canvas().initFullScreen();
-		ctx = canvas.getCtx();
-		imageLoader = JIVE.ImageLoader();
+		renderer = JIVE.Renderer();
+		camera = JIVE.Camera();
+		inputHandler = JIVE.InputHandler().init();
+		inputHandler.bind(JIVE.Keys.ARROW_UP, 'move-up');
+		inputHandler.bind(JIVE.Keys.ARROW_DOWN, 'move-down');
+		inputHandler.bind(JIVE.Keys.ARROW_LEFT, 'move-left');
+		camera.on('move-up', function(){
+			console.log('camera is moving yeahh');
+			// TODO problem with dt. we need to be able to access dt
+			// when calling the camera.
+		});
+
 		map = JIVE.Map();
-		renderer = JIVE.Renderer(map);
-		map.loadJSON(url, imageLoader, function(){ 
-			animate();
+		map.loadJSON(url, function(){ 
+			JIVE.reqAnimFrame(animate);
 		});
 	}
 
-	function animate(){
-		requestAnimationFrame(animate)
+	function animate(dt){
+
+		if (inputHandler.getActionState("move-up")){
+			console.log("up");
+		}
 
 		if (map.isLoaded())
-			renderer.draw(imageLoader, ctx);
+			renderer.draw(map, camera);
+
+		// TODO when button is pressed:
+		//camera.move({up:0, right:1, left:0, down:0}, dt/10)
 	}
 
 

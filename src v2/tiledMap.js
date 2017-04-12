@@ -2,8 +2,6 @@ class TiledMap{
 
 	constructor(){
 
-		this.data = null;
-
 		// Holds the map data and the layers.
 		// this variable has 3 dimensions.
 		// one is to access the layer and the rest
@@ -33,18 +31,21 @@ class TiledMap{
 	}
 
 
-	loadJSON(fileURI, imageLoader, callback){
+	loadJSON(fileURI, callback, imageLoader){
+		imageLoader = imageLoader || JIVE._imageLoader;
 		var that = this;
-		var map = Utils.xhrGet(fileURI, function(data){
+		Utils.xhrGet(fileURI, function(data){
 			that.parseMap(data.responseText);
-			that.loadImages(imageLoader, callback)
+			that.loadImages(data.responseText, callback, imageLoader)
 			that.loaded = true;
 		})
 	}
 
+
 	isLoaded(){
 		return this.loaded;
 	}
+
 
 	getGID(gid){
 		return this.gid2ImagePos[gid];
@@ -56,18 +57,26 @@ class TiledMap{
 			"map": this.map, 
 			"layersNo": this.layersNo,
 			"mapwidth": this.mapWidth,
-			"mapheight": this.mapHeight
+			"mapheight": this.mapHeight,
+			"tilewidth": this.tileWidth,
+			"tileheight": this.tileHeight
 		}
 	}
 
 
-	getTileWidth(){ return this.tileWidth; }
-	getTileHeight(){ return this.tileHeight; }
+	getTileWidth(){ 
+		return this.tileWidth; 
+	}
 
 
-	loadImages(imageLoader, callback){
+	getTileHeight(){ 
+		return this.tileHeight; 
+	}
 
-		var tilesets = this.data["tilesets"]
+
+	loadImages(data, callback, imageLoader){
+		var jsonData = JSON.parse(data);
+		var tilesets = jsonData["tilesets"];
 		var imgsList = [];
 		for (var ts = 0; ts < tilesets.length; ts++){
 			imgsList.push(tilesets[ts]["image"]);
@@ -80,7 +89,6 @@ class TiledMap{
 
 	parseMap(data){
 		var jsonData = JSON.parse(data);
-		this.data = jsonData;
 		var layers = jsonData["layers"];
 		var tileSets = jsonData["tilesets"];
 		this.layersNo = layers.length;

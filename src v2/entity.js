@@ -1,4 +1,4 @@
-this is for entities only. BACKGROUND TILES DO NOT COUNT AS ENTITIES
+/*this is for entities only. BACKGROUND TILES DO NOT COUNT AS ENTITIES
 
 class
 
@@ -18,4 +18,9 @@ draw(){
 	note: Here is where draw happens
 	i.e. call here
 	drawImage(....)
+}*/
+
+class Entity{
+
+	constructor(){}
 }

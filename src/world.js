@@ -121,7 +121,7 @@ class World extends EventEmitter {
 		let keyAction = ih.getKeyAction()
 
         // camera movement
-		// TODO maybe this needs a beter explanation
+		// TODO maybe this needs a better explanation
 		// dt is the elapsed time
 		// we divide dt by 10 so that if FPS = 60 and dt = 16.6ms
 		// then this will be called 60 times per second and 

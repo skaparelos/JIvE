@@ -13,10 +13,13 @@ class Canvas{
 
 	initCanvas(x, y, w, h){
 		this.canvas = document.createElement('canvas');
-		this.canvas.setAttribute("id", "myCanvas");
+		this.canvas.setAttribute("id", "JiveCanvas");
+
+		// TODO manipulate css to set the correct coordinates
+		// Code goes here...
 
 		// this is to be able to change the position of the canvas
-		this.canvas.className = "myCanvas";
+		this.canvas.className = "JiveCanvas";
 		this.updateCanvasSize(w, h);
 		document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 		return this;
@@ -27,6 +30,14 @@ class Canvas{
 		this.canvas.height = height;
 		this.ctx = this.canvas.getContext('2d');
 		return this;
+	}
+
+	getWidth(){
+		return this.canvas.width;
+	}
+
+	getHeight(){
+		return this.canvas.height;
 	}
 
 	getCtx(){ return this.ctx; }
