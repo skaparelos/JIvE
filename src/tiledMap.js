@@ -10,27 +10,35 @@ class TiledMap{
 
 		this.layersNo = 0;
 
+		// the unit tile height (i.e. smallest possible height of a tile)
 		this.tileHeight = 0;
 
+		// the unit tile width (i.e. smallest possible width of a tile)
 		this.tileWidth = 0;
 
-		// stores the width of the map in number of tiles
+		// the width of the map in number of tiles
 		this.mapWidth = 0;
 
-		// stores the height of the map in number of tiles
+		// the height of the map in number of tiles
 		this.mapHeight = 0;
 
 		// holds the relation
 		// {"gid": [imageName, x, y, w, h]}
 		this.gid2ImagePos = {};
 
+		// indicates whether a tiled map has been loaded or not.
 		this.loaded = false;
 
 		return this;
 
 	}
 
-
+	/**
+	* loadJSON takes a JSON exported from tiled and loads the map.
+	* @param fileURI string
+	* @param callback function
+	* @param imageLoader instance of imageLoader class
+	*/ 
 	loadJSON(fileURI, callback, imageLoader){
 		imageLoader = imageLoader || JIVE._imageLoader;
 		var that = this;

@@ -1,179 +1,125 @@
-/**
- * The input handler class deals with input handling (what a surprise!)
- * here we attach event listeners and define the functions that should occur
- * when an event is triggered .
- * 
- * - It is connected with world.js in a 'polling' fashion everytime the 
- * update() function in the world.js is called, it asks to get the latest
- * updates. This should be 50 times a second. 
- * The alternative is to implement this in an 'interrupt' manner, i.e. every
- * time an event occurs, notify the world, however the mouse_hover event might
- * cause some problems as it might get called extremely often resulting to 
- * an overhead
- *
- * - We only need one instance of this class.
- */
-class InputHandler{
+class InputHandler extends EventEmitter{
 
 	constructor(){
 
-		// the two things we will add event listeners on:
-		this._docBody = document.body
-		this._window = window
+		super();
 
-		// holds the key pressed
-		this._keyAction = {}
+		// keeps the mapping between a keycode and a user defined action
+		// e.g. the keycode 87 (letter W) can be mapped to a user defined
+		// action like 'move-up' (it can be any name).
+		// We let the user use the bind() function to register these mappings like
+		// inputHandler = JIVE.InputHandler().init();
+		// inputHandler.bind(87, 'move-up');
+		// or 
+		// inputHandler.bind(JIVE.Keys.W, 'move-up');
+		this.bindings = {};
 
-		// holds the mouse buttons pressed
-		this._mouseAction = {}
-	
-		// Mouse Events
-		this._mouseScrollEvent = null
-		this._leftMouseClickEvent = null
-		this._mouseWheelEvent = null
+		// a dictionary of actions indicating whether an action defined by the user
+		// using the bind() function takes place now or not.
+		// Specifically this.actions is a dictionary that maps user defined actions
+		// to either true or false.
+		// e.g. {'move-up':true, 'move-down':false, 'move-left':false, 'move-right':true}
+		this.actions = {};
 
-		// Window Event
-		this._screenResize = false
-
-		// set event listener
-		this._attachEventListeners()
- 	}
+	}
 
 
-	_attachEventListeners(){
+	/**
+	* init() is used by the user to initialise the basic event listeners.
+	* This function must be called by the user explicitly.
+	*/
+	init(){
 
 		// Keyboard
-		this._docBody.addEventListener('keydown', this._keyDown.bind(this), false) 
-		this._docBody.addEventListener('keyup', this._keyUp.bind(this), false)
-	
+		document.body.addEventListener('keydown', this.handleKeyDown.bind(this), false) 
+		document.body.addEventListener('keyup', this.handleKeyUp.bind(this), false)
+
 		// Mouse
-		this._docBody.addEventListener('contextmenu', this._rightClick.bind(this), false)
-		this._docBody.addEventListener('mousedown', this._mouseDown.bind(this), false)
-		this._docBody.addEventListener('mouseup', this._mouseUp.bind(this), false)
-		this._docBody.addEventListener('mousemove', this._mouseHover.bind(this), false)
-		this._docBody.addEventListener('wheel', this._mouseWheel.bind(this), false)
+		document.body.addEventListener('contextmenu', function(e){
+			// disables right click
+			e.preventDefault();
+		}, false);
+		document.body.addEventListener('mousedown', this.handleMouseDown.bind(this), false)
+		document.body.addEventListener('mouseup', this.handleMouseUp.bind(this), false)
 
 		// Window
-		this._window.addEventListener('resize', this._windowResize.bind(this))
-		
-	}
+		window.addEventListener('resize', JIVE._canvas.updateCanvasSize.bind(this))
 
-
-	/**
-	 * key pressed
-	 */
-	_keyDown(e){
-		this._keyAction[e.keyCode] = true
-	}
-
-
-	/**
-	 * key no longer pressed 
-	 */
-	_keyUp(e){
-		this._keyAction[e.keyCode] = false
-	}
-	
-
-	/**
-	 * overwrites the right click functionality
-	 */
-	_rightClick(e){
-		e.preventDefault()
-	}
-
-
-	/**
-	 *  mouse button pressed
-	 */
-	_mouseDown(e){	
-		this._mouseAction[e.button] = true
-		switch (e.which) {
-			case 1: // left click
-				this._leftMouseClickEvent = e
-				break;
-			case 2:  break;	// middle mouse button
-			case 3:  break; // right click has its own event listener (see above)
-			default: break;
-    	}
-	}
-
-
-	_mouseWheel(e){
-		this._mouseWheelEvent = e
+		return this;
 	}
 
 	/**
-	 *  mouse button no longer pressed
-	 */
-	_mouseUp(e){
-		this._mouseAction[e.button] = false
+	* Binds a keyCode to a user defined action
+	* @param keyCode int
+	* @param action string
+	*/
+	bind(keyCode, action){
+
+		// bind the keycode to an action
+		this.bindings[keyCode] = action;
+
+		// if the action is not registered,
+		// then register the action
+		if (this.actions[action] == null){
+			this.actions[action] = false;
+		}
+
+		return this;
 	}
 
-
-	/**
-	 * mouse hovering
-	 */
-	_mouseHover(e){
-		this._mouseScrollEvent = e	
+	handleKeyUp(e){
+		var action = this.bindings[e.keyCode];
+		if (action)
+			this.actions[action] = false;
 	}
 
+	handleKeyDown(e){
+		var action = this.bindings[e.keyCode];
+		if (action){
+			this.actions[action] = true;
 
-	/**
-	 * window resize
-	 */
-	_windowResize(e){
-		console.log('window resized');
-		this._screenResize = true
+			// TODO: the problem here is that the function
+			// gets executed only once a key is down, then waits for some time
+			// to call this again. As a result, the emit function doesn't get called
+			// as often as it should to provide a smooth experience.
+			// The problem is that pressing a button down is treated as a distinct event rather
+			// than a continuous one. This happens only with the keyboard, mouse is fine
+			// unless we want to fire when he hold the button down.
+			this.emit(action, e);
+		}
 	}
 
-
-	getKeyAction(){
-		return this._keyAction
+	handleMouseUp(e){
+		var action = this.bindings[e.button];
+		if (action){
+			this.actions[action] = false;
+		}
 	}
 
+	handleMouseDown(e){
+		var action = this.bindings[e.keyCode];
+		if (action){
+			this.actions[action] = true;
 
-	getLeftMouseDown(){
-		return this._mouseAction[0];
-	}
-
-
-	getMouseAction(){
-		return this._mouseAction
-	}
-
-
-	getMouseHover(){
-		return this._mouseScrollEvent 
-	}
-
-
-	getLeftMouseClick(){
-		return this._leftMouseClickEvent
-	}
-
-
-	isMouseWheelScrolled(){
-		if (this._mouseWheelEvent === null){
-			return false
-		}else{
-			var ret = this._mouseWheelEvent
-			this._mouseWheelEvent = null
-			return ret
+			// TODO: the problem here is that the function
+			// gets executed only once a key is down, then waits for some time
+			// to call this again. As a result, the emit function doesn't get called
+			// as often as it should to provide a smooth experience.
+			// The problem is that pressing a button down is treated as a distinct event rather
+			// than a continuous one. This happens only with the keyboard, mouse is fine
+			// unless we want to fire when he hold the button down.
+			this.emit(action, e);
 		}
 	}
 
 
-	isScreenResized(){
-		var ret = this._screenResize
-		this._screenResize = false
-		return ret
+	/**
+	* Returns the state of an action
+	* @param action string
+	* @return {true, false}
+	*/
+	getActionState(action){
+		return this.actions[action];
 	}
 
-
-	setScreenResize(value){
-		this._screenResize = value
-	}
-
-} // end of InputHandler class
-
+}

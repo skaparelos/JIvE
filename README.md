@@ -5,7 +5,6 @@ Written using VanillaJS in ECMAScript 6
 
 ## Map Editor
 Check an example loaded map [here](https://skaparelos.github.io/JIvE/src%20v2/jive.html).
-Make sure to check the map editor (written using JIvE) [here](https://skaparelos.github.io/JIvE/examples/Example%203%20-%20Map%20Editor/).
 
 Use the left plus to load isometric images from examples/Example 3 Map Editor/imgs, and the layer plus button to add layers.
 
@@ -39,13 +38,5 @@ A game map (e.g. like the age of empires map) consists of many layers. The first
 Current:
 ![alt tag](https://raw.githubusercontent.com/skaparelos/JIvE/gh-pages/src%20v2/screenshot_v2.png)
 
-Previous:
-![alt tag](https://github.com/skaparelos/JIvE/blob/master/examples/screenshots/3-menu-added-houses.png)
-
-Tile Selection (128x64 tiles, zoom in):
-![alt tag](https://github.com/skaparelos/JIvE/blob/master/examples/screenshots/1-tile_selection.png)
-
-Lame Lake (64x32 tiles, zoom out):
-![alt tag](https://github.com/skaparelos/JIvE/blob/master/examples/screenshots/2-lame_lake.png)
 
 

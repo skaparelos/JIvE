@@ -1,212 +1,148 @@
-// Represents the viewport
-class Camera{
+class Camera extends EventEmitter{
 
-	constructor(width, height, offsetTop, offsetLeft){
-		
-		// Set the viewport to the origin	
-		this._x = 0;
-		this._y = 0;
-		this._width = 0;
-		this._height = 0;
-		this.updateCameraSize(width, height);
+	constructor(x, y, scrollSpeed, zoomLvl){
 
-		this._canvasOffsetTop = offsetTop;
-		this._canvasOffsetLeft = offsetLeft;
+		super();
 
-		this._scrollingSpeed = g_camera_settings["scrollingSpeed"];
-		this._zoomLevel = g_camera_settings["initialZoomLevel"];
-		this._allowChangeInZoom = g_camera_settings["allowChangeInZoomLevel"];
+		this.x = x || 0;
+		this.y = y || 0;
+		this.w = JIVE._canvas.getWidth();
+		this.h = JIVE._canvas.getHeight();
 
-		this._upButtons    = g_camera_settings["UP"];
-		this._downButtons  = g_camera_settings["DOWN"];
-		this._leftButtons  = g_camera_settings["LEFT"];
-		this._rightButtons = g_camera_settings["RIGHT"];
-	}
+		this.scrollingSpeed = scrollSpeed || 1;
+		this.zoomLvl = zoomLvl || 1;
 
+		// keeps a boolean of whether there was a change in
+		// the position of the camera.
+		this.posChanged = true;
 
-	updateCameraSize(width, height){
-		this._width = width;
-		this._height = height;
-		this._setCornerScreenEvents(width, height);
-	}
-
-
-    /**
-     *
-     *  Four events that are used to identify the bounds of the visible map
-     *  portion to the user
-     *
-     *  Imagine this is the screen:
-     *
-     *  E-----------E
-     *  |           |
-     *  |           |
-     *  |           |
-     *  E-----------E
-     */
-    _setCornerScreenEvents(width, height){
-        this._eventLeftUp = {clientX : 0, clientY : 0};
-        this._eventRightUp = {clientX : width, clientY : 0};
-        this._eventLeftDown = {clientX : 0, clientY : height};
-        this._eventRightDown = {clientX : width, clientY : height};
-    }
-
-
-    /**
-     *  This function finds which parts of the map are shown to the player
-     *  and returns them. bounded by start-end rows and cols.
-	 *  i.e. which portion of the map the user sees.
-     *
-     *  It does so by using the 4 edges of the screen and finding the
-     *  their corresponding map cells.
-     *
-     *  imagine that the map is bigger than the screen
-     *  so that the screen only shows a portion of the map.
-     */
-    identifyVisibleMapBounds(map){
-
-		/*
-		 Check the 4 edges of the screen to see which tiles are there.
-		 Then draw the tiles that can appear on the screen and nothing more
-
-		 This is a big reduction:
-		 in a 200x200 map we drop from 40.000 iterations to about 1000.
-		 */
-
-		var mapSize = map.getSize();
-        var mapW = mapSize.width;
-        var mapH = mapSize.height;
-
-        var startRow = 0;
-        var startCol = 0;
-        var endRow = mapH;
-        var endCol = mapW;
-
-        var res = map.screen2MapCoords(this._eventLeftUp, this);
-        if (res != -1) {
-            startCol = res.tileX;
-        }
-
-        res = map.screen2MapCoords(this._eventRightUp, this);
-        if (res != -1) {
-            startRow = res.tileY;
-        }
-
-        res = map.screen2MapCoords(this._eventLeftDown, this);
-        if (res != -1) {
-            endRow = (res.tileY + 2 > mapH) ? mapH : res.tileY + 2;
-        }
-
-        res = map.screen2MapCoords(this._eventRightDown, this);
-        if (res != -1) {
-            endCol = (res.tileX + 1 > mapW) ? mapW : res.tileX + 1;
-        }
-
-        return {
-            startRow:  startRow,
-            endRow: endRow,
-            startCol: startCol,
-            endCol: endCol
-        };
-    }
-
-
-	_checkButtonPressed(keyAction, buttons){
-		for (var key in buttons){
-			var value = buttons[key];
-			if (keyAction[value] === true)
-				return true;
-		}
-		return false
-	}
-
-
-	/**
-	 *  Moves the camera
-	 */
-	move(keyAction, dt){
-		var keys = Utils.keyboardKeys;
-
-		var UP    = this._checkButtonPressed(keyAction, this._upButtons);
-		var DOWN  = this._checkButtonPressed(keyAction, this._downButtons);
-		var LEFT  = this._checkButtonPressed(keyAction, this._leftButtons);
-		var RIGHT = this._checkButtonPressed(keyAction, this._rightButtons);
-
-		if (DOWN || UP || LEFT || RIGHT){
-    
-			var dx = 0;
-			var dy = 0;
-			  
-			if (UP)    dy =  this._scrollingSpeed * dt;
-			if (DOWN)  dy = -this._scrollingSpeed * dt;
-			if (LEFT)  dx =  this._scrollingSpeed * dt;
-			if (RIGHT) dx = -this._scrollingSpeed * dt;
-
-			// update the position of the viewport 
-			this._x += dx;
-			this._y += dy;
-
-		}
 		return this;
 	}
 
 
 	getCamera(){
-		return{
-			x: this._x,
-			y: this._y,
-			width: this._width,
-			height: this._height,
-			zoomLevel: this._zoomLevel,
-			canvasOffsetTop: this._canvasOffsetTop,
-			canvasOffsetLeft: this._canvasOffsetLeft
-		};
-	}
-
-
-	getPos(){
 		return {
-			x: this._x,
-			y: this._y
+			x: this.x,
+			y: this.y,
+			w: this.w,
+			h: this.h,
+			zoomLvl: this.zoomLvl
+		}
+	}
+
+	/**
+	* Finds the area of the map that the camera sees.
+	*
+	*/
+	getViewport(map){
+
+		// If the position of the camera has not changed
+		// since the last call to this function
+		// then return the results of the previous times
+		if (!this.posChanged){
+			return {
+				startRow: this._startRow,
+				endRow: this._endRow,
+				startCol: this._startCol,
+				endCol: this._endCol
+			}	
+		}
+
+		var m = map.getMap();
+		var mapWidth = m["mapwidth"];
+		var mapHeight = m["mapheight"];
+
+		this._startRow = 0;
+		this._startCol = 0;
+		this._endRow = mapHeight;
+		this._endCol = mapWidth;
+
+		var screenWidth = JIVE._canvas.getWidth();
+		var screenHeight = JIVE._canvas.getHeight();
+		if (this.w != screenWidth) this.w = screenWidth;
+		if (this.h != screenHeight) this.h = screenWidth;
+
+		var leftUp = {clientX : 0, clientY : 0};
+        var rightUp = {clientX : this.w, clientY : 0};
+        var leftDown = {clientX : 0, clientY : this.h};
+        var rightDown = {clientX : this.w, clientY : this.h};
+
+		var res = Utils.screen2MapCoords(leftUp, map, this);
+		if (res != -1) this._startCol = res.tileX;
+
+		res = Utils.screen2MapCoords(rightUp, map, this);
+		if (res != -1) this._startRow = res.tileY;
+
+		res = Utils.screen2MapCoords(leftDown, map, this);
+		if (res != -1) this._endRow = (res.tileY + 2 > mapHeight) ? mapHeight : res.tileY + 2;
+
+		res = Utils.screen2MapCoords(rightDown, map, this);
+		if (res != -1) this._endCol = (res.tileX + 1 > mapWidth) ? mapWidth : res.tileX + 1;
+
+		// the position now has been registered so 
+		// we keep returning this unless there is a 
+		// change from the move() function or some other
+		// setter function
+		this.posChanged = false;
+
+		return {
+			startRow: this._startRow,
+			endRow: this._endRow,
+			startCol: this._startCol,
+			endCol: this._endCol
 		};
+
+	}
+
+	/**
+	*
+	* @param direction - an object like {left:1, right:0, up:0, down:1}
+	*        indicating the direction(s) of movement.
+	*
+	*/
+	move(direction, dt){
+
+		// change in x, y
+		var dx = 0;
+		var dy = 0;
+
+		if (direction.left)  dx = this.scrollingSpeed * dt;
+		if (direction.right) dx = - this.scrollingSpeed * dt;
+		if (direction.up)    dy = this.scrollingSpeed * dt;
+		if (direction.down)  dy = - this.scrollingSpeed * dt;
+
+		this.x += dx;
+		this.y += dy;
+
+		this.posChanged = true;
+
+		return this;
+	}
+
+	setX(x){
+		this.x = x;
+		this.posChanged = true;
+		return this;
+	}
+
+	setY(y){
+		this.y = y;
+		this.posChanged = true;
+		return this;
+	}
+
+	setW(w){
+		this.w = w;
+		this.posChanged = true;
+		return this;
+	}
+
+	setH(h){
+		this.h = h;
+		this.posChanged = true;
+		return this;
 	}
 
 
-	getZoomLevel(){
-		return this._zoomLevel;
-	}
-
-
-    _isZoomChangeAllowed(){
-        if(this._allowChangeInZoom){
-            return true;
-        }else{
-            console.log("changing the zoom level is not allowed. Check the configuration file");
-            return false;
-        }
-    }
-
-
-	increaseZoomLevel(){
-		if (this._isZoomChangeAllowed()) {
-            if (this._zoomLevel > 1)
-                this._zoomLevel -= 1;
-        }
-		return this
-	}
-
-
-	decreaseZoomLevel(){
-		if (this._isZoomChangeAllowed())
-			this._zoomLevel +=1;
-		return this
-	}
-
-
-	setZoomLevel(value){
-		if (this._isZoomChangeAllowed())
-			this._zoomLevel = value;
-		return this
-	}
 
 }

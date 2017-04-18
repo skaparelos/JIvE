@@ -41,7 +41,7 @@ class TiledMapRenderer{
 						var gid = map.getGID(gidValue);
 
 						var coords = Utils.map2ScreenCoords(
-							h, w, 
+							h, w,
 							gid["w"], gid["h"], 
 							camX, camY, camZL, 
 							unitTileWidth, unitTileHeight

@@ -53,6 +53,7 @@
 		renderer = JIVE.Renderer();
 		camera = JIVE.Camera();
 
+		// register bindings
 		inputHandler = JIVE.InputHandler().init();
 		inputHandler.bind(JIVE.Keys.ARROW_UP, 'move-up');
 		inputHandler.bind(JIVE.Keys.W, 'move-up');
@@ -80,7 +81,7 @@
 		})
 
 		camera.on('click-right', function(){
-			console.log("right click")
+			console.log("right click");
 		});
 
 		map = JIVE.Map();
@@ -92,29 +93,25 @@
 	function animate(dt){
 
 		if (inputHandler.getActionState("move-up")){
-			camera.move({up:1, right:0, left:0, down:0}, dt)
+			camera.move({up:1, right:0, left:0, down:0}, dt);
 			//console.log("up");
 		}
 
 		if (inputHandler.getActionState('move-left')){
-			camera.move({up:0, right:0, left:1, down:0}, dt)
+			camera.move({up:0, right:0, left:1, down:0}, dt);
 		}
 
 		if (inputHandler.getActionState('move-right')){
-			camera.move({up:0, right:1, left:0, down:0}, dt)
+			camera.move({up:0, right:1, left:0, down:0}, dt);
 		}
 
 		if (inputHandler.getActionState('move-down')){
-			camera.move({up:0, right:0, left:0, down:1}, dt)
+			camera.move({up:0, right:0, left:0, down:1}, dt);
 		}
-
-
 
 		if (map.isLoaded())
 			renderer.draw(map, camera);
 
-		// TODO when button is pressed:
-		//camera.move({up:0, right:1, left:0, down:0}, dt/10)
 	}
 
 

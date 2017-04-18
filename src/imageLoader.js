@@ -30,7 +30,7 @@ class ImageLoader {
 	* text strings. e.g.
 	* imgsLoadList = ["image1.png", "imgs/img3.png"]
 	* 
-	* @param imgsLoadList, a list.
+	* @param imgsLoadList, a list of strings containing the image path.
 	* @param callback, a function to call once done with loading
 	*/
 	loadImages(imgsLoadList, callback){
@@ -44,6 +44,7 @@ class ImageLoader {
 		for (var i = 0; i < totalLoad; i++){
 			var imgName = imgsLoadList[i];
 
+			// if this images has not been loaded, load it
 			if (this.images[imgName] == null){
 				var img = new Image();
 
@@ -57,6 +58,7 @@ class ImageLoader {
 				this.images[imgName] = img;
 
 			}else{
+				// if it has already been loaded, don't load it
 				imgLoaded++;
 				if(imgLoaded == totalLoad)
 					callback();

@@ -20,17 +20,24 @@ function showTab(evt, tabName) {
 
     if(tabName == "Assets")
         showAllAssets();
+
+    if(tabName == "Entities")
+        showAllEntities();
 }
 
 
 function showAllEntities(){
+    var panel = document.getElementById("flexitem1");
+    panel.innerHTML = "";
     for (var bo in BasicObject.worldObjects){
-
+        panel.innerHTML += "<p>" + BasicObject.worldObjects[bo].getNickName() + "</p>";
     }
+
 }
 
 
 function showAllAssets(){
+    clearPanel("flexitem1");
     var imgs = worldImageManager.getImages();
     for (var i in imgs){
         attachImage("flexitem1", imgs[i], i);
@@ -130,6 +137,11 @@ function imageLoaded(img, fileName) {
 
 }
 
+
+function clearPanel(elementId){
+    var panel = document.getElementById(elementId);
+    panel.innerHTML = "";
+}
 
 function attachImage(elementId, img, fileName){
 

@@ -1,56 +1,53 @@
-/**
- * This class is responsible for handling the HTML canvas
- */
 class Canvas{
 
-    constructor(width, height){
-        this._canvas = null;
-        this._context = null;
-        this._canvasOffsetTop = 0;
-        this._canvasOffsetLeft = 0;
-        this._initCanvas(width, height);
-    }
+	constructor(){
+		this.canvas = null;
+		this.ctx = null;
+		return this;
+	}
 
-    _initCanvas(width, height){
-        this._canvas = document.createElement('canvas');
-        this._canvas.setAttribute("id", "myCanvas");
+	initFullScreen(){
+		this.initCanvas(0, 0, document.body.clientWidth, document.body.clientHeight);
+		return this;
+	}
 
-        // this is to be able to change the position of the canvas
-        this._canvas.className = "myCanvas";
-        this.updateCanvasSize(width, height);
-    }
+	initCanvas(x, y, w, h){
+		this.canvas = document.createElement('canvas');
+		this.canvas.setAttribute("id", "JiveCanvas");
 
+		// TODO manipulate css to set the correct coordinates
+		// Code goes here...
 
-    init(){
-        document.body.insertBefore(this._canvas, document.body.childNodes[0]);
-        var canv = document.getElementById('myCanvas').getBoundingClientRect();
-        this._canvasOffsetTop = canv.top;
-        this._canvasOffsetLeft = canv.left;
-    }
+		// this is to be able to change the position of the canvas
+		this.canvas.className = "JiveCanvas";
+		this.updateCanvasSize(w, h);
+		document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+		return this;
+	}
 
+	updateCanvasSize(width, height) {
 
-    /**
-     *  updates the canvas size
-     */
-    updateCanvasSize(width, height) {
-        this._canvas.width = width;
-        this._canvas.height = height;
-        this._context = this._canvas.getContext('2d');
-    }
+		// this if statement is used in the case that this function is 
+		// called from the input handler. The input handler automatically
+		// tries to pass an event as the first parameter
+		// which is of type object. In that case just ignore it
+		// and set the width correctly.
+		if (typeof(width) === 'object')
+			width = undefined
 
+		this.canvas.width = width || document.body.clientWidth;
+		this.canvas.height = height || document.body.clientHeight;
+		this.ctx = this.canvas.getContext('2d');
+		return this;
+	}
 
-    getCanvas(){
-        return{
-            canvas: this._canvas,
-            ctx: this._context,
-            canvasOffsetTop: this._canvasOffsetTop,
-            canvasOffsetLeft: this._canvasOffsetLeft
-        };
-    }
+	getWidth(){
+		return this.canvas.width;
+	}
 
+	getHeight(){
+		return this.canvas.height;
+	}
 
-    getCtx(){
-        return this._context;
-    }
-
+	getCtx(){ return this.ctx; }
 }

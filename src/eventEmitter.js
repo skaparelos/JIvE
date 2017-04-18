@@ -1,32 +1,33 @@
 class EventEmitter{
 
-	constructor(){
-		this._events = {}
-	}	
+	constructor(){}	
 
 
 	on(eventName, callback) {
 		if (typeof callback !== "function"){
-			console.log("The " + eventName.toString() + " callback must be a function")
+			console.log("The " + eventName.toString() + " callback must be a function");
 			return;
 		}
 
-		if (!this._events[eventName]) {
-			this._events[eventName] = []
+		if (!EventEmitter.events[eventName]) {
+			EventEmitter.events[eventName] = [];
 		}
 
-		this._events[eventName].push(callback);
+		EventEmitter.events[eventName].push(callback);
 	}
 
 	
 	emit(eventName, event){
-		if (this._events[eventName] === undefined ||
-			this._events[eventName].length === 0)
+		if (EventEmitter.events[eventName] === undefined ||
+			EventEmitter.events[eventName].length === 0)
 			return ;
 
-		for (var callback of this._events[eventName]) { 
-			callback(event) 
+		for (var callback of EventEmitter.events[eventName]) { 
+			callback(event);
 		} 	
 	}
 
 }
+
+/* @static */
+EventEmitter.events = {};
