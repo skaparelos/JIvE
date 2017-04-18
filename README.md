@@ -36,7 +36,7 @@ A game map (e.g. like the age of empires map) consists of many layers. The first
 
 ## Screenshots
 Current:
-![alt tag](https://raw.githubusercontent.com/skaparelos/JIvE/gh-pages/src/screenshot_v2.png)
+![alt tag](https://raw.githubusercontent.com/skaparelos/JIvE/gh-pages/src/imgs/screenshot_v2.png)
 
 
 
