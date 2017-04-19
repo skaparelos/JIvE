@@ -46,27 +46,26 @@
 	<script>	
 
 	url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/tiled2.json"
-	var map, renderer, camera, inputHandler;
+	var map, renderer, camera, ih;
 
 	function init(){
 		renderer = JIVE.Renderer();
 		camera = JIVE.Camera();
 
 		// register bindings
-		inputHandler = JIVE.InputHandler().init();
-		inputHandler.bind(JIVE.Keys.ARROW_UP, 'move-up');
-		inputHandler.bind(JIVE.Keys.W, 'move-up');
-		inputHandler.bind(JIVE.Keys.ARROW_DOWN, 'move-down');
-		inputHandler.bind(JIVE.Keys.S, 'move-down');
-		inputHandler.bind(JIVE.Keys.ARROW_LEFT, 'move-left');
-		inputHandler.bind(JIVE.Keys.A, 'move-left');
-		inputHandler.bind(JIVE.Keys.ARROW_RIGHT, 'move-right');
-		inputHandler.bind(JIVE.Keys.D, 'move-right');
-		inputHandler.bind(JIVE.Mouse.LEFT, 'click-left');
-		inputHandler.bind(JIVE.Mouse.RIGHT, 'click-right');
+		ih = JIVE.InputHandler().init();
+		ih.bind(JIVE.Keys.ARROW_UP, 'move-up');
+		ih.bind(JIVE.Keys.W, 'move-up');
+		ih.bind(JIVE.Keys.ARROW_DOWN, 'move-down');
+		ih.bind(JIVE.Keys.S, 'move-down');
+		ih.bind(JIVE.Keys.ARROW_LEFT, 'move-left');
+		ih.bind(JIVE.Keys.A, 'move-left');
+		ih.bind(JIVE.Keys.ARROW_RIGHT, 'move-right');
+		ih.bind(JIVE.Keys.D, 'move-right');
+		ih.bind(JIVE.Mouse.LEFT, 'click-left');
+		ih.bind(JIVE.Mouse.RIGHT, 'click-right');
 
-		// you can do somethind like this, but for some reason
-		// it is veeeery sloww
+		// you can do somethind like this, but it is veeery slow
 		camera.on('move-up', function(){
 			//camera.move({up:1, right:0, left:0, down:0}, dt)
 
@@ -74,12 +73,13 @@
 			// when calling the camera.
 		});
 
-		inputHandler.on('click-left', function(e) {
+
+		ih.on('click-left', function(e) {
 			//console.log("left click oeooe");
 			console.log(Utils.screen2MapCoords(e, map, camera));
 		})
 
-		inputHandler.on('click-right', function(){
+		ih.on('click-right', function(){
 			console.log("right click");
 		});
 
@@ -91,20 +91,20 @@
 
 	function animate(dt){
 
-		if (inputHandler.getActionState("move-up")){
+		if (ih.getActionState("move-up")){
 			camera.move({up:1, right:0, left:0, down:0}, dt);
 			//console.log("up");
 		}
 
-		if (inputHandler.getActionState('move-left')){
+		if (ih.getActionState('move-left')){
 			camera.move({up:0, right:0, left:1, down:0}, dt);
 		}
 
-		if (inputHandler.getActionState('move-right')){
+		if (ih.getActionState('move-right')){
 			camera.move({up:0, right:1, left:0, down:0}, dt);
 		}
 
-		if (inputHandler.getActionState('move-down')){
+		if (ih.getActionState('move-down')){
 			camera.move({up:0, right:0, left:0, down:1}, dt);
 		}
 

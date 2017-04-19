@@ -4,7 +4,7 @@ A Javascript Isometric Game Engine (JIvE)
 Written using VanillaJS in ECMAScript 6
 
 ## Map Editor
-Check an example loaded map [here](https://skaparelos.github.io/JIvE/src%20v2/jive.html).
+Check an example loaded map [here](https://skaparelos.github.io/JIvE/src/jive.html).
 
 Use the left plus to load isometric images from examples/Example 3 Map Editor/imgs, and the layer plus button to add layers.
 
