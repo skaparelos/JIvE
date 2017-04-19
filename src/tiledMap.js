@@ -35,14 +35,15 @@ class TiledMap{
 
 	/**
 	* loadJSON takes a JSON exported from tiled and loads the map.
-	* @param fileURI string
+	* @param JsonURI string
 	* @param callback function
 	* @param imageLoader instance of imageLoader class
 	*/ 
-	loadJSON(fileURI, callback, imageLoader){
+	loadJSON(JsonURI, callback, imageLoader){
 		imageLoader = imageLoader || JIVE._imageLoader;
 		var that = this;
-		Utils.xhrGet(fileURI, function(data){
+		
+		Utils.xhrGet(JsonURI, function(data){
 			that.parseMap(data.responseText);
 			that.loadImages(data.responseText, callback, imageLoader)
 			that.loaded = true;

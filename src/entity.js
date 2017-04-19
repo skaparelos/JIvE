@@ -22,7 +22,6 @@ draw(){
 
 /**
 * An entity is anything besides background tiles.
-* Objects from the object layer should be considered entities.
 * A rock is an entity with isWalkable false
 */
 
@@ -58,7 +57,11 @@ class Entity{
 
 	}
 
-	draw(){
-		if(!this.isAlive) return;
+	getMapX(){
+		return this.mapX;
+	}
+
+	getMapY(){
+		return this.mapY;
 	}
 }

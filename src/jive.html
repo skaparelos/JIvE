@@ -46,10 +46,10 @@
 	<script>	
 
 	url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/tiled2.json"
-	var map, renderer, camera, ih;
+	var map, mapRenderer, camera, ih, woRenderer;
 
 	function init(){
-		renderer = JIVE.Renderer();
+		mapRenderer = JIVE.MapRenderer();
 		camera = JIVE.Camera();
 
 		// register bindings
@@ -109,7 +109,7 @@
 		}
 
 		if (map.isLoaded())
-			renderer.draw(map, camera);
+			mapRenderer.draw(map, camera);
 
 	}
 

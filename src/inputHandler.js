@@ -67,11 +67,14 @@ class InputHandler extends EventEmitter{
 		return this;
 	}
 
+
 	handleKeyUp(e){
 		var action = this.bindings[e.keyCode];
-		if (action)
+		if (action){
 			this.actions[action] = false;
+		}
 	}
+
 
 	handleKeyDown(e){
 		var action = this.bindings[e.keyCode];
@@ -89,12 +92,14 @@ class InputHandler extends EventEmitter{
 		}
 	}
 
+
 	handleMouseUp(e){
 		var action = this.bindings[e.button];
 		if (action){
 			this.actions[action] = false;
 		}
 	}
+
 
 	handleMouseDown(e){
 		var action = this.bindings[e.button];

@@ -24,8 +24,12 @@ JIVE.Map = function () {
 	return new TiledMap();
 };
 
-JIVE.Renderer = function (canvas){
+JIVE.MapRenderer = function (canvas){
 	return new TiledMapRenderer(canvas);
+};
+
+JIVE.ObjectRenderer = function (canvas){
+	return new EntityRenderer(canvas);
 };
 
 JIVE.Canvas = function (){
