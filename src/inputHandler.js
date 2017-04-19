@@ -97,7 +97,7 @@ class InputHandler extends EventEmitter{
 	}
 
 	handleMouseDown(e){
-		var action = this.bindings[e.keyCode];
+		var action = this.bindings[e.button];
 		if (action){
 			this.actions[action] = true;
 

@@ -63,9 +63,9 @@ class Camera extends EventEmitter{
 		if (this.h != screenHeight) this.h = screenWidth;
 
 		var leftUp = {clientX : 0, clientY : 0};
-        var rightUp = {clientX : this.w, clientY : 0};
-        var leftDown = {clientX : 0, clientY : this.h};
-        var rightDown = {clientX : this.w, clientY : this.h};
+		var rightUp = {clientX : this.w, clientY : 0};
+		var leftDown = {clientX : 0, clientY : this.h};
+		var rightDown = {clientX : this.w, clientY : this.h};
 
 		var res = Utils.screen2MapCoords(leftUp, map, this);
 		if (res != -1) this._startCol = res.tileX;

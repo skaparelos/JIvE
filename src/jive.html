@@ -74,12 +74,12 @@
 			// when calling the camera.
 		});
 
-		camera.on('click-left', function(e) {
+		inputHandler.on('click-left', function(e) {
 			//console.log("left click oeooe");
 			console.log(Utils.screen2MapCoords(e, map, camera));
 		})
 
-		camera.on('click-right', function(){
+		inputHandler.on('click-right', function(){
 			console.log("right click");
 		});
 
