@@ -12,7 +12,9 @@
 	<script src="tiledMapRenderer.js"></script>
 	<script src="utils.js"></script>
 	<script src="inputHandler.js"></script>
+	<script src="entity.js"></script>
 	<script src="jive.js"></script>
+
 
 
 	<style>
@@ -76,7 +78,8 @@
 
 		ih.on('click-left', function(e) {
 			//console.log("left click oeooe");
-			console.log(Utils.screen2MapCoords(e, map, camera));
+			//console.log(Utils.screen2MapCoords(e, map, camera));
+			entities[0].move(1, 0, map);
 		})
 
 		ih.on('click-right', function(){
@@ -84,7 +87,17 @@
 		});
 
 		map = JIVE.Map();
+		entities = [];
 		map.loadJSON(url, function(){ 
+			var m = map.getMap()["map"][2];
+			for (var h = 0; h < map.getMap()["mapheight"]; h++){
+				for (var w = 0; w < map.getMap()["mapwidth"]; w++){
+					if (m[h][w] != 0){
+						entities.push(new JIVE.Entity(h, w, m[h][w]));
+					}
+				}
+			}
+
 			JIVE.reqAnimFrame(animate);
 		});
 	}
@@ -108,8 +121,10 @@
 			camera.move({up:0, right:0, left:0, down:1}, dt);
 		}
 
-		if (map.isLoaded())
+		if (map.isLoaded()){
 			mapRenderer.draw(map, camera);
+		}
+
 
 	}
 

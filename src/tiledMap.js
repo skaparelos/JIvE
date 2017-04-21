@@ -42,7 +42,7 @@ class TiledMap{
 	loadJSON(JsonURI, callback, imageLoader){
 		imageLoader = imageLoader || JIVE._imageLoader;
 		var that = this;
-		
+
 		Utils.xhrGet(JsonURI, function(data){
 			that.parseMap(data.responseText);
 			that.loadImages(data.responseText, callback, imageLoader)
@@ -73,6 +73,12 @@ class TiledMap{
 	}
 
 
+	setTile(layer, row, col, gidValue){
+		this.map[layer][row][col] = gidValue;
+		return this;
+	}
+
+
 	getTileWidth(){ 
 		return this.tileWidth; 
 	}
@@ -94,7 +100,6 @@ class TiledMap{
 		// load the images
 		imageLoader.loadImages(imgsList, callback);
 	}
-
 
 	parseMap(data){
 		var jsonData = JSON.parse(data);
@@ -121,6 +126,7 @@ class TiledMap{
 					ctr++;
 				}
 			}
+			
 			this.map.push(map2d);
 			map2d = [];
 			ctr = 0;

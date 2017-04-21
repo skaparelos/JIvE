@@ -28,16 +28,13 @@ JIVE.MapRenderer = function (canvas){
 	return new TiledMapRenderer(canvas);
 };
 
-JIVE.ObjectRenderer = function (canvas){
-	return new EntityRenderer(canvas);
-};
 
 JIVE.Canvas = function (){
 	return new Canvas();
 };
 
-JIVE.Entity = function (){
-	return new Entity();
+JIVE.Entity = function (x, y, gid){
+	return new Entity(x, y, gid);
 }
 
 JIVE.ImageLoader = function () {

@@ -1,4 +1,4 @@
-class EntityRenderer{
+class EntitiesRenderer{
 
 	constructor(canvas){
 		this.canvas = canvas || JIVE._canvas;
@@ -6,6 +6,8 @@ class EntityRenderer{
 
 
 	draw(entities, camera, imageLoader){
-		
+		foe (var en in entities){
+			
+		}
 	}
 }

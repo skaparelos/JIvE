@@ -28,11 +28,9 @@ class TiledMapRenderer{
 		var unitTileWidth = m["tilewidth"];
 		var unitTileHeight = m["tileheight"];
 
-		for (var layer = 0; layer < layersNo; layer++){
-
-			for (var h = bounds.startRow; h < bounds.endRow; h++){
-
-				for (var w = bounds.startCol; w < bounds.endCol; w++){
+		for (var h = bounds.startRow; h < bounds.endRow; h++){
+			for (var w = bounds.startCol; w < bounds.endCol; w++){
+				for (var layer = 0; layer < layersNo; layer++){
 
 					var gidValue = m["map"][layer][h][w];
 

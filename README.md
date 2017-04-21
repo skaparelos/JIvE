@@ -1,10 +1,10 @@
 # JIvE
-A Javascript Isometric Game Engine (JIvE)
+A Javascript Isometric Game Engine (JIvE).
 
 Written using VanillaJS in ECMAScript 6
 
-## Map Editor
 Check an example loaded map [here](https://skaparelos.github.io/JIvE/src/jive.html).
+
 
 ## Currently Supported:
 - map scroll
@@ -19,6 +19,3 @@ Check an example loaded map [here](https://skaparelos.github.io/JIvE/src/jive.ht
 ## Screenshots
 Current:
 ![alt tag](https://raw.githubusercontent.com/skaparelos/JIvE/gh-pages/src/imgs/screenshot_v2.png)
-
-
-
