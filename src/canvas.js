@@ -3,6 +3,7 @@ class Canvas{
 	constructor(){
 		this.canvas = null;
 		this.ctx = null;
+		this._hasChanged = false;
 		return this;
 	}
 
@@ -38,7 +39,14 @@ class Canvas{
 		this.canvas.width = width || document.body.clientWidth;
 		this.canvas.height = height || document.body.clientHeight;
 		this.ctx = this.canvas.getContext('2d');
+		this._hasChanged = true;
 		return this;
+	}
+
+	hasChanged(){
+		var hs = this.hasChanged;
+		this._hasChanged = false;
+		return hs;
 	}
 
 	getWidth(){

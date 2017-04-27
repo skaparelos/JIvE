@@ -2,12 +2,13 @@ class TiledMap{
 
 	constructor(){
 
-		// Holds the map data and the layers.
-		// this variable has 3 dimensions.
-		// one is to access the layer and the rest
-		// are to access a 2d position
+		// holds the base layer(s).
+		// it only holds the background layers that
+		// do not contain entities like people, trees, items, etc.
+		// Entities are created and maintained using the list JIVE.entities
 		this.map = [];
 
+		// the number of background layers
 		this.layersNo = 0;
 
 		// the unit tile height (i.e. smallest possible height of a tile)
@@ -105,33 +106,11 @@ class TiledMap{
 		var jsonData = JSON.parse(data);
 		var layers = jsonData["layers"];
 		var tileSets = jsonData["tilesets"];
-		this.layersNo = layers.length;
+		//this.layersNo = layers.length; (no longed used)
 		this.tileWidth = jsonData["tilewidth"];
 		this.tileHeight = jsonData["tileheight"];
 		this.mapWidth = jsonData["width"];
 		this.mapHeight = jsonData["height"];
-
-
-		// create the map as a 2d array so that it is easier to 
-		// manipulate it later. For each layer go through the 
-		// the data on that layer and create the map.
-		var map2d = [], ctr = 0;
-		for(var layer = 0; layer < layers.length; layer++){
-
-			for(var i = 0; i < this.mapHeight; i++){
-				map2d[i] = [];
-
-				for(var j = 0; j < this.mapWidth; j++){
-					map2d[i][j] = layers[layer]["data"][ctr];
-					ctr++;
-				}
-			}
-			
-			this.map.push(map2d);
-			map2d = [];
-			ctr = 0;
-		}
-
 
 		// create a mapping between GIDs and the position of the atlas frame
 		// in the atlas image. 
@@ -154,5 +133,42 @@ class TiledMap{
 				}
 			}
 		}
+
+
+		// create the map as a 2d array so that it is easier to 
+		// manipulate it later. For each layer go through the 
+		// the data on that layer and create the map.
+		var map2d = [], ctr = 0;
+		for(var layer = 0; layer < layers.length; layer++){
+
+			var isBaseLayer = layers[layer]["name"].includes("base");
+			if (isBaseLayer)
+				this.layersNo++;
+
+			for(var i = 0; i < this.mapHeight; i++){
+				if (isBaseLayer)
+					map2d[i] = [];
+
+				for(var j = 0; j < this.mapWidth; j++){
+					if (isBaseLayer)
+						map2d[i][j] = layers[layer]["data"][ctr];
+					else{
+						if (layers[layer]["data"][ctr] != 0){
+							var en = new Entity(i, j, layers[layer]["data"][ctr], map);
+							JIVE.entities.push(en);
+						}	
+					}
+					ctr++;
+				}
+			}
+			
+			if(isBaseLayer){
+				this.map.push(map2d);
+			}
+			map2d = [];
+			ctr = 0;
+		}
+
+
 	}
 }

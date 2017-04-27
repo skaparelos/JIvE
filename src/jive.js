@@ -6,6 +6,7 @@ var JIVE = {};
 // is not important, neither is making the imageLoader
 JIVE._imageLoader = new ImageLoader();
 JIVE._canvas = new Canvas();
+JIVE.entities = [];
 
 JIVE._onDocumentLoad = function (){
 
@@ -24,10 +25,9 @@ JIVE.Map = function () {
 	return new TiledMap();
 };
 
-JIVE.MapRenderer = function (canvas){
-	return new TiledMapRenderer(canvas);
+JIVE.Renderer = function (canvas){
+	return new Renderer(canvas);
 };
-
 
 JIVE.Canvas = function (){
 	return new Canvas();

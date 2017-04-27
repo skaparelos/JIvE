@@ -10,6 +10,8 @@
 	<script src="camera.js"></script>
 	<script src="tiledMap.js"></script>
 	<script src="tiledMapRenderer.js"></script>
+	<script src="renderer.js"></script>
+	<script src="entityRenderer.js"></script>
 	<script src="utils.js"></script>
 	<script src="inputHandler.js"></script>
 	<script src="entity.js"></script>
@@ -48,10 +50,10 @@
 	<script>	
 
 	url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/map.json"
-	var map, mapRenderer, camera, ih, woRenderer;
+	var map, renderer, camera, ih, woRenderer;
 
 	function init(){
-		mapRenderer = JIVE.MapRenderer();
+		renderer = JIVE.Renderer();
 		camera = JIVE.Camera();
 
 		// register bindings
@@ -79,7 +81,7 @@
 		ih.on('click-left', function(e) {
 			//console.log("left click oeooe");
 			//console.log(Utils.screen2MapCoords(e, map, camera));
-			entities[0].move(1, 0, map);
+			//entities[0].move(1, 0, map);
 		})
 
 		ih.on('click-right', function(){
@@ -87,43 +89,38 @@
 		});
 
 		map = JIVE.Map();
-		entities = [];
-		map.loadJSON(url, function(){ 
-			var m = map.getMap()["map"][2];
-			for (var h = 0; h < map.getMap()["mapheight"]; h++){
-				for (var w = 0; w < map.getMap()["mapwidth"]; w++){
-					if (m[h][w] != 0){
-						entities.push(new JIVE.Entity(h, w, m[h][w]));
-					}
-				}
-			}
-
-			JIVE.reqAnimFrame(animate);
+		map.loadJSON(url, function(){
+			if(map.isLoaded())
+				JIVE.reqAnimFrame(animate);
 		});
 	}
 
 	function animate(dt){
 
+		direction = {up: 0, right:0, left:0, down: 0};
+
 		if (ih.getActionState("move-up")){
-			camera.move({up:1, right:0, left:0, down:0}, dt);
-			//console.log("up");
+			direction.up = 1;
 		}
 
 		if (ih.getActionState('move-left')){
-			camera.move({up:0, right:0, left:1, down:0}, dt);
+			direction.left = 1;
 		}
 
 		if (ih.getActionState('move-right')){
-			camera.move({up:0, right:1, left:0, down:0}, dt);
+			direction.right = 1;
 		}
 
 		if (ih.getActionState('move-down')){
-			camera.move({up:0, right:0, left:0, down:1}, dt);
+			direction.down = 1;
 		}
 
-		if (map.isLoaded()){
-			mapRenderer.draw(map, camera);
-		}
+		var dxdy = camera.move(direction, dt);
+
+		JIVE.entities.forEach(function(entity){
+			entity.update(dxdy, dt);
+		});
+		renderer.draw(camera, map, JIVE.entities);
 
 
 	}

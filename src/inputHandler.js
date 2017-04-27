@@ -87,7 +87,7 @@ class InputHandler extends EventEmitter{
 			// as often as it should to provide a smooth experience.
 			// The problem is that pressing a button down is treated as a distinct event rather
 			// than a continuous one. This happens only with the keyboard, mouse is fine
-			// unless we want to fire when he hold the button down.
+			// unless we want to fire when we hold the button down.
 			this.emit(action, e);
 		}
 	}
@@ -105,18 +105,9 @@ class InputHandler extends EventEmitter{
 		var action = this.bindings[e.button];
 		if (action){
 			this.actions[action] = true;
-
-			// TODO: the problem here is that the function
-			// gets executed only once a key is down, then waits for some time
-			// to call this again. As a result, the emit function doesn't get called
-			// as often as it should to provide a smooth experience.
-			// The problem is that pressing a button down is treated as a distinct event rather
-			// than a continuous one. This happens only with the keyboard, mouse is fine
-			// unless we want to fire when he hold the button down.
 			this.emit(action, e);
 		}
 	}
-
 
 	/**
 	* Returns the state of an action

@@ -21,6 +21,12 @@ class Camera extends EventEmitter{
 
 
 	getCamera(){
+		
+		if(JIVE._canvas.hasChanged()){
+			this.w = JIVE._canvas.getWidth();
+			this.h = JIVE._canvas.getHeight();
+		}
+
 		return {
 			x: this.x,
 			y: this.y,
@@ -116,7 +122,7 @@ class Camera extends EventEmitter{
 
 		this.posChanged = true;
 
-		return this;
+		return {dx: dx, dy: dy};
 	}
 
 	setX(x){

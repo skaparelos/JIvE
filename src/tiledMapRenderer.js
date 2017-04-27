@@ -1,21 +1,8 @@
 class TiledMapRenderer{
 
-	constructor(canvas){
-		this.canvas = canvas || JIVE._canvas;
-	}
+	constructor(){}
 
-
-	clearScreen(ctx){
-		ctx.clearRect(0, 0, this.canvas.getWidth(), this.canvas.getHeight());
-	}
-
-
-	draw(map, camera, imageLoader){
-
-		var ctx = this.canvas.getCtx();
-		this.clearScreen(ctx);
-
-		imageLoader = imageLoader || JIVE._imageLoader;
+	draw(map, camera, ctx, imageLoader){
 
 		var cam = camera.getCamera();
 		var camX = cam.x;
