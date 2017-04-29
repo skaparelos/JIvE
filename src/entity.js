@@ -7,7 +7,7 @@
 class Entity{
 
 
-	constructor(mapY, mapX, gid, map, walkable){
+	constructor(mapY, mapX, gid, walkable){
 
 		this.id = Entity.id++;
 		this.gid = gid;
@@ -24,17 +24,15 @@ class Entity{
 
 		// these are used for drawing
 		// i.e. don't show everything in the middle of the tile
-
-		var scrnCoords = Utils.map2ScreenCoords(
+		var screenCoords = Utils.map2ScreenCoords(
 			mapY, mapX,
 			map.getGID(gid)["w"], map.getGID(gid)["h"], 
-			camera.getCamera().x, camera.getCamera().y, camera.getCamera().zoomLvl, 
-			map.getTileWidth(), map.getTileHeight()
+			camera
 			);
+		this.screenX = screenCoords.x; 
+		this.screenY = screenCoords.y;
 
-
-		this.screenX = scrnCoords.x; 
-		this.screenY = scrnCoords.y;
+		this.speed = 0.3;
 
 		// indicates whether the entity is alive
 		this.isAlive = true;
@@ -57,20 +55,30 @@ class Entity{
 	/**
 	* Moves the entity to a different position
 	*/
-	move(dx, dy, map){
+	move(dx, dy, camera){
 
-		// TODO change this, we now use a linked list
-		map.setTile(2, this.mapX, this.mapY, 0);
-		this.mapX += dx;
-		this.mapY += dy;
-		map.setTile(2, this.mapX, this.mapY, this.gid);
+		// update the screen coords
+		this.screenX += dx;
+		this.screenY += dy;
+
+		// calculate the new map coords
+		var coords = Utils.screen2MapCoords({clientX: this.screenX, clientY: this.screenY}, camera);
+		this.mapX = coords.tileX;
+		this.mapY = coords.tileY;
+
+		return this;
 	}
 
+	moveTo(x, y){
+		this._finalx = x;
+		this._finaly = y;
+	}
 
 	update(dxdy, dt){
 		if(!this.isAlive) return;
 		this.screenX += dxdy.dx;
 		this.screenY += dxdy.dy;
+
 	}
 
 }

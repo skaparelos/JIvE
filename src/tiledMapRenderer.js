@@ -8,7 +8,7 @@ class TiledMapRenderer{
 		var camX = cam.x;
 		var camY = cam.y;
 		var camZL = cam.zoomLvl;
-		var bounds = camera.getViewport(map);
+		var bounds = camera.getViewport();
 
 		var m = map.getMap();
 		var layersNo = m["layersNo"];
@@ -28,8 +28,7 @@ class TiledMapRenderer{
 						var coords = Utils.map2ScreenCoords(
 							h, w,
 							gid["w"], gid["h"], 
-							camX, camY, camZL, 
-							unitTileWidth, unitTileHeight
+							camera
 							);
 
 						ctx.drawImage(
@@ -39,7 +38,6 @@ class TiledMapRenderer{
 							coords.x, coords.y, 
 							gid["w"], gid["h"]
 							);
-
 					}
 				}
 			}

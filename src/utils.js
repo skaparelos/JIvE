@@ -21,7 +21,7 @@ class Utils{
 	 *
 	 * Outputs the cell in the map that was clicked
 	*/
-	static screen2MapCoords(e, map, camera) {
+	static screen2MapCoords(e, camera) {
 
 		/*  Solve the drawing functions for tileX, tileY
 			These are the 2 drawing equations:
@@ -34,11 +34,10 @@ class Utils{
 		var camY = cam.y;
 		var zoomLvl = cam.zoomLvl;
 
-		var m = map.getMap();
-		var mapWidth = m["mapwidth"];
-		var mapHeight = m["mapheight"];
-		var unitTileWidth = m["tilewidth"];
-		var unitTileHeight = m["tileheight"];
+		var mapWidth = JIVE.settings["mapWidth"];
+		var mapHeight = JIVE.settings["mapHeight"];
+		var unitTileWidth = JIVE.settings["unitTileWidth"];
+		var unitTileHeight = JIVE.settings["unitTileHeight"];
 
 		var clientX = e.clientX; /* - cam.canvasOffsetLeft; // TODO*/
 		var clientY = e.clientY; /* - cam.canvasOffsetTop; // TODO*/
@@ -56,12 +55,10 @@ class Utils{
 				((clientX - camX + adjustX) / unitTileWidth)
 				));
 
-		if (tilex < 0 || tiley < 0 ||
-			tilex >= mapWidth || tiley >= mapHeight)
+		if (tilex < 0 || tiley < 0 || tilex >= mapWidth || tiley >= mapHeight)
 			return -1;
 
-		if (tilex == undefined || tiley == undefined ||
-				isNaN(tilex) || isNaN(tiley))
+		if (tilex == undefined || tiley == undefined || isNaN(tilex) || isNaN(tiley))
 			return -1;
 
 		return {
@@ -94,7 +91,15 @@ class Utils{
 	* @param zoomLevel
 	* @returns {{x: *, y: *, width: number, height: number}}
 	*/
-	static map2ScreenCoords(row, col, imgWidth, imgHeight, camX, camY, zoomLevel, unitTileWidth, unitTileHeight){
+	static map2ScreenCoords(row, col, imgWidth, imgHeight, camera){
+
+		var cam = camera.getCamera();
+		var camX = cam.x;
+		var camY = cam.y;
+		var zoomLevel = cam.zoomLvl;
+
+		var unitTileWidth = JIVE.settings["unitTileWidth"];
+		var unitTileHeight = JIVE.settings["unitTileHeight"];
 
 		// Map to screen coords conversion
 		var initX = (col - row) * unitTileWidth / 2;

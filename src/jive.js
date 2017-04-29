@@ -71,6 +71,8 @@ JIVE.reqAnimFrame = function(fn){
 	} 
 }
 
+JIVE.settings = {}
+
 JIVE.Keys = {
 
 	// arrows

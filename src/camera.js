@@ -4,7 +4,7 @@ class Camera extends EventEmitter{
 
 		super();
 
-		this.x = x || 0;
+		this.x = x || Math.floor(JIVE._canvas.getWidth()/2);
 		this.y = y || 0;
 		this.w = JIVE._canvas.getWidth();
 		this.h = JIVE._canvas.getHeight();
@@ -21,7 +21,7 @@ class Camera extends EventEmitter{
 
 
 	getCamera(){
-		
+
 		if(JIVE._canvas.hasChanged()){
 			this.w = JIVE._canvas.getWidth();
 			this.h = JIVE._canvas.getHeight();
@@ -40,7 +40,7 @@ class Camera extends EventEmitter{
 	* Finds the area of the map that the camera sees.
 	*
 	*/
-	getViewport(map){
+	getViewport(){
 
 		// If the position of the camera has not changed
 		// since the last call to this function
@@ -51,12 +51,11 @@ class Camera extends EventEmitter{
 				endRow: this._endRow,
 				startCol: this._startCol,
 				endCol: this._endCol
-			}	
+			};
 		}
 
-		var m = map.getMap();
-		var mapWidth = m["mapwidth"];
-		var mapHeight = m["mapheight"];
+		var mapWidth = JIVE.settings["mapWidth"];
+		var mapHeight = JIVE.settings["mapHeight"];
 
 		this._startRow = 0;
 		this._startCol = 0;
@@ -73,16 +72,16 @@ class Camera extends EventEmitter{
 		var leftDown = {clientX : 0, clientY : this.h};
 		var rightDown = {clientX : this.w, clientY : this.h};
 
-		var res = Utils.screen2MapCoords(leftUp, map, this);
+		var res = Utils.screen2MapCoords(leftUp, this);
 		if (res != -1) this._startCol = res.tileX;
 
-		res = Utils.screen2MapCoords(rightUp, map, this);
+		res = Utils.screen2MapCoords(rightUp, this);
 		if (res != -1) this._startRow = res.tileY;
 
-		res = Utils.screen2MapCoords(leftDown, map, this);
+		res = Utils.screen2MapCoords(leftDown, this);
 		if (res != -1) this._endRow = (res.tileY + 2 > mapHeight) ? mapHeight : res.tileY + 2;
 
-		res = Utils.screen2MapCoords(rightDown, map, this);
+		res = Utils.screen2MapCoords(rightDown, this);
 		if (res != -1) this._endCol = (res.tileX + 1 > mapWidth) ? mapWidth : res.tileX + 1;
 
 		// the position now has been registered so 

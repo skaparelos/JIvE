@@ -50,7 +50,7 @@
 	<script>	
 
 	url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/map.json"
-	var map, renderer, camera, ih, woRenderer;
+	var map, renderer, camera, ih;
 
 	function init(){
 		renderer = JIVE.Renderer();
@@ -80,8 +80,9 @@
 
 		ih.on('click-left', function(e) {
 			//console.log("left click oeooe");
-			//console.log(Utils.screen2MapCoords(e, map, camera));
+			console.log(Utils.screen2MapCoords(e, camera));
 			//entities[0].move(1, 0, map);
+			console.log(JIVE.entities[0].move(3, 0, camera).mapX);
 		})
 
 		ih.on('click-right', function(){
@@ -121,8 +122,6 @@
 			entity.update(dxdy, dt);
 		});
 		renderer.draw(camera, map, JIVE.entities);
-
-
 	}
 
 

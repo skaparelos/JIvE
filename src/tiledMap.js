@@ -112,6 +112,11 @@ class TiledMap{
 		this.mapWidth = jsonData["width"];
 		this.mapHeight = jsonData["height"];
 
+		JIVE.settings["unitTileWidth"] = this.tileWidth;
+		JIVE.settings["unitTileHeight"] = this.tileHeight;
+		JIVE.settings["mapWidth"] = this.mapWidth;
+		JIVE.settings["mapHeight"] = this.mapHeight;
+
 		// create a mapping between GIDs and the position of the atlas frame
 		// in the atlas image. 
 		// build the {"gid": [imageName, x, y, w, h]}
@@ -154,7 +159,7 @@ class TiledMap{
 						map2d[i][j] = layers[layer]["data"][ctr];
 					else{
 						if (layers[layer]["data"][ctr] != 0){
-							var en = new Entity(i, j, layers[layer]["data"][ctr], map);
+							var en = new Entity(i, j, layers[layer]["data"][ctr]);
 							JIVE.entities.push(en);
 						}	
 					}
