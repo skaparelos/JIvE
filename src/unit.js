@@ -14,7 +14,7 @@ class Unit extends Entity{
 		this.direction = 0;
 		this.life = 100;
 
-		this.shape = new Circle(screenX, screenY, 12, 33, 40);
+		this.shape = new Ellipse(screenX, screenY, 12, 15, 33, 40);
 
 		this.setWalkable(false);
 		JIVE.entities.push(this);
