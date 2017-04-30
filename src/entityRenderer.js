@@ -17,7 +17,7 @@ class EntityRenderer{
 			if (e.screenX < camX || e.screenX > camX + camW || e.screenY < camY || e.screenY > camY + camH ) break;
 			if (e.gid == 0) break;
 
-			var gid = map.getGID(e.gid);
+			var gid = JIVE.getGID(e.gid);
 
 			ctx.drawImage(
 				imageLoader.get(gid["imagename"]), 

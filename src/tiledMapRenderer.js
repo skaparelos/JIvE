@@ -23,7 +23,7 @@ class TiledMapRenderer{
 
 					if (gidValue != 0){
 
-						var gid = map.getGID(gidValue);
+						var gid = JIVE.getGID(gidValue);
 
 						var coords = Utils.map2ScreenCoords(
 							h, w,

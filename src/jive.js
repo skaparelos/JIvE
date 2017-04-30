@@ -6,7 +6,7 @@ var JIVE = {};
 // is not important, neither is making the imageLoader
 JIVE._imageLoader = new ImageLoader();
 JIVE._canvas = new Canvas();
-JIVE.entities = [];
+
 
 JIVE._onDocumentLoad = function (){
 

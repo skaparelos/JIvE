@@ -7,39 +7,23 @@
 class Entity{
 
 
-	constructor(mapY, mapX, gid, walkable){
+	constructor(screenX, screenY, gid){
 
+		JIVE.entities.push(this);
 		this.id = Entity.id++;
 		this.gid = gid;
 
-		// the coordinates of the entity in the map
-		// these can be integers
-		this.mapX = mapX || 0;
-		this.mapY = mapY || 0;
-
-		// these hold the width and height of the entity
-		// in number of tiles
-		this.width = 1;
-		this.height = 1;
-
 		// these are used for drawing
 		// i.e. don't show everything in the middle of the tile
-		var screenCoords = Utils.map2ScreenCoords(
-			mapY, mapX,
-			map.getGID(gid)["w"], map.getGID(gid)["h"], 
-			camera
-			);
-		this.screenX = screenCoords.x; 
-		this.screenY = screenCoords.y;
-
-		this.speed = 0.3;
+		this.screenX = screenX; 
+		this.screenY = screenY;
 
 		// indicates whether the entity is alive
 		this.isAlive = true;
 
 		// indicates whether this entity can be walked over
 		// e.g. like doors or whatever else
-		this.isWalkable = walkable || false;
+		this.isWalkable = null;
 
 	}
 
@@ -57,30 +41,23 @@ class Entity{
 	*/
 	move(dx, dy, camera){
 
-		// update the screen coords
-		this.screenX += dx;
-		this.screenY += dy;
-
-		// calculate the new map coords
-		var coords = Utils.screen2MapCoords({clientX: this.screenX, clientY: this.screenY}, camera);
-		this.mapX = coords.tileX;
-		this.mapY = coords.tileY;
-
 		return this;
 	}
 
-	moveTo(x, y){
-		this._finalx = x;
-		this._finaly = y;
-	}
 
+	/**
+	* called every frame to update the entity
+	*/
 	update(dxdy, dt){
 		if(!this.isAlive) return;
 		this.screenX += dxdy.dx;
 		this.screenY += dxdy.dy;
-
 	}
 
 }
 
+/* @static */
 Entity.id = 0;
+
+// A list containing all the entities of the game
+JIVE.entities = [];

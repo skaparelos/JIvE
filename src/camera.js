@@ -147,7 +147,4 @@ class Camera extends EventEmitter{
 		this.posChanged = true;
 		return this;
 	}
-
-
-
 }

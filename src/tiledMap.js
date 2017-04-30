@@ -23,10 +23,6 @@ class TiledMap{
 		// the height of the map in number of tiles
 		this.mapHeight = 0;
 
-		// holds the relation
-		// {"gid": [imageName, x, y, w, h]}
-		this.gid2ImagePos = {};
-
 		// indicates whether a tiled map has been loaded or not.
 		this.loaded = false;
 
@@ -40,12 +36,12 @@ class TiledMap{
 	* @param callback function
 	* @param imageLoader instance of imageLoader class
 	*/ 
-	loadJSON(JsonURI, callback, imageLoader){
+	loadJSON(JsonURI, camera, callback, imageLoader){
 		imageLoader = imageLoader || JIVE._imageLoader;
 		var that = this;
 
 		Utils.xhrGet(JsonURI, function(data){
-			that.parseMap(data.responseText);
+			that.parseMap(data.responseText, camera);
 			that.loadImages(data.responseText, callback, imageLoader)
 			that.loaded = true;
 		})
@@ -54,11 +50,6 @@ class TiledMap{
 
 	isLoaded(){
 		return this.loaded;
-	}
-
-
-	getGID(gid){
-		return this.gid2ImagePos[gid];
 	}
 
 
@@ -102,7 +93,7 @@ class TiledMap{
 		imageLoader.loadImages(imgsList, callback);
 	}
 
-	parseMap(data){
+	parseMap(data, camera){
 		var jsonData = JSON.parse(data);
 		var layers = jsonData["layers"];
 		var tileSets = jsonData["tilesets"];
@@ -132,7 +123,7 @@ class TiledMap{
 				var widthStep = tileSets[tileset]["tilewidth"];
 				for (var w = 0; w < imageWidth; w += widthStep){
 
-					this.gid2ImagePos[gid] = {"imagename":imageName, 
+					JIVE.gid2ImagePos[gid] = {"imagename":imageName, 
 						"x":w, "y":h, "w":widthStep, "h":heightStep};
 					gid++;
 				}
@@ -159,8 +150,13 @@ class TiledMap{
 						map2d[i][j] = layers[layer]["data"][ctr];
 					else{
 						if (layers[layer]["data"][ctr] != 0){
-							var en = new Entity(i, j, layers[layer]["data"][ctr]);
-							JIVE.entities.push(en);
+							var tgid = layers[layer]["data"][ctr];
+							var screenCoords = Utils.map2ScreenCoords(
+								i, j,
+								JIVE.getGID(tgid)["w"], JIVE.getGID(tgid)["h"], 
+								camera
+								);
+							new Entity(screenCoords.x, screenCoords.y, tgid);
 						}	
 					}
 					ctr++;
@@ -176,4 +172,10 @@ class TiledMap{
 
 
 	}
+}
+
+/* @static */
+JIVE.gid2ImagePos = {};
+JIVE.getGID = function(gid){
+	return JIVE.gid2ImagePos[gid];
 }
