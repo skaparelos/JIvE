@@ -4,6 +4,7 @@ class EntityRenderer{
 
 
 	draw(entities, camera, map, ctx, imageLoader){
+		
 		var cam = camera.getCamera();
 		var camX = cam.x;
 		var camY = cam.y;
@@ -19,6 +20,10 @@ class EntityRenderer{
 
 			var gid = JIVE.getGID(e.gid);
 
+			// draw the shape around the entity
+			entities[ent].shape.draw(ctx);
+
+			// draw the entity image
 			ctx.drawImage(
 				imageLoader.get(gid["imagename"]), 
 				gid["x"], gid["y"], 
@@ -26,6 +31,8 @@ class EntityRenderer{
 				e.screenX, e.screenY, 
 				gid["w"], gid["h"]
 				);
+
+
 		}
 
 	}

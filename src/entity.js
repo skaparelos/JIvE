@@ -1,7 +1,8 @@
 /**
 * An entity is anything besides background tiles.
-* A rock is an entity with isWalkable false
-* BACKGROUND TILES DO NOT COUNT AS ENTITIES
+* The entity class is a base class for other classes.
+* Examples of entities are: units, items, fringe, rocks, houses...
+* Background tiles are not considered entities.
 */
 
 class Entity{
@@ -9,13 +10,12 @@ class Entity{
 
 	constructor(screenX, screenY, gid){
 
-		JIVE.entities.push(this);
+		//JIVE.entities.push(this);
 		this.id = Entity.id++;
 		this.gid = gid;
 
-		// these are used for drawing
-		// i.e. don't show everything in the middle of the tile
-		this.screenX = screenX; 
+		// the x,y coordinates in the screen
+		this.screenX = screenX;
 		this.screenY = screenY;
 
 		// indicates whether the entity is alive
@@ -25,6 +25,12 @@ class Entity{
 		// e.g. like doors or whatever else
 		this.isWalkable = null;
 
+		return this;
+	}
+
+	setWalkable(w){
+		this.isWalkable = w;
+		return this;
 	}
 
 	getEntity(){
@@ -40,6 +46,7 @@ class Entity{
 	* Moves the entity to a different position
 	*/
 	move(dx, dy, camera){
+		if (!this.isAlive || !this.isWalkable) return;
 
 		return this;
 	}

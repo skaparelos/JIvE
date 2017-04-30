@@ -156,7 +156,7 @@ class TiledMap{
 								JIVE.getGID(tgid)["w"], JIVE.getGID(tgid)["h"], 
 								camera
 								);
-							new Entity(screenCoords.x, screenCoords.y, tgid);
+							new Unit(screenCoords.x, screenCoords.y, tgid);
 						}	
 					}
 					ctr++;
