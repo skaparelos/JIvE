@@ -33,10 +33,6 @@ JIVE.Canvas = function (){
 	return new Canvas();
 };
 
-JIVE.Entity = function (x, y, gid){
-	return new Entity(x, y, gid);
-}
-
 JIVE.ImageLoader = function () {
 	return new ImageLoader();
 }
@@ -47,6 +43,10 @@ JIVE.Camera = function () {
 
 JIVE.InputHandler = function (){
 	return new InputHandler();
+}
+
+JIVE.Spawn = function(entityName, x, y, gid){
+	return JIVE.entityFactory[entityName](x, y, gid);
 }
 
 JIVE.reqAnimFrame = function(fn){

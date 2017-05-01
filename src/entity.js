@@ -25,20 +25,32 @@ class Entity{
 		// e.g. like doors or whatever else
 		this.isWalkable = null;
 
+		// if it has been selected by the user
+		this.isSelected = null;
+
 		return this;
 	}
+
+
+	getSelected(){
+		return this.isSelected;
+	}
+
 
 	setWalkable(w){
 		this.isWalkable = w;
 		return this;
 	}
 
+
 	getEntity(){
 		return{
 			isAlive: this.isAlive,
+			isSelected: this.isSelected,
 			screenX: this.screenX,
 			screenY: this.screenY,
-			gid: this.gid
+			gid: this.gid,
+			that: this
 		};
 	}
 
@@ -68,3 +80,7 @@ Entity.id = 0;
 
 // A list containing all the entities of the game
 JIVE.entities = [];
+
+// A dictionary containing the map between the class name 
+// and its factory function
+JIVE.entityFactory = {};

@@ -137,6 +137,8 @@ class TiledMap{
 		var map2d = [], ctr = 0;
 		for(var layer = 0; layer < layers.length; layer++){
 
+			// if the name of the layer contains the word "base" then we do not
+			// create entities out of the layer.
 			var isBaseLayer = layers[layer]["name"].includes("base");
 			if (isBaseLayer)
 				this.layersNo++;
@@ -156,6 +158,8 @@ class TiledMap{
 								JIVE.getGID(tgid)["w"], JIVE.getGID(tgid)["h"], 
 								camera
 								);
+
+							// TODO is not always units
 							new Unit(screenCoords.x, screenCoords.y, tgid);
 						}	
 					}

@@ -54,6 +54,7 @@ class Rhombus{
 		this.y = y;
 	}
 
+
 	setPos(x,y){
 
 	}

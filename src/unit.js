@@ -11,12 +11,10 @@ class Unit extends Entity{
 		super(screenX, screenY, gid);
 
 		this.speed = 0.5;
-		this.direction = 0;
 		this.life = 100;
-
 		this.shape = new Ellipse(screenX, screenY, 12, 15, 33, 40);
-
 		this.setWalkable(false);
+
 		JIVE.entities.push(this);
 	}
 
@@ -25,4 +23,14 @@ class Unit extends Entity{
 		this.shape.setPos(this.screenX, this.screenY);
 	}
 
+	getShape(){
+		return this.shape;
+	}
+
 }
+
+
+JIVE._unitFactory = function(x, y, gid){
+	return new Unit(x, y, gid);
+}
+JIVE.entityFactory["unit"] = JIVE._unitFactory;
