@@ -39,9 +39,9 @@ class Selector{
         var h = this.curEvent.clientY - this.dragEvent.clientY;
         var x = this.curEvent.clientX;
         var y = this.curEvent.clientY;
+        
 
-
-        if (this.curEvent.clientX> this.dragEvent.clientX
+        if (this.curEvent.clientX > this.dragEvent.clientX
             && this.curEvent.clientY > this.dragEvent.clientY) {
             x = this.dragEvent.clientX;
             y = this.dragEvent.clientY;
@@ -51,7 +51,7 @@ class Selector{
         if(this.curEvent.clientX > this.dragEvent.clientX
             && this.curEvent.clientY < this.dragEvent.clientY){
             x = this.dragEvent.clientX;
-            y = this.dragEvent.clientY;
+            y = this.curEvent.clientY;
             w = this.curEvent.clientX - this.dragEvent.clientX;
             h = this.dragEvent.clientY - this.curEvent.clientY;
         }
