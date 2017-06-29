@@ -18,8 +18,8 @@ class Unit extends Entity{
 		JIVE.entities.push(this);
 	}
 
-	update(dxdy, dt){
-		super.update(dxdy, dt);
+	update(dxdy, dt, rect){
+		super.update(dxdy, dt, rect);
 		this.shape.setPos(this.screenX, this.screenY);
 	}
 

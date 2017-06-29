@@ -18,9 +18,8 @@
 	<script src="entity.js"></script>
 	<script src="unit.js"></script>
 	<script src="shapes.js"></script>
-
-
-
+	<script src="selector.js"></script>
+	<script src="selectorRenderer.js"></script>
 
 
 	<style>
@@ -54,7 +53,7 @@
 	<script>	
 
 	url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/map.json"
-	var map, renderer, camera, ih;
+	var map, renderer, camera, ih, selector;
 
 	function init(){
 		renderer = JIVE.Renderer();
@@ -73,7 +72,9 @@
 		ih.bind(JIVE.Mouse.LEFT, 'click-left');
 		ih.bind(JIVE.Mouse.RIGHT, 'click-right');
 
-		// you can do somethind like this, but it is veeery slow
+		selector = JIVE.Selector(ih);
+
+		// you can do something like this, but it is veeery slow
 		camera.on('move-up', function(){
 			//camera.move({up:1, right:0, left:0, down:0}, dt)
 
@@ -122,10 +123,14 @@
 
 		var dxdy = camera.move(direction, dt);
 
+		var rect = undefined;
+		if (selector.isActive())
+		    rect = selector.getRect();
+
 		JIVE.entities.forEach(function(entity){
-			entity.update(dxdy, dt);
+			entity.update(dxdy, dt, rect);
 		});
-		renderer.draw(camera, map, JIVE.entities);
+        renderer.draw(camera, map, JIVE.entities, selector);
 	}
 
 

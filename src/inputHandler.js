@@ -21,6 +21,13 @@ class InputHandler extends EventEmitter{
 		// e.g. {'move-up':true, 'move-down':false, 'move-left':false, 'move-right':true}
 		this.actions = {};
 
+		// pre registered mouse events
+		this.actions['mousedrag'] = false;
+		this.actions['mousedown'] = false;
+
+		// this is needed for the mousedrag
+		this._mouseDown = false;
+
 	}
 
 
@@ -31,19 +38,20 @@ class InputHandler extends EventEmitter{
 	init(){
 
 		// Keyboard
-		document.body.addEventListener('keydown', this.handleKeyDown.bind(this), false) 
-		document.body.addEventListener('keyup', this.handleKeyUp.bind(this), false)
+		document.body.addEventListener('keydown', this.handleKeyDown.bind(this), false);
+		document.body.addEventListener('keyup', this.handleKeyUp.bind(this), false);
 
 		// Mouse
 		document.body.addEventListener('contextmenu', function(e){
 			// disables right click
 			e.preventDefault();
 		}, false);
-		document.body.addEventListener('mousedown', this.handleMouseDown.bind(this), false)
-		document.body.addEventListener('mouseup', this.handleMouseUp.bind(this), false)
+		document.body.addEventListener('mousedown', this.handleMouseDown.bind(this), false);
+		document.body.addEventListener('mouseup', this.handleMouseUp.bind(this), false);
+		document.body.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
 
 		// Window
-		window.addEventListener('resize', JIVE._canvas.updateCanvasSize.bind(this))
+		window.addEventListener('resize', JIVE._canvas.updateCanvasSize.bind(this));
 
 		return this;
 	}
@@ -93,7 +101,19 @@ class InputHandler extends EventEmitter{
 	}
 
 
+    handleMouseMove(e){
+		if(this.actions['mousedown']){
+			this.actions['mousedrag'] = true;
+			this.emit('mousedrag', e);
+		}
+	}
+
+
 	handleMouseUp(e){
+        this.actions['mousedown'] = false;
+        this.actions['mousedrag'] = false;
+    	this.emit('mouseup', e);
+
 		var action = this.bindings[e.button];
 		if (action){
 			this.actions[action] = false;
@@ -102,6 +122,8 @@ class InputHandler extends EventEmitter{
 
 
 	handleMouseDown(e){
+        this.actions['mousedown'] = true;
+
 		var action = this.bindings[e.button];
 		if (action){
 			this.actions[action] = true;

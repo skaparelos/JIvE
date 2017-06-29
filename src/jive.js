@@ -49,6 +49,10 @@ JIVE.Spawn = function(entityName, x, y, gid){
 	return JIVE.entityFactory[entityName](x, y, gid);
 }
 
+JIVE.Selector = function (ih){
+	return new Selector(ih);
+}
+
 JIVE.reqAnimFrame = function(fn){
 
 	// reqAnimFrame is capped to 60FPS. In order to control FPS, we call

@@ -67,10 +67,19 @@ class Entity{
 	/**
 	* called every frame to update the entity
 	*/
-	update(dxdy, dt){
+	update(dxdy, dt, rect){
 		if(!this.isAlive) return;
 		this.screenX += dxdy.dx;
 		this.screenY += dxdy.dy;
+
+		if (rect == undefined) return;
+		if (this.screenX >= rect.x && this.screenX <= rect.x + rect.w
+			&& this.screenY >= rect.y && this.screenY <= rect.y + rect.h) {
+            this.isSelected = true;
+            Selector.selectedEntities.push(this);
+        }else {
+            this.isSelected = false;
+        }
 	}
 
 }

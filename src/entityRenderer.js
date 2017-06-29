@@ -16,10 +16,6 @@ class EntityRenderer{
 			var e = entities[ent].getEntity();
 			if (!e.isAlive) break;
 			if (e.screenX < camX || e.screenX > camX + camW || e.screenY < camY || e.screenY > camY + camH ) break;
-			/*if (e.screenX < camX) break;
-			if (e.screenX > camX + camW) break;
-			if (e.screenY < camY) break;
-			if (e.screenY > camY + camH) break;*/
 			if (e.gid == 0) break;
 
 			var gid = JIVE.getGID(e.gid);
