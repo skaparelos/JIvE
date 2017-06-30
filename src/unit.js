@@ -14,8 +14,6 @@ class Unit extends Entity{
 		this.life = 100;
 		this.shape = new Ellipse(screenX, screenY, 12, 15, 33, 40);
 		this.setWalkable(false);
-
-		JIVE.entities.push(this);
 	}
 
 	update(dxdy, dt, rect){
@@ -33,4 +31,4 @@ class Unit extends Entity{
 JIVE._unitFactory = function(x, y, gid){
 	return new Unit(x, y, gid);
 }
-JIVE.entityFactory["unit"] = JIVE._unitFactory;
+Entity.entityFactory["unit"] = JIVE._unitFactory;

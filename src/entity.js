@@ -22,17 +22,30 @@ class Entity{
 		this.isAlive = true;
 
 		// indicates whether this entity can be walked over
-		// e.g. like doors or whatever else
+		// e.g. like doors or bridge or whatever else
 		this.isWalkable = null;
 
 		// if it has been selected by the user
-		this.isSelected = null;
+		this.isSelected = false;
 
+        Entity.entities.push(this);
+
+        // takes the class name and adds it to a dictionary
+        // so we can create new objects on the fly by evaluating
+        // the class name
+        var subClassName = this.__proto__.constructor.name;
+        if(Entity._factory[subClassName] == null
+            && subClassName != "Entity") {
+            Entity._factory[subClassName] = function (x, y, gid) {
+                var o = eval("new " + subClassName + "(" + x + "," + y + "," + gid + ");");
+                return o;
+            }
+        }
 		return this;
 	}
 
 
-	getSelected(){
+	isSelected(){
 		return this.isSelected;
 	}
 
@@ -73,8 +86,10 @@ class Entity{
 		this.screenY += dxdy.dy;
 
 		if (rect == undefined) return;
-		if (this.screenX >= rect.x && this.screenX <= rect.x + rect.w
-			&& this.screenY >= rect.y && this.screenY <= rect.y + rect.h) {
+		if (this.screenX >= rect.x
+            && this.screenX <= rect.x + rect.w
+			&& this.screenY >= rect.y
+            && this.screenY <= rect.y + rect.h) {
             this.isSelected = true;
             Selector.selectedEntities.push(this);
         }else {
@@ -84,12 +99,16 @@ class Entity{
 
 }
 
+/* a map between a class name a function
+that creates new instances of that class */
+Entity._factory = {};
+
 /* @static */
 Entity.id = 0;
 
 // A list containing all the entities of the game
-JIVE.entities = [];
+Entity.entities = [];
 
 // A dictionary containing the map between the class name 
 // and its factory function
-JIVE.entityFactory = {};
+Entity.entityFactory = {};
