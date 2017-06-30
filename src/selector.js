@@ -8,24 +8,21 @@ class Selector{
         this.isMouseDragging = false;
         var that = this;
 
-        ih.on('mousedrag', function (e) {
-
+        this.ih.on('mousedrag', function (e) {
             if (!that.isMouseDragging) {
                 that.dragEvent = e;
                 that.isMouseDragging = true;
             } else {
                 that.curEvent = e;
             }
-
         });
 
-        ih.on('mouseup', function (e) {
+        this.ih.on('mouseup', function (e) {
             if (that.isMouseDragging) {
                 that.dragEvent = null;
                 that.curEvent = null;
                 that.isMouseDragging = false;
             }
-
         });
     }
 
@@ -33,13 +30,9 @@ class Selector{
         return this.isMouseDragging;
     }
 
-    getRect(){
+    getSelectedRect(){
         if (!this.isMouseDragging) return undefined;
-        var w = this.curEvent.clientX - this.dragEvent.clientX;
-        var h = this.curEvent.clientY - this.dragEvent.clientY;
-        var x = this.curEvent.clientX;
-        var y = this.curEvent.clientY;
-        
+        var x, y, w, h;
 
         if (this.curEvent.clientX > this.dragEvent.clientX
             && this.curEvent.clientY > this.dragEvent.clientY) {
@@ -78,16 +71,10 @@ class Selector{
         };
     }
 
-    update(){
-    }
-
-
 }
 
-
-
-
+/* @static */
 Selector.selectedEntities = [];
-JIVE.getSelectedItems = function (){
+Selector.getSelectedItems = function (){
     return Selector.selectedEntities;
 }

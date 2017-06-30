@@ -94,6 +94,7 @@
 			console.log("right click");
 		});
 
+
 		map = JIVE.Map();
 		map.loadJSON(url, camera, function(){
 			if(map.isLoaded())
@@ -103,34 +104,23 @@
 
 	function animate(dt){
 
-		direction = {up: 0, right:0, left:0, down: 0};
-
-		if (ih.getActionState("move-up")){
-			direction.up = 1;
-		}
-
-		if (ih.getActionState('move-left')){
-			direction.left = 1;
-		}
-
-		if (ih.getActionState('move-right')){
-			direction.right = 1;
-		}
-
-		if (ih.getActionState('move-down')){
-			direction.down = 1;
-		}
+		var direction = {
+		    up: ih.getActionState("move-up"),
+			right: ih.getActionState('move-right'),
+			left: ih.getActionState('move-left'),
+			down: ih.getActionState('move-down')
+		};
 
 		var dxdy = camera.move(direction, dt);
 
 		var rect = undefined;
 		if (selector.isActive())
-		    rect = selector.getRect();
+		    rect = selector.getSelectedRect();
 
-		JIVE.entities.forEach(function(entity){
+		Entity.entities.forEach(function(entity){
 			entity.update(dxdy, dt, rect);
 		});
-        renderer.draw(camera, map, JIVE.entities, selector);
+        renderer.draw(camera, map, Entity.entities, selector);
 	}
 
 

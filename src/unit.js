@@ -26,9 +26,3 @@ class Unit extends Entity{
 	}
 
 }
-
-
-JIVE._unitFactory = function(x, y, gid){
-	return new Unit(x, y, gid);
-}
-Entity.entityFactory["unit"] = JIVE._unitFactory;

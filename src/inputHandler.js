@@ -75,6 +75,15 @@ class InputHandler extends EventEmitter{
 		return this;
 	}
 
+    /**
+     * Returns the state of an action
+     * @param action string
+     * @return {true, false}
+     */
+    getActionState(action){
+        return this.actions[action];
+    }
+
 
 	handleKeyUp(e){
 		var action = this.bindings[e.keyCode];
@@ -129,15 +138,6 @@ class InputHandler extends EventEmitter{
 			this.actions[action] = true;
 			this.emit(action, e);
 		}
-	}
-
-	/**
-	* Returns the state of an action
-	* @param action string
-	* @return {true, false}
-	*/
-	getActionState(action){
-		return this.actions[action];
 	}
 
 }

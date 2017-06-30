@@ -7,6 +7,13 @@ var JIVE = {};
 JIVE._imageLoader = new ImageLoader();
 JIVE._canvas = new Canvas();
 
+JIVE.Canvas = function (){
+    return new Canvas();
+};
+
+JIVE.ImageLoader = function () {
+    return new ImageLoader();
+}
 
 JIVE._onDocumentLoad = function (){
 
@@ -29,29 +36,22 @@ JIVE.Renderer = function (canvas){
 	return new Renderer(canvas);
 };
 
-JIVE.Canvas = function (){
-	return new Canvas();
-};
-
-JIVE.ImageLoader = function () {
-	return new ImageLoader();
-}
-
 JIVE.Camera = function () {
 	return new Camera();
-}
+};
 
 JIVE.InputHandler = function (){
 	return new InputHandler();
-}
+};
 
 JIVE.Spawn = function(entityName, x, y, gid){
-	return JIVE.entityFactory[entityName](x, y, gid);
-}
+    return Entity._factory[entityName](x, y, gid);
+};
+
 
 JIVE.Selector = function (ih){
 	return new Selector(ih);
-}
+};
 
 JIVE.reqAnimFrame = function(fn){
 
@@ -73,9 +73,9 @@ JIVE.reqAnimFrame = function(fn){
 
 		this._then = now - (this._deltaTime % 16)
 	} 
-}
+};
 
-JIVE.settings = {}
+JIVE.settings = {};
 
 JIVE.Keys = {
 
@@ -134,11 +134,11 @@ JIVE.Keys = {
 
 	"=": 187,
 	"-": 189
-}
+};
 
 
 JIVE.Mouse = {
 	LEFT: 0,
 	MIDDLE: 1,
 	RIGHT: 2,
-}
+};

@@ -3,7 +3,7 @@ class EntityRenderer{
 	constructor(){}
 
 
-	draw(entities, camera, map, ctx, imageLoader){
+	draw(entities, camera, ctx, imageLoader){
 
 		var cam = camera.getCamera();
 		var camX = cam.x;

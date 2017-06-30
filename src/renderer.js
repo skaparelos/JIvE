@@ -17,7 +17,8 @@ class Renderer{
 		imageLoader = imageLoader || JIVE._imageLoader;
 
 		this.mapRenderer.draw(map, camera, ctx, imageLoader);
-		this.entityRenderer.draw(entities, camera, map, ctx, imageLoader);
-		this.selectorRenderer.draw(selector, ctx);
+		this.entityRenderer.draw(entities, camera, ctx, imageLoader);
+		if (selector != undefined && selector.isActive())
+			this.selectorRenderer.draw(selector, ctx);
 	}
 }

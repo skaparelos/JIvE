@@ -4,7 +4,7 @@ class SelectorRenderer{
 
     draw(selector, ctx){
         if(!selector.isActive()) return;
-        var rect = selector.getRect();
+        var rect = selector.getSelectedRect();
         ctx.beginPath();
         ctx.lineWidth="3";
         ctx.strokeStyle="black";
