@@ -6,6 +6,8 @@
 	<title>JIvE library</title>
 	<script src="canvas.js"></script>
 	<script src="imageLoader.js"></script>
+	<script src="Box2dWeb-2.1.a.3.min.js"></script>
+	<script src="physicsEngine.js"></script>
 	<script src="jive.js"></script>
 	<script src="eventEmitter.js"></script>
 	<script src="camera.js"></script>
@@ -20,8 +22,6 @@
 	<script src="shapes.js"></script>
 	<script src="selector.js"></script>
 	<script src="selectorRenderer.js"></script>
-	<script src="Box2dWeb-2.1.a.3.min.js"></script>
-	<script src="physicsEngine.js"></script>
 
 
 	<style>
@@ -88,6 +88,21 @@
 		ih.on('click-left', function(e) {
 			//console.log("left click oeooe");
 			console.log(Utils.screen2MapCoords(e, camera));
+			/* TODO
+            var body = JIVE.PhysicsEngine.getBodyAtMouse(e);
+            console.log("body = " + body);
+            if(body) {
+                console.log("here");
+                var md = new JIVE.PhysicsEngine.b2MouseJointDef();
+                md.bodyA = JIVE.PhysicsEngine.world.GetGroundBody();
+                md.bodyB = body;
+                md.target.Set(mouseX, mouseY);
+                md.collideConnected = true;
+                md.maxForce = 300.0 * body.GetMass();
+                mouseJoint = world.CreateJoint(md);
+                body.SetAwake(true);
+            }
+            */
 			//entities[0].move(1, 0, map);
 			//console.log(JIVE.entities[0].move(3, 0, camera).mapX);
 		})
@@ -96,6 +111,8 @@
 			console.log("right click");
 		});
 
+		//TODO temp
+		JIVE.PhysicsEngine.init(JIVE._canvas.getCtx());
 
 		map = JIVE.Map();
 		map.loadJSON(url, camera, function(){
@@ -115,14 +132,21 @@
 
 		var dxdy = camera.move(direction, dt);
 
-		var rect = undefined;
-		//if (selector.isActive())
-		rect = selector.getSelectedRect();
+		// get the selected area (if any)
+		var rect = selector.getSelectedRect();
 
-		Entity.entities.forEach(function(entity){
+		// update entities and physics engine
+		JIVE.entities.forEach(function(entity){
 			entity.update(dxdy, dt, rect);
 		});
-        renderer.draw(camera, map, Entity.entities, selector);
+		JIVE.PhysicsEngine.update();
+
+
+		// draw
+        renderer.draw(camera, map, JIVE.entities, selector);
+
+        //TODO remove:
+		//JIVE.PhysicsEngine.draw();
 	}
 
 

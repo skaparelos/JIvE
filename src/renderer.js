@@ -18,7 +18,7 @@ class Renderer{
 
 		this.mapRenderer.draw(map, camera, ctx, imageLoader);
 		this.entityRenderer.draw(entities, camera, ctx, imageLoader);
-		if (selector != undefined && selector.isActive())
+		if (selector !== undefined && selector.isActive())
 			this.selectorRenderer.draw(selector, ctx);
 	}
 }

@@ -48,6 +48,7 @@ JIVE.Spawn = function(entityName, x, y, gid){
     return Entity._factory[entityName](x, y, gid);
 };
 
+JIVE.PhysicsEngine = new PhysicsEngine();
 
 JIVE.Selector = function (ih){
 	return new Selector(ih);
@@ -56,7 +57,7 @@ JIVE.Selector = function (ih){
 JIVE.reqAnimFrame = function(fn){
 
 	// reqAnimFrame is capped to 60FPS. In order to control FPS, we call
-	// the drawing function every _period (see the if below)
+	// the drawing function every 16 secs (period) (see the if below)
 	requestAnimationFrame(function (){
 		JIVE.reqAnimFrame(fn);
 	});
@@ -65,17 +66,15 @@ JIVE.reqAnimFrame = function(fn){
 	this._then = this._then || 0;
 	this._deltaTime = now - this._then;
 
-	if (this._deltaTime >= 17) {
-
-		//this.update(this._deltaTime)
-		//this.draw()
+	if (this._deltaTime >= 16) {
 		fn(this._deltaTime)
-
 		this._then = now - (this._deltaTime % 16)
 	} 
 };
 
-JIVE.settings = {};
+JIVE.settings = {
+	frame_rate: 1/60 // fps
+};
 
 JIVE.Keys = {
 

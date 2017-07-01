@@ -10,7 +10,6 @@ class Entity{
 
 	constructor(screenX, screenY, gid){
 
-		//JIVE.entities.push(this);
 		this.id = Entity.id++;
 		this.gid = gid;
 
@@ -28,19 +27,24 @@ class Entity{
 		// if it has been selected by the user
 		this.isSelected = false;
 
-        Entity.entities.push(this);
+		// the physics body representation
+		// TODO fix
+		this.physicsBody = null;
 
         // takes the class name and adds it to a dictionary
         // so we can create new objects on the fly by evaluating
         // the class name
         var subClassName = this.__proto__.constructor.name;
-        if(Entity._factory[subClassName] == null
-            && subClassName != "Entity") {
-            Entity._factory[subClassName] = function (x, y, gid) {
+        if(Entity._factory[subClassName] === null
+			&& subClassName !== "Entity") {
+			Entity._factory[subClassName] = function (x, y, gid) {
                 var o = eval("new " + subClassName + "(" + x + "," + y + "," + gid + ");");
                 return o;
             }
         }
+
+        JIVE.entities.push(this);
+
 		return this;
 	}
 
@@ -103,12 +107,7 @@ class Entity{
 that creates new instances of that class */
 Entity._factory = {};
 
-/* @static */
 Entity.id = 0;
 
 // A list containing all the entities of the game
-Entity.entities = [];
-
-// A dictionary containing the map between the class name 
-// and its factory function
-Entity.entityFactory = {};
+JIVE.entities = [];
