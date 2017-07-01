@@ -41,6 +41,7 @@ class Ellipse{
 	draw(ctx){
 		ctx.beginPath();
 		ctx.ellipse(this.x, this.y, this.radiusX, this.radiusY, 45 * Math.PI/180, 0, 2 * Math.PI);
+        ctx.lineWidth = 1;
 		ctx.stroke();
 	}
 

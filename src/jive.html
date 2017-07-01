@@ -20,6 +20,8 @@
 	<script src="shapes.js"></script>
 	<script src="selector.js"></script>
 	<script src="selectorRenderer.js"></script>
+	<script src="Box2dWeb-2.1.a.3.min.js"></script>
+	<script src="physicsEngine.js"></script>
 
 
 	<style>
@@ -114,8 +116,8 @@
 		var dxdy = camera.move(direction, dt);
 
 		var rect = undefined;
-		if (selector.isActive())
-		    rect = selector.getSelectedRect();
+		//if (selector.isActive())
+		rect = selector.getSelectedRect();
 
 		Entity.entities.forEach(function(entity){
 			entity.update(dxdy, dt, rect);

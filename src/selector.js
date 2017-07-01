@@ -6,6 +6,7 @@ class Selector{
         this.dragEvent = null;
         this.curEvent = null;
         this.isMouseDragging = false;
+        this.clickEvent = null;
         var that = this;
 
         this.ih.on('mousedrag', function (e) {
@@ -15,6 +16,7 @@ class Selector{
             } else {
                 that.curEvent = e;
             }
+            that.clickEvent = null;
         });
 
         this.ih.on('mouseup', function (e) {
@@ -22,16 +24,38 @@ class Selector{
                 that.dragEvent = null;
                 that.curEvent = null;
                 that.isMouseDragging = false;
+                that.clickEvent = null;
             }
+        });
+
+        this.ih.on('mouseclick', function (e) {
+            that.clickEvent = e;
+            that.isMouseDragging = false;
         });
     }
 
     isActive(){
-        return this.isMouseDragging;
+        return this.isMouseDragging || this.clickEvent !== null;
     }
 
     getSelectedRect(){
-        if (!this.isMouseDragging) return undefined;
+        if(!this.isActive())
+            return undefined;
+
+        // in case that there is a click event return that point
+        if(this.clickEvent !== null && !this.isMouseDragging) {
+            return {
+                x: this.clickEvent.clientX,
+                y: this.clickEvent.clientY,
+                w: 0,
+                h: 0
+            };
+        }
+
+        if (this.curEvent === null || this.dragEvent === null)
+            return undefined;
+
+        // in case of mouse drag calculate the area of dragging
         var x, y, w, h;
 
         if (this.curEvent.clientX > this.dragEvent.clientX

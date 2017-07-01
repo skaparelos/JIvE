@@ -110,6 +110,7 @@ class InputHandler extends EventEmitter{
 	}
 
 
+
     handleMouseMove(e){
 		if(this.actions['mousedown']){
 			this.actions['mousedrag'] = true;
@@ -119,6 +120,9 @@ class InputHandler extends EventEmitter{
 
 
 	handleMouseUp(e){
+    	if (!this.actions['mousedrag']) {
+            this.emit('mouseclick', e);
+        }
         this.actions['mousedown'] = false;
         this.actions['mousedrag'] = false;
     	this.emit('mouseup', e);
