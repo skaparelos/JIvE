@@ -21,10 +21,11 @@ class PhysicsEngine{
             false // set sleeping to false
         );
 
+        this.scale = 30;
     }
 
 
-    update(dt) {
+    update() {
         var start = Date.now();
 
         this.world.Step(
@@ -33,48 +34,50 @@ class PhysicsEngine{
             4    //position iterations
         );
         this.world.ClearForces();
-        this.body.SetLinearVelocity(new this.b2Vec2(20, 0));
+        //todo remove:
+        //this.body.SetLinearVelocity(new this.b2Vec2(5, 0));
 
         return(Date.now() - start);
     }
 
+
     init(ctx){
         //TODO this is temporary
-        this.scale = 20;
         this.setupDebugDraw(ctx);
-        this.createRectangularBody(500, 200, 40, 40, true);
-        this.createRectangularBody(10, 200, 70, 20, false);
     }
 
 
     addBody(entDef){
-
+        if (entDef.shape === "rectangle"){
+            return this.createRectangle(entDef);
+        }
     }
 
     deleteBody(){
 
     }
 
-    /* TODO
+    /*
+    // TODO
     getBodyAtMouse(e) {
         var mouseX = e.clientX/this.scale;
         var mouseY = e.clientY/this.scale;
-        this.mousePVec = new this.b2Vec2(mouseX, mouseY);
+        mousePVec = new this.b2Vec2(mouseX, mouseY);
         var aabb = new this.b2AABB();
         aabb.lowerBound.Set(mouseX - 0.001, mouseY - 0.001);
         aabb.upperBound.Set(mouseX + 0.001, mouseY + 0.001);
 
         // Query the world for overlapping shapes.
 
-        this.selectedBody = null;
+        selectedBody = null;
         this.world.QueryAABB(this.getBodyCB, aabb);
-        return this.selectedBody;
+        return selectedBody;
     }
 
     getBodyCB(fixture) {
-        if(fixture.GetBody().GetType() !== this.b2Body.b2_staticBody) {
-            if(fixture.GetShape().TestPoint(fixture.GetBody().GetTransform(), this.mousePVec)) {
-                this.selectedBody = fixture.GetBody();
+        if(fixture.GetBody().GetType() !== b2Body.b2_staticBody) {
+            if(fixture.GetShape().TestPoint(fixture.GetBody().GetTransform(), mousePVec)) {
+                selectedBody = fixture.GetBody();
                 return false;
             }
         }
@@ -82,25 +85,28 @@ class PhysicsEngine{
     }
     */
 
-    createRectangularBody(x, y, w, h, isStatic){
+
+    createRectangle(entDef){
         var bodyDef = new this.b2BodyDef;
-        if (isStatic)
+        if (entDef.isStatic)
             bodyDef.type = this.b2Body.b2_staticBody;
         else
             bodyDef.type = this.b2Body.b2_dynamicBody;
-        bodyDef.position.x = x/this.scale;
-        bodyDef.position.y = y/this.scale;
+        bodyDef.position.x = entDef.x/this.scale;
+        bodyDef.position.y = entDef.y/this.scale;
 
         var fixtureDef = new this.b2FixtureDef;
-        fixtureDef.density = 1.0;
-        fixtureDef.friction = 0.5;
-        fixtureDef.restitution = 0.3;
+        fixtureDef.density = entDef.density;
+        fixtureDef.friction = entDef.friction;
+        fixtureDef.restitution = entDef.restitution;
 
         fixtureDef.shape = new this.b2PolygonShape;
-        fixtureDef.shape.SetAsBox(w/this.scale, h/this.scale);
+        fixtureDef.shape.SetAsBox(entDef.width/this.scale, entDef.height/this.scale);
 
-        this.body = this.world.CreateBody(bodyDef);
-        this.body.CreateFixture(fixtureDef);
+        var body = this.world.CreateBody(bodyDef);
+        body.SetUserData(entDef);
+        body.CreateFixture(fixtureDef);
+        return body;
     }
 
 
@@ -130,3 +136,10 @@ class PhysicsEngine{
         this.world.DrawDebugData();
     }
 }
+
+/*
+TODO
+var b2Body = Box2D.Dynamics.b2Body;
+var mousePVec = null;
+var selectedBody = null;
+*/

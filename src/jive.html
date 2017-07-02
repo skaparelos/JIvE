@@ -22,6 +22,7 @@
 	<script src="shapes.js"></script>
 	<script src="selector.js"></script>
 	<script src="selectorRenderer.js"></script>
+	<script src="entities.js"></script>
 
 
 	<style>
@@ -57,6 +58,11 @@
 	url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/map.json"
 	var map, renderer, camera, ih, selector;
 
+
+	//todo remove:
+	var mouseJoint = null;
+	var mouseX, mouseY;
+
 	function init(){
 		renderer = JIVE.Renderer();
 		camera = JIVE.Camera();
@@ -86,32 +92,33 @@
 
 
 		ih.on('click-left', function(e) {
-			//console.log("left click oeooe");
 			console.log(Utils.screen2MapCoords(e, camera));
-			/* TODO
+
+			/* todo
             var body = JIVE.PhysicsEngine.getBodyAtMouse(e);
-            console.log("body = " + body);
             if(body) {
-                console.log("here");
                 var md = new JIVE.PhysicsEngine.b2MouseJointDef();
                 md.bodyA = JIVE.PhysicsEngine.world.GetGroundBody();
                 md.bodyB = body;
+                mouseX = e.clientX/30;
+                mouseY = e.clientY/30;
                 md.target.Set(mouseX, mouseY);
                 md.collideConnected = true;
-                md.maxForce = 300.0 * body.GetMass();
-                mouseJoint = world.CreateJoint(md);
+                md.maxForce = 100.0 * body.GetMass();
+                mouseJoint = JIVE.PhysicsEngine.world.CreateJoint(md);
                 body.SetAwake(true);
             }
             */
+
 			//entities[0].move(1, 0, map);
 			//console.log(JIVE.entities[0].move(3, 0, camera).mapX);
-		})
+		});
 
-		ih.on('click-right', function(){
+		ih.on('click-right', function(e){
 			console.log("right click");
 		});
 
-		//TODO temp
+		// TODO remove
 		JIVE.PhysicsEngine.init(JIVE._canvas.getCtx());
 
 		map = JIVE.Map();
@@ -142,11 +149,26 @@
 		JIVE.PhysicsEngine.update();
 
 
-		// draw
-        renderer.draw(camera, map, JIVE.entities, selector);
+		if (JIVE.settings.DEBUG) {
+            if (Math.random() > 0.5)
+                renderer.draw(camera, map, JIVE.entities, selector);
+            else
+                JIVE.PhysicsEngine.draw();
+        }else{
+            renderer.draw(camera, map, JIVE.entities, selector);
+		}
+		/*
+        //TODO remove
+        if(mouseJoint) {
+            if(ih.getActionState('mousedown')) {
+                mouseJoint.SetTarget(new JIVE.PhysicsEngine.b2Vec2(mouseX, mouseY));
+            } else {
+                JIVE.PhysicsEngine.world.DestroyJoint(mouseJoint);
+                mouseJoint = null;
+            }
+        }
+		*/
 
-        //TODO remove:
-		//JIVE.PhysicsEngine.draw();
 	}
 
 

@@ -64,8 +64,8 @@ class Camera extends EventEmitter{
 
 		var screenWidth = JIVE._canvas.getWidth();
 		var screenHeight = JIVE._canvas.getHeight();
-		if (this.w != screenWidth) this.w = screenWidth;
-		if (this.h != screenHeight) this.h = screenWidth;
+		if (this.w !== screenWidth) this.w = screenWidth;
+		if (this.h !== screenHeight) this.h = screenWidth;
 
 		var leftUp = {clientX : 0, clientY : 0};
 		var rightUp = {clientX : this.w, clientY : 0};
@@ -73,16 +73,16 @@ class Camera extends EventEmitter{
 		var rightDown = {clientX : this.w, clientY : this.h};
 
 		var res = Utils.screen2MapCoords(leftUp, this);
-		if (res != -1) this._startCol = res.tileX;
+		if (res !== -1) this._startCol = res.tileX;
 
 		res = Utils.screen2MapCoords(rightUp, this);
-		if (res != -1) this._startRow = res.tileY;
+		if (res !== -1) this._startRow = res.tileY;
 
 		res = Utils.screen2MapCoords(leftDown, this);
-		if (res != -1) this._endRow = (res.tileY + 2 > mapHeight) ? mapHeight : res.tileY + 2;
+		if (res !== -1) this._endRow = (res.tileY + 2 > mapHeight) ? mapHeight : res.tileY + 2;
 
 		res = Utils.screen2MapCoords(rightDown, this);
-		if (res != -1) this._endCol = (res.tileX + 1 > mapWidth) ? mapWidth : res.tileX + 1;
+		if (res !== -1) this._endCol = (res.tileX + 1 > mapWidth) ? mapWidth : res.tileX + 1;
 
 		// the position now has been registered so 
 		// we keep returning this unless there is a 

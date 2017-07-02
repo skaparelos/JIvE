@@ -73,7 +73,8 @@ JIVE.reqAnimFrame = function(fn){
 };
 
 JIVE.settings = {
-	frame_rate: 1/60 // fps
+	frame_rate: 1/60, // fps
+	DEBUG: 1 // 0 for not debug, 1 for debug
 };
 
 JIVE.Keys = {

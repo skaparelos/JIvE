@@ -28,8 +28,9 @@ class Entity{
 		this.isSelected = false;
 
 		// the physics body representation
-		// TODO fix
-		this.physicsBody = null;
+		entities["man"].x = this.screenX;
+		entities["man"].y = this.screenY;
+		this.physicsBody = JIVE.PhysicsEngine.addBody(entities["man"]);
 
         // takes the class name and adds it to a dictionary
         // so we can create new objects on the fly by evaluating
@@ -88,22 +89,33 @@ class Entity{
 		if(!this.isAlive) return;
 		this.screenX += dxdy.dx;
 		this.screenY += dxdy.dy;
+		var moveDir = new JIVE.PhysicsEngine.b2Vec2(dxdy.dx, dxdy.dy);
+		moveDir.Normalize();
+		moveDir.Multiply(10);
+		this.physicsBody.SetLinearVelocity(moveDir);
 
-		if (rect == undefined) return;
+		if (rect === undefined) return;
 		if (this.screenX >= rect.x
-            && this.screenX <= rect.x + rect.w
+        	&& this.screenX <= rect.x + rect.w
 			&& this.screenY >= rect.y
-            && this.screenY <= rect.y + rect.h) {
+        	&& this.screenY <= rect.y + rect.h) {
             this.isSelected = true;
-            Selector.selectedEntities.push(this);
+
+            // add the item in the list of the selected items only if it doesn't exist
+            if(Selector.selectedEntities.indexOf(this) === -1)
+            	Selector.selectedEntities.push(this);
         }else {
             this.isSelected = false;
+            var index = Selector.selectedEntities.indexOf(this);
+            if (index > -1) {
+                Selector.selectedEntities.splice(index, 1);
+            }
         }
 	}
 
 }
 
-/* a map between a class name a function
+/* a map between a class name and a function
 that creates new instances of that class */
 Entity._factory = {};
 

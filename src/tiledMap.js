@@ -173,8 +173,6 @@ class TiledMap{
 			map2d = [];
 			ctr = 0;
 		}
-
-
 	}
 }
 
