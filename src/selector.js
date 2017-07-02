@@ -1,15 +1,16 @@
-class Selector{
+class Selector extends EventEmitter{
 
-    constructor(inputHandler) {
+    constructor() {
 
-        this.ih = inputHandler;
+        super();
+
         this.dragEvent = null;
         this.curEvent = null;
         this.isMouseDragging = false;
         this.clickEvent = null;
         var that = this;
 
-        this.ih.on('mousedrag', function (e) {
+        this.on('mousedrag', function (e) {
             if (!that.isMouseDragging) {
                 that.dragEvent = e;
                 that.isMouseDragging = true;
@@ -19,7 +20,7 @@ class Selector{
             that.clickEvent = null;
         });
 
-        this.ih.on('mouseup', function (e) {
+        this.on('mouseup', function (e) {
             if (that.isMouseDragging) {
                 that.dragEvent = null;
                 that.curEvent = null;
@@ -28,7 +29,7 @@ class Selector{
             }
         });
 
-        this.ih.on('mouseclick', function (e) {
+        this.on('mouseclick', function (e) {
             that.clickEvent = e;
             that.isMouseDragging = false;
         });

@@ -1,57 +1,30 @@
-var JIVE = {};
+if (typeof JIVE === "undefined")
+	var JIVE = {};
 
-// these two are used to hide some basic functionality
-// from the user and let him/her deal only with more 
-// important stuff. for the user making a canvas element
-// is not important, neither is making the imageLoader
-JIVE._imageLoader = new ImageLoader();
-JIVE._canvas = new Canvas();
+JIVE.ImageLoader = new ImageLoader();
+JIVE.Canvas = new Canvas();
+JIVE.Map = new TiledMap();
+JIVE.Camera = new Camera();
+JIVE.Renderer = new Renderer();
+JIVE.InputHandler = new InputHandler();
+JIVE.PhysicsEngine = new PhysicsEngine();
+JIVE.Selector = new Selector();
 
-JIVE.Canvas = function (){
-    return new Canvas();
-};
-
-JIVE.ImageLoader = function () {
-    return new ImageLoader();
-}
 
 JIVE._onDocumentLoad = function (){
-
-	// make this call here so that the body has been loaded
-	// so we can access document.body
-	JIVE._canvas.initFullScreen();
+	JIVE.Canvas.initFullScreen();
+	JIVE.Camera.init();
+	JIVE.Renderer.init();
+    JIVE.InputHandler.init();
 
 	// calls the user defined init() function
 	init();
-}
-
-// when the body loads call this function
+};
 window.onload = JIVE._onDocumentLoad;
 
-JIVE.Map = function () {
-	return new TiledMap();
-};
-
-JIVE.Renderer = function (canvas){
-	return new Renderer(canvas);
-};
-
-JIVE.Camera = function () {
-	return new Camera();
-};
-
-JIVE.InputHandler = function (){
-	return new InputHandler();
-};
 
 JIVE.Spawn = function(entityName, x, y, gid){
     return Entity._factory[entityName](x, y, gid);
-};
-
-JIVE.PhysicsEngine = new PhysicsEngine();
-
-JIVE.Selector = function (ih){
-	return new Selector(ih);
 };
 
 JIVE.reqAnimFrame = function(fn){
@@ -74,7 +47,7 @@ JIVE.reqAnimFrame = function(fn){
 
 JIVE.settings = {
 	frame_rate: 1/60, // fps
-	DEBUG: 1 // 0 for not debug, 1 for debug
+	DEBUG: 0 // 0 for not debug, 1 for debug
 };
 
 JIVE.Keys = {

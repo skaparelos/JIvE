@@ -4,8 +4,8 @@ class TiledMap{
 
 		// holds the base layer(s).
 		// it only holds the background layers that
-		// do not contain entities like people, trees, items, etc.
-		// Entities are created and maintained using the list JIVE.entities
+		// do not contain Entities like people, trees, items, etc.
+		// Entities are created and maintained using the list JIVE.Entities
 		this.map = [];
 
 		// the number of background layers
@@ -37,7 +37,7 @@ class TiledMap{
 	* @param imageLoader instance of imageLoader class
 	*/ 
 	loadJSON(JsonURI, camera, callback, imageLoader){
-		imageLoader = imageLoader || JIVE._imageLoader;
+		imageLoader = imageLoader || JIVE.ImageLoader;
 		var that = this;
 
 		Utils.xhrGet(JsonURI, function(data){
@@ -138,7 +138,7 @@ class TiledMap{
 		for(var layer = 0; layer < layers.length; layer++){
 
 			// if the name of the layer contains the word "base" then we do not
-			// create entities out of the layer.
+			// create Entities out of the layer.
 			var isBaseLayer = layers[layer]["name"].includes("base");
 			if (isBaseLayer)
 				this.layersNo++;
@@ -177,6 +177,8 @@ class TiledMap{
 }
 
 /* @static */
+if(typeof JIVE == "undefined")
+	var JIVE = {};
 JIVE.gid2ImagePos = {};
 JIVE.getGID = function(gid){
 	return JIVE.gid2ImagePos[gid];

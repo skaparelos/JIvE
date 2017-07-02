@@ -1,10 +1,12 @@
 class Renderer{
 
-	constructor(canvas){
-		this.canvas = canvas || JIVE._canvas;
-		this.mapRenderer = new TiledMapRenderer();
-		this.entityRenderer = new EntityRenderer();
-		this.selectorRenderer = new SelectorRenderer();
+	constructor(){}
+
+	init(){
+        this.canvas = JIVE.Canvas;
+        this.mapRenderer = new TiledMapRenderer();
+        this.entityRenderer = new EntityRenderer();
+        this.selectorRenderer = new SelectorRenderer();
 	}
 
 	clearScreen(ctx){
@@ -14,7 +16,7 @@ class Renderer{
 	draw(camera, map, entities,  selector, imageLoader){
 		var ctx = this.canvas.getCtx();
 		this.clearScreen(ctx);
-		imageLoader = imageLoader || JIVE._imageLoader;
+		imageLoader = imageLoader || JIVE.ImageLoader;
 
 		this.mapRenderer.draw(map, camera, ctx, imageLoader);
 		this.entityRenderer.draw(entities, camera, ctx, imageLoader);

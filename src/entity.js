@@ -1,8 +1,8 @@
 /**
 * An entity is anything besides background tiles.
 * The entity class is a base class for other classes.
-* Examples of entities are: units, items, fringe, rocks, houses...
-* Background tiles are not considered entities.
+* Examples of Entities are: units, items, fringe, rocks, houses...
+* Background tiles are not considered Entities.
 */
 
 class Entity{
@@ -44,7 +44,7 @@ class Entity{
             }
         }
 
-        JIVE.entities.push(this);
+        JIVE.Entities.push(this);
 
 		return this;
 	}
@@ -121,5 +121,5 @@ Entity._factory = {};
 
 Entity.id = 0;
 
-// A list containing all the entities of the game
-JIVE.entities = [];
+// A list containing all the Entities of the game
+JIVE.Entities = [];

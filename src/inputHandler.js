@@ -25,9 +25,6 @@ class InputHandler extends EventEmitter{
 		this.actions['mousedrag'] = false;
 		this.actions['mousedown'] = false;
 
-		// this is needed for the mousedrag
-		this._mouseDown = false;
-
 	}
 
 
@@ -51,7 +48,7 @@ class InputHandler extends EventEmitter{
 		document.body.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
 
 		// Window
-		window.addEventListener('resize', JIVE._canvas.updateCanvasSize.bind(this));
+		window.addEventListener('resize', JIVE.Canvas.updateCanvasSize.bind(this));
 
 		return this;
 	}

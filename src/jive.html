@@ -7,20 +7,20 @@
 	<script src="canvas.js"></script>
 	<script src="imageLoader.js"></script>
 	<script src="Box2dWeb-2.1.a.3.min.js"></script>
-	<script src="physicsEngine.js"></script>
-	<script src="jive.js"></script>
 	<script src="eventEmitter.js"></script>
-	<script src="camera.js"></script>
+	<script src="physicsEngine.js"></script>
 	<script src="tiledMap.js"></script>
-	<script src="tiledMapRenderer.js"></script>
+	<script src="camera.js"></script>
 	<script src="renderer.js"></script>
+	<script src="selector.js"></script>
+	<script src="inputHandler.js"></script>
+	<script src="jive.js"></script>
+	<script src="tiledMapRenderer.js"></script>
 	<script src="entityRenderer.js"></script>
 	<script src="utils.js"></script>
-	<script src="inputHandler.js"></script>
 	<script src="entity.js"></script>
 	<script src="unit.js"></script>
 	<script src="shapes.js"></script>
-	<script src="selector.js"></script>
 	<script src="selectorRenderer.js"></script>
 	<script src="entities.js"></script>
 
@@ -64,11 +64,11 @@
 	var mouseX, mouseY;
 
 	function init(){
-		renderer = JIVE.Renderer();
-		camera = JIVE.Camera();
+		renderer = JIVE.Renderer;
+		camera = JIVE.Camera;
 
 		// register bindings
-		ih = JIVE.InputHandler().init();
+		ih = JIVE.InputHandler;
 		ih.bind(JIVE.Keys.ARROW_UP, 'move-up');
 		ih.bind(JIVE.Keys.W, 'move-up');
 		ih.bind(JIVE.Keys.ARROW_DOWN, 'move-down');
@@ -80,7 +80,7 @@
 		ih.bind(JIVE.Mouse.LEFT, 'click-left');
 		ih.bind(JIVE.Mouse.RIGHT, 'click-right');
 
-		selector = JIVE.Selector(ih);
+		selector = JIVE.Selector;
 
 		// you can do something like this, but it is veeery slow
 		camera.on('move-up', function(){
@@ -110,8 +110,8 @@
             }
             */
 
-			//entities[0].move(1, 0, map);
-			//console.log(JIVE.entities[0].move(3, 0, camera).mapX);
+			//Entities[0].move(1, 0, map);
+			//console.log(JIVE.Entities[0].move(3, 0, camera).mapX);
 		});
 
 		ih.on('click-right', function(e){
@@ -119,9 +119,9 @@
 		});
 
 		// TODO remove
-		JIVE.PhysicsEngine.init(JIVE._canvas.getCtx());
+		JIVE.PhysicsEngine.init(JIVE.Canvas.getCtx());
 
-		map = JIVE.Map();
+		map = JIVE.Map;
 		map.loadJSON(url, camera, function(){
 			if(map.isLoaded())
 				JIVE.reqAnimFrame(animate);
@@ -142,8 +142,8 @@
 		// get the selected area (if any)
 		var rect = selector.getSelectedRect();
 
-		// update entities and physics engine
-		JIVE.entities.forEach(function(entity){
+		// update Entities and physics engine
+		JIVE.Entities.forEach(function(entity){
 			entity.update(dxdy, dt, rect);
 		});
 		JIVE.PhysicsEngine.update();
@@ -151,11 +151,11 @@
 
 		if (JIVE.settings.DEBUG) {
             if (Math.random() > 0.5)
-                renderer.draw(camera, map, JIVE.entities, selector);
+                renderer.draw(camera, map, JIVE.Entities, selector);
             else
                 JIVE.PhysicsEngine.draw();
         }else{
-            renderer.draw(camera, map, JIVE.entities, selector);
+            renderer.draw(camera, map, JIVE.Entities, selector);
 		}
 		/*
         //TODO remove
