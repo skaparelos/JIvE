@@ -21,7 +21,7 @@ class PhysicsEngine{
             false // set sleeping to false
         );
 
-        this.scale = 30;
+        this.scale = 60;
     }
 
 
@@ -34,15 +34,11 @@ class PhysicsEngine{
             4    //position iterations
         );
         this.world.ClearForces();
-        //todo remove:
-        //this.body.SetLinearVelocity(new this.b2Vec2(5, 0));
-
         return(Date.now() - start);
     }
 
 
     init(ctx){
-        //TODO this is temporary
         this.setupDebugDraw(ctx);
     }
 
@@ -85,6 +81,9 @@ class PhysicsEngine{
     }
     */
 
+    createRhombus(entDef){
+
+    }
 
     createRectangle(entDef){
         var bodyDef = new this.b2BodyDef;

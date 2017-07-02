@@ -24,7 +24,6 @@ class InputHandler extends EventEmitter{
 		// pre registered mouse events
 		this.actions['mousedrag'] = false;
 		this.actions['mousedown'] = false;
-
 	}
 
 
@@ -65,7 +64,7 @@ class InputHandler extends EventEmitter{
 
 		// if the action is not registered,
 		// then register the action
-		if (this.actions[action] == null){
+		if (this.actions[action] === null){
 			this.actions[action] = false;
 		}
 
@@ -105,7 +104,6 @@ class InputHandler extends EventEmitter{
 			this.emit(action, e);
 		}
 	}
-
 
 
     handleMouseMove(e){

@@ -28,8 +28,8 @@ class Entity{
 		this.isSelected = false;
 
 		// the physics body representation
-		entities["man"].x = this.screenX;
-		entities["man"].y = this.screenY;
+		entities["man"].x = this.screenX + entities["man"].width;
+		entities["man"].y = this.screenY + entities["man"].height;
 		this.physicsBody = JIVE.PhysicsEngine.addBody(entities["man"]);
 
         // takes the class name and adds it to a dictionary
@@ -90,9 +90,10 @@ class Entity{
 		this.screenX += dxdy.dx;
 		this.screenY += dxdy.dy;
 		var moveDir = new JIVE.PhysicsEngine.b2Vec2(dxdy.dx, dxdy.dy);
-		moveDir.Normalize();
-		moveDir.Multiply(10);
+		//moveDir.Normalize();
+		//moveDir.Multiply(10);
 		this.physicsBody.SetLinearVelocity(moveDir);
+		//this.pose = this.physicsBody.getPos();
 
 		if (rect === undefined) return;
 		if (this.screenX >= rect.x

@@ -10,18 +10,19 @@ JIVE.InputHandler = new InputHandler();
 JIVE.PhysicsEngine = new PhysicsEngine();
 JIVE.Selector = new Selector();
 
-
 JIVE._onDocumentLoad = function (){
 	JIVE.Canvas.initFullScreen();
 	JIVE.Camera.init();
 	JIVE.Renderer.init();
     JIVE.InputHandler.init();
 
+    if(JIVE.settings.DEBUG)
+        JIVE.PhysicsEngine.init(JIVE.Canvas.getCtx());
+
 	// calls the user defined init() function
 	init();
 };
 window.onload = JIVE._onDocumentLoad;
-
 
 JIVE.Spawn = function(entityName, x, y, gid){
     return Entity._factory[entityName](x, y, gid);
@@ -40,7 +41,7 @@ JIVE.reqAnimFrame = function(fn){
 	this._deltaTime = now - this._then;
 
 	if (this._deltaTime >= 16) {
-		fn(this._deltaTime)
+		fn(this._deltaTime);
 		this._then = now - (this._deltaTime % 16)
 	} 
 };
