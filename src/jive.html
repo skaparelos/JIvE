@@ -6,9 +6,7 @@
 	<title>JIvE library</title>
 	<script src="canvas.js"></script>
 	<script src="imageLoader.js"></script>
-	<script src="Box2dWeb-2.1.a.3.min.js"></script>
 	<script src="eventEmitter.js"></script>
-	<script src="physicsEngine.js"></script>
 	<script src="tiledMap.js"></script>
 	<script src="camera.js"></script>
 	<script src="renderer.js"></script>
@@ -143,17 +141,9 @@
 		JIVE.Entities.forEach(function(entity){
 			entity.update(dxdy, dt, rect);
 		});
-		JIVE.PhysicsEngine.update();
 
+		renderer.draw(camera, map, JIVE.Entities, selector);
 
-		if (JIVE.settings.DEBUG) {
-            if (Math.random() > 0.5)
-                renderer.draw(camera, map, JIVE.Entities, selector);
-            else
-                JIVE.PhysicsEngine.draw();
-        }else{
-            renderer.draw(camera, map, JIVE.Entities, selector);
-		}
 		/*
         //TODO remove
         if(mouseJoint) {
@@ -165,7 +155,6 @@
             }
         }
 		*/
-
 	}
 
 

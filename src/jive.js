@@ -7,7 +7,6 @@ JIVE.Map = new TiledMap();
 JIVE.Camera = new Camera();
 JIVE.Renderer = new Renderer();
 JIVE.InputHandler = new InputHandler();
-JIVE.PhysicsEngine = new PhysicsEngine();
 JIVE.Selector = new Selector();
 
 JIVE._onDocumentLoad = function (){
@@ -15,9 +14,6 @@ JIVE._onDocumentLoad = function (){
 	JIVE.Camera.init();
 	JIVE.Renderer.init();
     JIVE.InputHandler.init();
-
-    if(JIVE.settings.DEBUG)
-        JIVE.PhysicsEngine.init(JIVE.Canvas.getCtx());
 
 	// calls the user defined init() function
 	init();
