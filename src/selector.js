@@ -45,12 +45,8 @@ class Selector extends EventEmitter{
 
         // in case that there is a click event return that point
         if(this.clickEvent !== null && !this.isMouseDragging) {
-            return {
-                x: this.clickEvent.clientX,
-                y: this.clickEvent.clientY,
-                w: 0,
-                h: 0
-            };
+            return new Rectangle(this.clickEvent.clientX,
+                this.clickEvent.clientY, 0, 0);
         }
 
         if (this.curEvent === null || this.dragEvent === null)
@@ -88,12 +84,7 @@ class Selector extends EventEmitter{
             h = this.curEvent.clientY - this.dragEvent.clientY;
         }
 
-        return {
-            x: x,
-            y: y,
-            w: w,
-            h: h
-        };
+        return new Rectangle(x, y, w, h);
     }
 
 }

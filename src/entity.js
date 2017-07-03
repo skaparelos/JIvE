@@ -25,6 +25,7 @@ class Entity{
 		this.isWalkable = null;
 
 		// if it has been selected by the user
+		this.isSelectable = true;
 		this.isSelected = false;
 
         // takes the class name and adds it to a dictionary
@@ -85,11 +86,8 @@ class Entity{
 		this.screenX += dxdy.dx;
 		this.screenY += dxdy.dy;
 
-		if (rect === undefined) return;
-		if (this.screenX >= rect.x
-        	&& this.screenX <= rect.x + rect.w
-			&& this.screenY >= rect.y
-        	&& this.screenY <= rect.y + rect.h) {
+		if (!this.isSelectable || rect === undefined) return;
+		if (rect.containsPoint(this.screenX, this.screenY)){
             this.isSelected = true;
 
             // add the item in the list of the selected items only if it doesn't exist
@@ -97,6 +95,8 @@ class Entity{
             	Selector.selectedEntities.push(this);
         }else {
             this.isSelected = false;
+
+            // see if the item is in the selected items list and if it is, remove it
             var index = Selector.selectedEntities.indexOf(this);
             if (index > -1) {
                 Selector.selectedEntities.splice(index, 1);

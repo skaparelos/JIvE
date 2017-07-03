@@ -1,3 +1,30 @@
+class Rectangle{
+
+	constructor(x, y, w, h){
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+	}
+
+	getRect(){
+		return {
+			x: this.x,
+			y: this.y,
+			w: this.w,
+			h: this.h
+		};
+	}
+
+	containsPoint(x, y){
+        return x >= this.x &&
+			x <= this.x + this.w &&
+			y >= this.y &&
+			y <= this.y + this.h;
+	}
+
+}
+
 class Circle{
 
 	constructor(x, y, radius, offsetX, offsetY){

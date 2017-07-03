@@ -151,17 +151,16 @@ class TiledMap{
 					if (isBaseLayer)
 						map2d[i][j] = layers[layer]["data"][ctr];
 					else{
-						if (layers[layer]["data"][ctr] != 0){
-							var tgid = layers[layer]["data"][ctr];
-							var screenCoords = Utils.map2ScreenCoords(
-								i, j,
-								JIVE.getGID(tgid)["w"], JIVE.getGID(tgid)["h"], 
-								camera
-								);
+						if (layers[layer]["data"][ctr] === 0) continue;
+						var tgid = layers[layer]["data"][ctr];
+						var screenCoords = Utils.map2ScreenCoords(
+							i, j,
+							JIVE.getGID(tgid)["w"], JIVE.getGID(tgid)["h"],
+							camera
+							);
 
-							// TODO is not always units
-							new Unit(screenCoords.x, screenCoords.y, tgid);
-						}	
+						// TODO is not always units
+						new Unit(screenCoords.x, screenCoords.y, tgid);
 					}
 					ctr++;
 				}
