@@ -151,7 +151,10 @@ class TiledMap{
 					if (isBaseLayer)
 						map2d[i][j] = layers[layer]["data"][ctr];
 					else{
-						if (layers[layer]["data"][ctr] === 0) continue;
+						if (layers[layer]["data"][ctr] === 0) {
+							ctr++;
+                            continue;
+                        }
 						var tgid = layers[layer]["data"][ctr];
 						var screenCoords = Utils.map2ScreenCoords(
 							i, j,
