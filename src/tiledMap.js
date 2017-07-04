@@ -11,12 +11,6 @@ class TiledMap{
 		// the number of background layers
 		this.layersNo = 0;
 
-		// the unit tile height (i.e. smallest possible height of a tile)
-		this.tileHeight = 0;
-
-		// the unit tile width (i.e. smallest possible width of a tile)
-		this.tileWidth = 0;
-
 		// the width of the map in number of tiles
 		this.mapWidth = 0;
 
@@ -42,7 +36,7 @@ class TiledMap{
 
 		Utils.xhrGet(JsonURI, function(data){
 			that.parseMap(data.responseText, camera);
-			that.loadImages(data.responseText, callback, imageLoader)
+			that.loadImages(data.responseText, callback, imageLoader);
 			that.loaded = true;
 		})
 	}
@@ -58,9 +52,7 @@ class TiledMap{
 			"map": this.map, 
 			"layersNo": this.layersNo,
 			"mapwidth": this.mapWidth,
-			"mapheight": this.mapHeight,
-			"tilewidth": this.tileWidth,
-			"tileheight": this.tileHeight
+			"mapheight": this.mapHeight
 		}
 	}
 
@@ -68,16 +60,6 @@ class TiledMap{
 	setTile(layer, row, col, gidValue){
 		this.map[layer][row][col] = gidValue;
 		return this;
-	}
-
-
-	getTileWidth(){ 
-		return this.tileWidth; 
-	}
-
-
-	getTileHeight(){ 
-		return this.tileHeight; 
 	}
 
 
@@ -93,20 +75,19 @@ class TiledMap{
 		imageLoader.loadImages(imgsList, callback);
 	}
 
+
 	parseMap(data, camera){
 		var jsonData = JSON.parse(data);
 		var layers = jsonData["layers"];
 		var tileSets = jsonData["tilesets"];
-		//this.layersNo = layers.length; (no longed used)
-		this.tileWidth = jsonData["tilewidth"];
-		this.tileHeight = jsonData["tileheight"];
+
 		this.mapWidth = jsonData["width"];
 		this.mapHeight = jsonData["height"];
 
-		JIVE.settings["unitTileWidth"] = this.tileWidth;
-		JIVE.settings["unitTileHeight"] = this.tileHeight;
-		JIVE.settings["mapWidth"] = this.mapWidth;
-		JIVE.settings["mapHeight"] = this.mapHeight;
+		JIVE.settings["unitTileWidth"] = jsonData["tilewidth"];
+		JIVE.settings["unitTileHeight"] = jsonData["tileheight"];
+		JIVE.settings["mapWidth"] = jsonData["width"];
+		JIVE.settings["mapHeight"] = jsonData["height"];
 
 		// create a mapping between GIDs and the position of the atlas frame
 		// in the atlas image. 
@@ -156,14 +137,24 @@ class TiledMap{
                             continue;
                         }
 						var tgid = layers[layer]["data"][ctr];
-						var screenCoords = Utils.map2ScreenCoords(
-							i, j,
+						var screenCoords = Utils.map2ScreenCoords(i, j,
 							JIVE.getGID(tgid)["w"], JIVE.getGID(tgid)["h"],
 							camera
 							);
 
-						// TODO is not always units
-						new Unit(screenCoords.x, screenCoords.y, tgid);
+						// check that the tgid has custom tileproperties
+						if (!(tgid-1 in tileSets[0]["tileproperties"])) {
+							ctr++;
+							continue;
+                        }
+                        // get the entity name and spawn it
+						var entityType = tileSets[0]["tileproperties"][tgid-1]["type"];
+						if( entityType )
+							JIVE.Spawn(entityType,
+						 			screenCoords.x,
+						 			screenCoords.y,
+						 			tgid
+						 			);
 					}
 					ctr++;
 				}

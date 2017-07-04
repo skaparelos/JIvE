@@ -31,14 +31,14 @@ class Entity{
         // takes the class name and adds it to a dictionary
         // so we can create new objects on the fly by evaluating
         // the class name
-        var subClassName = this.__proto__.constructor.name;
+        /*var subClassName = this.__proto__.constructor.name;
         if(Entity._factory[subClassName] === null
 			&& subClassName !== "Entity") {
 			Entity._factory[subClassName] = function (x, y, gid) {
                 var o = eval("new " + subClassName + "(" + x + "," + y + "," + gid + ");");
                 return o;
             }
-        }
+        }*/
 
         JIVE.Entities.push(this);
 
@@ -112,5 +112,7 @@ Entity._factory = {};
 
 Entity.id = 0;
 
+if(typeof JIVE == "undefined")
+    var JIVE = {};
 // A list containing all the Entities of the game
 JIVE.Entities = [];

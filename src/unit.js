@@ -26,3 +26,8 @@ class Unit extends Entity{
 	}
 
 }
+
+
+Entity._factory["Unit"] = function (x, y, gid) {
+    return new Unit(x, y, gid);
+};
