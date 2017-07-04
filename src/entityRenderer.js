@@ -6,17 +6,13 @@ class EntityRenderer{
 	draw(entities, camera, ctx, imageLoader){
 
 		var cam = camera.getCamera();
-		var camX = cam.x;
-		var camY = cam.y;
-		var camW = cam.w;
-		var camH = cam.h;
-		var camZL = cam.zoomLvl;
 
 		for (var ent in entities){
 			var e = entities[ent].getEntity();
-			if (!e.isAlive) break;
-			if (e.screenX < camX || e.screenX > camX + camW || e.screenY < camY || e.screenY > camY + camH ) break;
-			if (e.gid == 0) break;
+			if (!e.isAlive
+				|| !cam.camera.containsPoint(e.screenX, e.screenY)
+                || e.gid === 0)
+				continue;
 
 			var gid = JIVE.getGID(e.gid);
 
@@ -32,6 +28,9 @@ class EntityRenderer{
 				e.screenX, e.screenY, 
 				gid["w"], gid["h"]
 				);
+
+			//todo
+			e.that.body.draw(ctx);
 		}
 
 	}

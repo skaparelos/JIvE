@@ -34,7 +34,7 @@ class Canvas{
 		// which is of type object. In that case just ignore it
 		// and set the width correctly.
 		if (typeof(width) === 'object')
-			width = undefined
+			width = undefined;
 
 		this.canvas.width = width || document.body.clientWidth;
 		this.canvas.height = height || document.body.clientHeight;

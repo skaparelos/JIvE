@@ -28,6 +28,9 @@ class Entity{
 		this.isSelectable = true;
 		this.isSelected = false;
 
+		// todo maybe remove the hardcoded values
+		this.body = new Rectangle(this.screenX + 26, this.screenY + 9, 15, 39);
+
         // takes the class name and adds it to a dictionary
         // so we can create new objects on the fly by evaluating
         // the class name
@@ -85,6 +88,7 @@ class Entity{
 		if(!this.isAlive) return;
 		this.screenX += dxdy.dx;
 		this.screenY += dxdy.dy;
+        this.body = new Rectangle(this.screenX + 26, this.screenY + 9, 15, 39);
 
 		if (!this.isSelectable || rect === undefined) return;
 		if (rect.containsPoint(this.screenX, this.screenY)){
@@ -112,7 +116,7 @@ Entity._factory = {};
 
 Entity.id = 0;
 
-if(typeof JIVE == "undefined")
+if(typeof JIVE === "undefined")
     var JIVE = {};
 // A list containing all the Entities of the game
 JIVE.Entities = [];

@@ -23,6 +23,14 @@ class Rectangle{
 			y <= this.y + this.h;
 	}
 
+	draw(ctx){
+        ctx.beginPath();
+        ctx.lineWidth = "1";
+        ctx.strokeStyle = "red";
+        ctx.rect(this.x, this.y, this.w, this.h);
+        ctx.stroke();
+	}
+
 }
 
 class Circle{
@@ -67,6 +75,7 @@ class Ellipse{
 
 	draw(ctx){
 		ctx.beginPath();
+        ctx.strokeStyle = "black";
 		ctx.ellipse(this.x, this.y, this.radiusX, this.radiusY, 45 * Math.PI/180, 0, 2 * Math.PI);
         ctx.lineWidth = 1;
 		ctx.stroke();

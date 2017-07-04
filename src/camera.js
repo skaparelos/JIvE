@@ -4,10 +4,7 @@ class Camera extends EventEmitter{
 
 		super();
 
-		this.x = x || 0;
-		this.y = y || 0;
-		this.w = 0;
-		this.h = 0;
+		this.camera = new Rectangle(x || 0, y || 0, 0, 0);
 
 		this.scrollingSpeed = scrollSpeed || 1;
 		this.zoomLvl = zoomLvl || 1;
@@ -20,26 +17,23 @@ class Camera extends EventEmitter{
 	}
 
 	init(){
-        this.x = Math.floor(JIVE.Canvas.getWidth()/2);
-        this.w = JIVE.Canvas.getWidth();
-        this.h = JIVE.Canvas.getHeight();
+        this.camera.x = Math.floor(JIVE.Canvas.getWidth()/2);
+        this.camera.w = JIVE.Canvas.getWidth();
+        this.camera.h = JIVE.Canvas.getHeight();
 	}
 
 
 	getCamera(){
 
 		if(JIVE.Canvas.hasChanged()){
-			this.w = JIVE.Canvas.getWidth();
-			this.h = JIVE.Canvas.getHeight();
+			this.camera.w = JIVE.Canvas.getWidth();
+			this.camera.h = JIVE.Canvas.getHeight();
 		}
 
 		return {
-			x: this.x,
-			y: this.y,
-			w: this.w,
-			h: this.h,
-			zoomLvl: this.zoomLvl
-		}
+            camera: this.camera,
+            zoomLvl: this.zoomLvl
+    	};
 	}
 
 	/**
@@ -122,8 +116,8 @@ class Camera extends EventEmitter{
 		if (direction.up)    dy = this.scrollingSpeed * dt;
 		if (direction.down)  dy = - this.scrollingSpeed * dt;
 
-		this.x += dx;
-		this.y += dy;
+		this.camera.x += dx;
+		this.camera.y += dy;
 
 		this.posChanged = true;
 

@@ -30,8 +30,8 @@ class Utils{
 		*/
 
 		var cam = camera.getCamera();
-		var camX = cam.x;
-		var camY = cam.y;
+		var camX = cam.camera.x;
+		var camY = cam.camera.y;
 		var zoomLvl = cam.zoomLvl;
 
 		var mapWidth = JIVE.settings["mapWidth"];
@@ -58,7 +58,7 @@ class Utils{
 		if (tilex < 0 || tiley < 0 || tilex >= mapWidth || tiley >= mapHeight)
 			return -1;
 
-		if (tilex == undefined || tiley == undefined || isNaN(tilex) || isNaN(tiley))
+		if (tilex === undefined || tiley === undefined || isNaN(tilex) || isNaN(tiley))
 			return -1;
 
 		return {
@@ -94,8 +94,8 @@ class Utils{
 	static map2ScreenCoords(row, col, imgWidth, imgHeight, camera){
 
 		var cam = camera.getCamera();
-		var camX = cam.x;
-		var camY = cam.y;
+		var camX = cam.camera.x;
+		var camY = cam.camera.y;
 		var zoomLevel = cam.zoomLvl;
 
 		var unitTileWidth = JIVE.settings["unitTileWidth"];

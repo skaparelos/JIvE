@@ -2,17 +2,25 @@ class Pathfinding{
 
     constructor(){}
 
-    buildPassableGrid(map){
+    /**
+     *
+     * @param map
+     * @param entities
+     */
+    static buildPassableGrid(entities){
 
+        for (var e in entities){
+
+        }
     }
 
     /**
      *
-     * @param gridMap - gridMap is the output of buildPassableGrid
+     * @param passableGrid - the output of buildPassableGrid
      * @param startPoint
      * @param endPoint
      */
-    findPath(gridMap, startPoint, endPoint){
-
+    static findPath(startPoint, endPoint){
+        var passableGrid = Pathfinding.buildPassableGrid(JIVE.Entities);
     }
 }
