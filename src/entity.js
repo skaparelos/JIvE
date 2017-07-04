@@ -91,7 +91,8 @@ class Entity{
         this.body = new Rectangle(this.screenX + 26, this.screenY + 9, 15, 39);
 
 		if (!this.isSelectable || rect === undefined) return;
-		if (rect.containsPoint(this.screenX, this.screenY)){
+		// todo fix that for overlapping
+		if (rect.containsPoint(this.screenX, this.screenY) || (rect.w === 0 && this.body.containsPoint(rect.x, rect.y))){
             this.isSelected = true;
 
             // add the item in the list of the selected items only if it doesn't exist
