@@ -23,10 +23,10 @@ class Rectangle{
 			y <= this.y + this.h;
 	}
 
-	draw(ctx){
+	draw(ctx, colour){
         ctx.beginPath();
         ctx.lineWidth = "1";
-        ctx.strokeStyle = "red";
+        ctx.strokeStyle = colour;
         ctx.rect(this.x, this.y, this.w, this.h);
         ctx.stroke();
 	}

@@ -1,26 +1,27 @@
-class Renderer{
+class Renderer {
 
-	constructor(){}
+    constructor() {
+    }
 
-	init(){
+    init() {
         this.canvas = JIVE.Canvas;
         this.mapRenderer = new TiledMapRenderer();
         this.entityRenderer = new EntityRenderer();
         this.selectorRenderer = new SelectorRenderer();
-	}
+    }
 
-	clearScreen(ctx){
-		ctx.clearRect(0, 0, this.canvas.getWidth(), this.canvas.getHeight());
-	}
+    clearScreen(ctx) {
+        ctx.clearRect(0, 0, this.canvas.getWidth(), this.canvas.getHeight());
+    }
 
-	draw(camera, map, entities,  selector, imageLoader){
-		var ctx = this.canvas.getCtx();
-		this.clearScreen(ctx);
-		imageLoader = imageLoader || JIVE.ImageLoader;
+    draw(camera, map, entities, selector, imageLoader) {
+        var ctx = this.canvas.getCtx();
+        this.clearScreen(ctx);
+        imageLoader = imageLoader || JIVE.ImageLoader;
 
-		this.mapRenderer.draw(map, camera, ctx, imageLoader);
-		this.entityRenderer.draw(entities, camera, ctx, imageLoader);
-		if (selector !== undefined && selector.isActive())
-			this.selectorRenderer.draw(selector, ctx);
-	}
+        this.mapRenderer.draw(map, camera, ctx, imageLoader);
+        this.entityRenderer.draw(entities, camera, ctx, imageLoader);
+        if (selector !== undefined && selector.isActive())
+            this.selectorRenderer.draw(selector, ctx);
+    }
 }

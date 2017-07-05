@@ -4,26 +4,26 @@ class Selector extends EventEmitter{
 
         super();
 
-        this.dragEvent = null;
-        this.curEvent = null;
+        this.dragEventOrigin = null;
+        this.dragEventCurrently = null;
         this.isMouseDragging = false;
         this.clickEvent = null;
         var that = this;
 
         this.on('mousedrag', function (e) {
             if (!that.isMouseDragging) {
-                that.dragEvent = e;
+                that.dragEventOrigin = e;
                 that.isMouseDragging = true;
             } else {
-                that.curEvent = e;
+                that.dragEventCurrently = e;
             }
             that.clickEvent = null;
         });
 
         this.on('mouseup', function (e) {
             if (that.isMouseDragging) {
-                that.dragEvent = null;
-                that.curEvent = null;
+                that.dragEventOrigin = null;
+                that.dragEventCurrently = null;
                 that.isMouseDragging = false;
                 that.clickEvent = null;
             }
@@ -49,39 +49,39 @@ class Selector extends EventEmitter{
                 this.clickEvent.clientY, 0, 0);
         }
 
-        if (this.curEvent === null || this.dragEvent === null)
+        if (this.dragEventCurrently === null || this.dragEventOrigin === null)
             return undefined;
 
         // in case of mouse drag calculate the area of dragging
         var x, y, w, h;
 
-        if (this.curEvent.clientX > this.dragEvent.clientX
-            && this.curEvent.clientY > this.dragEvent.clientY) {
-            x = this.dragEvent.clientX;
-            y = this.dragEvent.clientY;
-            w = this.curEvent.clientX - this.dragEvent.clientX;
-            h = this.curEvent.clientY - this.dragEvent.clientY;
+        if (this.dragEventCurrently.clientX > this.dragEventOrigin.clientX
+            && this.dragEventCurrently.clientY > this.dragEventOrigin.clientY) {
+            x = this.dragEventOrigin.clientX;
+            y = this.dragEventOrigin.clientY;
+            w = this.dragEventCurrently.clientX - this.dragEventOrigin.clientX;
+            h = this.dragEventCurrently.clientY - this.dragEventOrigin.clientY;
         }
-        if(this.curEvent.clientX > this.dragEvent.clientX
-            && this.curEvent.clientY < this.dragEvent.clientY){
-            x = this.dragEvent.clientX;
-            y = this.curEvent.clientY;
-            w = this.curEvent.clientX - this.dragEvent.clientX;
-            h = this.dragEvent.clientY - this.curEvent.clientY;
+        if(this.dragEventCurrently.clientX > this.dragEventOrigin.clientX
+            && this.dragEventCurrently.clientY < this.dragEventOrigin.clientY){
+            x = this.dragEventOrigin.clientX;
+            y = this.dragEventCurrently.clientY;
+            w = this.dragEventCurrently.clientX - this.dragEventOrigin.clientX;
+            h = this.dragEventOrigin.clientY - this.dragEventCurrently.clientY;
         }
-        if(this.curEvent.clientX < this.dragEvent.clientX
-            && this.curEvent.clientY < this.dragEvent.clientY) {
-            x = this.curEvent.clientX;
-            y = this.curEvent.clientY;
-            w = this.dragEvent.clientX - this.curEvent.clientX;
-            h = this.dragEvent.clientY - this.curEvent.clientY;
+        if(this.dragEventCurrently.clientX < this.dragEventOrigin.clientX
+            && this.dragEventCurrently.clientY < this.dragEventOrigin.clientY) {
+            x = this.dragEventCurrently.clientX;
+            y = this.dragEventCurrently.clientY;
+            w = this.dragEventOrigin.clientX - this.dragEventCurrently.clientX;
+            h = this.dragEventOrigin.clientY - this.dragEventCurrently.clientY;
         }
-        if(this.curEvent.clientX < this.dragEvent.clientX
-            && this.curEvent.clientY > this.dragEvent.clientY) {
-            x = this.curEvent.clientX;
-            y = this.dragEvent.clientY;
-            w = this.dragEvent.clientX - this.curEvent.clientX;
-            h = this.curEvent.clientY - this.dragEvent.clientY;
+        if(this.dragEventCurrently.clientX < this.dragEventOrigin.clientX
+            && this.dragEventCurrently.clientY > this.dragEventOrigin.clientY) {
+            x = this.dragEventCurrently.clientX;
+            y = this.dragEventOrigin.clientY;
+            w = this.dragEventOrigin.clientX - this.dragEventCurrently.clientX;
+            h = this.dragEventCurrently.clientY - this.dragEventOrigin.clientY;
         }
 
         return new Rectangle(x, y, w, h);

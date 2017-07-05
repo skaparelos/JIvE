@@ -18,7 +18,7 @@ class EntityRenderer{
 
 			// draw the shape around the entity
 			if (e.isSelected)
-				e.that.getShape().draw(ctx);
+				e.that.getShape().draw(ctx, "black");
 
 			// draw the entity image
 			ctx.drawImage(
@@ -30,7 +30,7 @@ class EntityRenderer{
 				);
 
 			//todo
-			e.that.body.draw(ctx);
+			e.that.body.draw(ctx, "red");
 		}
 
 	}
