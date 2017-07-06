@@ -1,3 +1,57 @@
+class Point{
+
+	constructor(x, y){
+		this.x = x;
+		this.y = y;
+		return this;
+	}
+
+	equal(pt){
+		return this.x === pt.x && this.y === pt.y;
+	}
+
+	sameX(pt){
+		return this.x === pt.x;
+	}
+
+	sameY(pt){
+		return this.y === pt.y;
+	}
+
+	add(pt){
+		this.x += pt.x;
+		this.y += pt.y;
+		return this;
+	}
+
+	subtract(pt){
+		this.x -= pt.x;
+		this.y -= pt.y;
+		return this;
+	}
+
+	update(x, y){
+		this.x = x;
+		this.y = y;
+		return this;
+	}
+
+	distance(pt){
+		var x2_x1 = this.x - pt.x;
+		var y2_y1 = this.y - pt.y;
+		return Math.sqrt(x2_x1 * x2_x1 + y2_y1 * y2_y1);
+	}
+
+	angleRad(pt){
+		return Math.atan2(this.y - pt.y, this.x - pt.x);
+	}
+
+	angleDeg(pt){
+		return Math.atan2(this.y - pt.y, this.x - pt.x) * 180 / Math.PI;
+	}
+
+}
+
 class Rectangle{
 
 	constructor(x, y, w, h){

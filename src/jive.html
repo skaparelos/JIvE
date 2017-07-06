@@ -22,6 +22,8 @@
 	<script src="tiledMap.js"></script>
 	<script src="jive.js"></script>
 	<script src="tiledMapRenderer.js"></script>
+	<script src="pathfinding.js"></script>
+	<script src="astar.js"></script>
 
 
 	<style>
@@ -95,6 +97,15 @@
 
 		ih.on('click-right', function(e){
 			console.log("right click");
+            for (var ent in Selector.selectedEntities){
+                Selector.selectedEntities[ent].goTo(e);
+            }
+			/*var _clickPt = Utils.screen2MapCoords(e, camera);
+			if (_clickPt === -1) return;
+			var clickPt = new Point(_clickPt.tileX, _clickPt.tileY);
+			for (var e in Selector.selectedEntities){
+                Selector.selectedEntities[e].moveTo(clickPt);
+			}*/
 		});
 
 		map = JIVE.Map;
