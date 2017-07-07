@@ -126,12 +126,9 @@
 
 		var dxdy = camera.move(direction, dt);
 
-		// get the selected area (if any)
-		var rect = selector.getSelectedRect();
-
-		// update Entities and physics engine
-		JIVE.Entities.forEach(function(entity){
-			entity.update(dxdy, dt, rect);
+		// update Entities
+		JIVE.Entities.forEach( function(entity){
+			entity.update(dxdy, dt);
 		});
 
 		renderer.draw(camera, map, JIVE.Entities, selector);

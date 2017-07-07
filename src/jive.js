@@ -32,7 +32,7 @@ JIVE.reqAnimFrame = function (fn) {
         JIVE.reqAnimFrame(fn);
     });
 
-    var now = Date.now()
+    var now = Date.now();
     this._then = this._then || 0;
     this._deltaTime = now - this._then;
 
@@ -43,8 +43,8 @@ JIVE.reqAnimFrame = function (fn) {
 };
 
 JIVE.settings = {
-    frame_rate: 1 / 60, // fps
-    DEBUG: 0 // 0 for not debug, 1 for debug
+    FRAME_RATE: 1 / 60, // fps
+    DEBUG: 0, // 0 for not debug, 1 for debug
 };
 
 JIVE.Keys = {

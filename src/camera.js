@@ -4,45 +4,56 @@ class Camera extends EventEmitter {
 
         super();
 
-        this.camera = new Rectangle(x || 0, y || 0, 0, 0);
+        this.body = new Rectangle(x || 0, y || 0, 0, 0);
 
         this.scrollingSpeed = scrollSpeed || 1;
         this.zoomLvl = zoomLvl || 1;
 
         // keeps a boolean of whether there was a change in
-        // the position of the camera.
+        // the position of the body.
         this.posChanged = true;
 
         return this;
     }
 
     init() {
-        this.camera.x = Math.floor(JIVE.Canvas.getWidth() / 2);
-        this.camera.w = JIVE.Canvas.getWidth();
-        this.camera.h = JIVE.Canvas.getHeight();
+        this.initX = Math.floor(JIVE.Canvas.getWidth() / 2);
+        this.body.x = this.initX;
+        this.body.w = JIVE.Canvas.getWidth();
+        this.body.h = JIVE.Canvas.getHeight();
     }
 
+    get(){
+        return this;
+    }
 
     getCamera() {
 
         if (JIVE.Canvas.hasChanged()) {
-            this.camera.w = JIVE.Canvas.getWidth();
-            this.camera.h = JIVE.Canvas.getHeight();
+            this.body.w = JIVE.Canvas.getWidth();
+            this.body.h = JIVE.Canvas.getHeight();
         }
 
         return {
-            camera: this.camera,
+            body: this.body,
             zoomLvl: this.zoomLvl
         };
     }
 
+    containsPoint(x, y){
+        return x >= this.body.x - this.initX &&
+                x <= this.body.x + this.body.w &&
+                y >= this.body.y &&
+                y <= this.body.y + this.body.h;
+    }
+
     /**
-     * Finds the area of the map that the camera sees.
+     * Finds the area of the map that the body sees.
      *
      */
     getViewport() {
 
-        // If the position of the camera has not changed
+        // If the position of the body has not changed
         // since the last call to this function
         // then return the results of the previous times
         if (!this.posChanged) {
@@ -116,8 +127,8 @@ class Camera extends EventEmitter {
         if (direction.up) dy = this.scrollingSpeed * dt;
         if (direction.down) dy = -this.scrollingSpeed * dt;
 
-        this.camera.x += dx;
-        this.camera.y += dy;
+        this.body.x += dx;
+        this.body.y += dy;
 
         this.posChanged = true;
 

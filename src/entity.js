@@ -5,10 +5,12 @@
  * Background tiles are not considered Entities.
  */
 
-class Entity {
+class Entity extends EventEmitter{
 
 
     constructor(screenX, screenY, gid) {
+
+        super();
 
         this.id = Entity.id++;
         this.gid = gid;
@@ -26,7 +28,7 @@ class Entity {
 
         // if it has been selected by the user
         this.isSelectable = true;
-        this.isSelected = false;
+        this.selected = false;
 
         this.curPt = null;
         this.isMoving = false;
@@ -39,10 +41,43 @@ class Entity {
 
         JIVE.Entities.push(this);
 
+        var that = this;
+        this.on('mouseclick', function (e) {
+            that.selected = that.body.containsPoint(e.clientX, e.clientY);
+            if (that.selected)
+                that.select();
+            else
+                that.deSelect();
+        });
+        
+        this.on('multiselect', function (rect) {
+            that.selected = rect.containsPoint(that.body.x, that.body.y);
+            if (that.selected)
+                that.select();
+            else
+                that.deSelect();
+        });
+
         this.direction = 5;
 
         return this;
     }
+
+    select(){
+        if (!this.isSelectable) return;
+        this.selected = true;
+        if (Selector.selectedEntities.indexOf(this) === -1)
+            Selector.selectedEntities.push(this);
+    }
+
+    deSelect(){
+        if (!this.isSelectable) return;
+        this.selected = false;
+        var index = Selector.selectedEntities.indexOf(this);
+        if (index > -1)
+            Selector.selectedEntities.splice(index, 1);
+    }
+
 
     getTilePos() {
         return Utils.screen2MapCoords({
@@ -52,7 +87,7 @@ class Entity {
     }
 
     isSelected() {
-        return this.isSelected;
+        return this.selected;
     }
 
     moveTo(end) {
@@ -81,17 +116,6 @@ class Entity {
     }
 
 
-    getEntity() {
-        return {
-            isAlive: this.isAlive,
-            isSelected: this.isSelected,
-            screenX: this.screenX,
-            screenY: this.screenY,
-            gid: this.gid,
-            that: this
-        };
-    }
-
     /**
      * Moves the entity to a different position
      */
@@ -105,30 +129,11 @@ class Entity {
     /**
      * called every frame to update the entity
      */
-    update(dxdy, dt, rect) {
+    update(dxdy, dt) {
         if (!this.isAlive) return;
         this.screenX += dxdy.dx;
         this.screenY += dxdy.dy;
         this.body = new Rectangle(this.screenX + 26, this.screenY + 9, 15, 39);
-
-        // selector
-        if (!this.isSelectable || rect === undefined) return;
-        // todo fix that for overlapping
-        if (rect.containsPoint(this.screenX, this.screenY) || (rect.w === 0 && this.body.containsPoint(rect.x, rect.y))) {
-            this.isSelected = true;
-
-            // add the item in the list of the selected items only if it doesn't exist
-            if (Selector.selectedEntities.indexOf(this) === -1)
-                Selector.selectedEntities.push(this);
-        } else {
-            this.isSelected = false;
-
-            // see if the item is in the selected items list and if it is, remove it
-            var index = Selector.selectedEntities.indexOf(this);
-            if (index > -1) {
-                Selector.selectedEntities.splice(index, 1);
-            }
-        }
 
         /*
         // pathfinding
@@ -204,9 +209,6 @@ class Entity {
                     this.isMoving = false;
 
         }
-
-
-
     }
 
 }

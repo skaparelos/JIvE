@@ -8,7 +8,7 @@ class Utils {
             if (xhr.readyState === 4 && xhr.status == "200") {
                 callback(xhr);
             }
-        }
+        };
         xhr.send();
     }
 
@@ -25,14 +25,13 @@ class Utils {
 
         /*  Solve the drawing functions for tileX, tileY
          These are the 2 drawing equations:
-         screenX = (tileX - tileY) * unittileWidth / zoomLevel / 2 + camX;
-         screenY = (tileY + tileX) * unittileHeight / zoomLevel / 2 + camY;
+         screenX = (tileX - tileY) * unitTileWidth / zoomLevel / 2 + camX;
+         screenY = (tileY + tileX) * unitTileHeight / zoomLevel / 2 + camY;
          */
 
-        var cam = camera.getCamera();
-        var camX = cam.camera.x;
-        var camY = cam.camera.y;
-        var zoomLvl = cam.zoomLvl;
+        var camX = camera.body.x;
+        var camY = camera.body.y;
+        var zoomLvl = camera.zoomLvl;
 
         var mapWidth = JIVE.settings["mapWidth"];
         var mapHeight = JIVE.settings["mapHeight"];
@@ -47,32 +46,32 @@ class Utils {
         // adjustX=-40 has been set empirically to correct the tile choice
         var adjustX = -40 / zoomLvl;
 
-        var tilex = Math.floor(zoomLvl * (
+        var tileX = Math.floor(zoomLvl * (
                 ((clientX - camX + adjustX) / unitTileWidth) +
                 ((clientY - camY) / unitTileHeight)
             ));
 
-        var tiley = Math.floor(zoomLvl * (
+        var tileY = Math.floor(zoomLvl * (
                 ((clientY - camY) / unitTileHeight) -
                 ((clientX - camX + adjustX) / unitTileWidth)
             ));
 
-        if (tilex < 0 || tiley < 0 || tilex >= mapWidth || tiley >= mapHeight)
+        if (tileX < 0 || tileY < 0 || tileX >= mapWidth || tileY >= mapHeight)
             return -1;
 
-        if (tilex === undefined || tiley === undefined || isNaN(tilex) || isNaN(tiley))
+        if (tileX === undefined || tileY === undefined || isNaN(tileX) || isNaN(tileY))
             return -1;
 
         return {
-            tileY: tiley,
-            tileX: tilex
+            tileY: tileY,
+            tileX: tileX
         }
     }
 
 
     /**
      * Calculates the drawing coordinates of an image given the tile position
-     * (i.e. row, col), the image width & height, as well as the camera position
+     * (i.e. row, col), the image width & height, as well as the body position
      * and the zoom level.
      *
      * Gets as input cartesian coordinates along with some extra input and
@@ -90,14 +89,13 @@ class Utils {
      * @param camX
      * @param camY
      * @param zoomLevel
-     * @returns {{x: *, y: *, width: number, height: number}}
+     * @returns Point
      */
     static map2ScreenCoords(row, col, imgWidth, imgHeight, camera) {
 
-        var cam = camera.getCamera();
-        var camX = cam.camera.x;
-        var camY = cam.camera.y;
-        var zoomLevel = cam.zoomLvl;
+        var camX = camera.body.x;
+        var camY = camera.body.y;
+        var zoomLevel = camera.zoomLvl;
 
         var unitTileWidth = JIVE.settings["unitTileWidth"];
         var unitTileHeight = JIVE.settings["unitTileHeight"];
@@ -106,13 +104,13 @@ class Utils {
         var initX = (col - row) * unitTileWidth / 2;
         var initY = (row + col) * unitTileHeight / 2;
 
-        // adjust screen coordinates based on zoom level and camera position
+        // adjust screen coordinates based on zoom level and body position
         var screenX = initX / zoomLevel + camX;
         var screenY = initY / zoomLevel + camY;
 
         // calculate the new tile width & height based on the zoom level
-        var widthZoom = Math.floor(imgWidth / zoomLevel);
-        var heightZoom = Math.floor(imgHeight / zoomLevel);
+        //var widthZoom = Math.floor(imgWidth / zoomLevel);
+        //var heightZoom = Math.floor(imgHeight / zoomLevel);
 
         // make these two adjustments to position the image correctly
         // (this is to correctly draw any image in the center of the tile)
@@ -121,12 +119,7 @@ class Utils {
         screenY = Math.floor(screenY - imgHeight / zoomLevel
             + unitTileHeight / zoomLevel);
 
-        return {
-            x: screenX,
-            y: screenY,
-            width: widthZoom,
-            height: heightZoom
-        }
+        return new Point(screenX, screenY);
     }
 
     // Finds the angle between two objects in terms of a direction (where 0 <= angle < directions) (assuming we have 8 directions)

@@ -84,7 +84,9 @@ class Selector extends EventEmitter{
             h = this.dragEventCurrently.clientY - this.dragEventOrigin.clientY;
         }
 
-        return new Rectangle(x, y, w, h);
+        var rect = new Rectangle(x, y, w, h);
+        this.emit('multiselect', rect);
+        return rect;
     }
 
 }
