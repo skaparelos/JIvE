@@ -82,8 +82,8 @@ class Entity extends EventEmitter{
 
     getTilePos() {
         return Utils.screen2MapCoords({
-            clientX: this.screenX,
-            clientY: this.screenY
+            clientX: this.screenX + 32,
+            clientY: this.screenY + 40
         }, JIVE.Camera);
     }
 
@@ -93,17 +93,31 @@ class Entity extends EventEmitter{
 
     printPath(){
         for (var pt in this.path){
-            console.log('y: ' + this.path[pt].y + ', x: ' + this.path[pt].x );
+            console.log('x: ' + this.path[pt].y + ', y: ' + this.path[pt].x);
         }
         console.log("----- end of path --- ");
     }
 
     goTo(e) {
+        var startMapPt = this.getTilePos();
+        if (startMapPt === -1) return -1;
+        console.log("start: x: " + startMapPt.tileX + ", y: " + startMapPt.tileY);
+        console.log("screenX: " + this.screenX + ", screenY: " + this.screenY);
         var pt = Utils.screen2MapCoords(e, JIVE.Camera);
-        this.GOTOPT = new Point(pt.tileX, pt.tileY);
+        this.gotoMapPt = new Point(pt.tileX, pt.tileY);
+        this.path = Pathfinding.findPath(new Point(startMapPt.tileX, startMapPt.tileY), this.gotoMapPt);
         this.isMoving = true;
-        this.direction = Utils.wrapDirection(Math.round(this.direction), this.directions);
-        this.GOTOPTscrn = Utils.map2ScreenCoords(this.GOTOPT.y, this.GOTOPT.x, 64, 64, JIVE.Camera);
+        this.printPath();
+        // y for x, x for y
+        this.nextPt = new Point(this.path[0].y, this.path[0].x);
+        console.log("x: " + this.nextPt.x + ", y: " + this.nextPt.y);
+        this.distanceLeft = 32;
+        //this.direction = Utils.wrapDirection(Math.round(this.direction), this.directions);
+        //this.GOTOPTscrn = Utils.map2ScreenCoords(this.GOTOPT.y, this.GOTOPT.x, 64, 64, JIVE.Camera);
+
+        this.speed = 40;
+        this.movement = 1;
+        this.findDirection();
     }
 
 
@@ -113,33 +127,61 @@ class Entity extends EventEmitter{
     }
 
 
-    /**
-     * Moves the entity to a different position
-     */
-    move(dx, dy, camera) {
-        if (!this.isAlive || !this.isWalkable) return;
+    findDirection(){
 
-        return this;
+        // TODO the result of this destroys my path finding!!
+        var curMapPt = Utils.screen2MapCoords({clientX: this.screenX + 32, clientY: this.screenY + 40}, JIVE.Camera);
+        curMapPt = new Point(curMapPt.tileX, curMapPt.tileY);
+
+        this.dxMove = 0;
+        this.dyMove = 0;
+
+        //1
+        if (this.nextPt.x == curMapPt.x - 1 && this.nextPt.y == curMapPt.y - 1){
+            this.dyMove = -this.movement;
+        }
+
+        //2
+        if (this.nextPt.x == curMapPt.x  && this.nextPt.y == curMapPt.y - 1) {
+            this.dyMove = -this.movement/2;
+            this.dxMove = this.movement;
+        }
+
+        //3
+        if (this.nextPt.x == curMapPt.x + 1 && this.nextPt.y == curMapPt.y - 1){
+            this.dxMove = this.movement;
+        }
+
+        //4
+        if (this.nextPt.x == curMapPt.x + 1 && this.nextPt.y == curMapPt.y){
+            this.dyMove = this.movement/2;
+            this.dxMove = this.movement;
+        }
+
+        //5
+        if (this.nextPt.x == curMapPt.x + 1 && this.nextPt.y == curMapPt.y + 1){
+            this.dyMove = this.movement;
+        }
+
+        //6
+        if (this.nextPt.x == curMapPt.x && this.nextPt.y == curMapPt.y + 1){
+            this.dyMove = this.movement/2;
+            this.dxMove = -this.movement;
+        }
+
+        //7
+        if (this.nextPt.x == curMapPt.x - 1  && this.nextPt.y == curMapPt.y + 1){
+            this.dxMove = -this.movement;
+        }
+
+        //8
+        if (this.nextPt.x == curMapPt.x - 1  && this.nextPt.y == curMapPt.y){
+            this.dyMove = -this.movement/2;
+            this.dxMove = -this.movement;
+        }
+
     }
 
-
-    moveTo(scrnEndPt) {
-        var endPt = Utils.screen2MapCoords(scrnEndPt, JIVE.Camera);
-        endPt = new Point(endPt.tileX, endPt.tileY);
-        var start = this.getTilePos();
-        if (start === -1) return -1;
-        console.log("start: y: " + start.tileY + ", x: " + start.tileX);
-        console.log("screenX: " + this.screenX + ", screenY: " + this.screenY);
-        this.path = Pathfinding.findPath(new Point(start.tileX, start.tileY), endPt);
-        this.printPath();
-        this.goToPt = endPt;
-        this.isMoving = true;
-        this.nextPt = new Point(this.path[0].y, this.path[0].x);
-        console.log("y: " + this.nextPt.y + ", x: " + this.nextPt.x);
-        this.scrnNextPt = Utils.map2ScreenCoords(this.nextPt.y, this.nextPt.x, 64, 64, JIVE.Camera);
-        console.log("nextScrn: x: " + this.scrnNextPt.x + ", y: " +this.scrnNextPt.y );
-        this.direction = Utils.wrapDirection(Math.round(this.direction), this.directions);
-    }
 
     /**
      * called every frame to update the entity
@@ -150,65 +192,25 @@ class Entity extends EventEmitter{
         this.screenY += dxdy.dy;
         this.body = new Rectangle(this.screenX + 26, this.screenY + 9, 15, 39);
 
-        // movement
         if (!this.isMoving) return;
-        var scrnPt = new Point(this.screenX, this.screenY);
-        var thisPt = Utils.screen2MapCoords({clientX: this.screenX, clientY: this.screenY}, JIVE.Camera);
-        thisPt = new Point(thisPt.tileX, thisPt.tileY);
-        this.directions = 8;
-        this.turnSpeed = 4;
-        this.speed = 40;
 
-        //this.nextPt = new Point(this.path[0].x, this.path[0].y);
-        this.scrnNextPt = Utils.map2ScreenCoords(this.nextPt.y, this.nextPt.x, 64, 64, JIVE.Camera);
-        this.scrnGoToPT = Utils.map2ScreenCoords(this.goToPt.y, this.goToPt.x, 64, 64, JIVE.Camera);
+        this.screenX += this.dxMove;
+        this.screenY += this.dyMove;
+        this.distanceLeft -= this.movement;
 
-        // Find out where we need to turn to get to destination
-        var newDirection = Utils.findAngle(this.scrnNextPt, scrnPt, this.directions);
-
-        // Calculate difference between new direction and current direction
-        var difference = Utils.angleDiff(this.direction, newDirection, this.directions);
-
-        // Calculate amount that aircraft can turn per animation cycle
-        var turnAmount = this.turnSpeed / 8;
-        if (Math.abs(difference) > turnAmount){
-            this.direction = Utils.wrapDirection(this.direction + turnAmount * Math.abs(difference)/difference, this.directions);
-        } else {
-
-            // Calculate distance that aircraft can move per animation cycle
-            var movement = this.speed / 64;
-
-            // Calculate x and y components of the movement
-            var angleRadians = - (Math.round(this.direction) / this.directions) * 2 * Math.PI ;
-            this.lastMovementX = - (movement * Math.sin(angleRadians));
-            this.lastMovementY = - (movement * Math.cos(angleRadians));
-            this.screenX += this.lastMovementX;
-            this.screenY += this.lastMovementY;
-
-            if (Math.abs(this.screenY - this.scrnGoToPT.y) < 1 &&
-                Math.abs(this.screenX - this.scrnGoToPT.x) < 1){
-                    this.isMoving = false;
-            }
-
-            if(thisPt.equal(this.goToPt))
+        //if (this.nextPt.equal(curMapPt) || this.distanceLeft <= 0){
+        if (this.distanceLeft <= 0){
+            this.path.shift();
+            if (this.path.length === 0) {
                 this.isMoving = false;
-
-            if (Math.abs(this.screenY - this.scrnNextPt.y) < 1 &&
-                Math.abs(this.screenX - this.scrnNextPt.x) < 1){
-                    this.path.shift();
-                    if (this.path.length == 0) {
-                        this.isMoving = false;
-                        return;
-                    }
-                    this.nextPt = new Point(this.path[0].y, this.path[0].x);
-                    console.log("Doing: y: " + this.nextPt.y + ", x: " + this.nextPt.x);
-                    this.scrnNextPt = Utils.map2ScreenCoords(this.nextPt.y, this.nextPt.x, 64, 64, JIVE.Camera);
+                return;
             }
-
-
+            // y for x, x for y
+            this.nextPt = new Point(this.path[0].y, this.path[0].x);
+            this.findDirection();
+            this.distanceLeft = 32;
         }
     }
-
 }
 
 /* a map between a class name and a function

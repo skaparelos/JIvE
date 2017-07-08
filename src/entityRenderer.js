@@ -29,6 +29,14 @@ class EntityRenderer{
 
 			//todo
 			entity.body.draw(ctx, "red");
+
+			// draw dots indicating the path
+            for (var pt in entity.path){
+				var row = entity.path[pt].x;
+				var col = entity.path[pt].y;
+				var p = Utils.map2ScreenCoords(row, col, 64, 64, camera);
+				ctx.fillRect(p.x + 32, p.y + 32, 5, 5);
+            }
 		}
 
 	}
