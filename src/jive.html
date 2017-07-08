@@ -98,7 +98,7 @@
 		ih.on('click-right', function(e){
 			console.log("right click");
             for (var ent in Selector.selectedEntities){
-                Selector.selectedEntities[ent].goTo(e);
+                Selector.selectedEntities[ent].moveTo(e);
             }
 			/*var _clickPt = Utils.screen2MapCoords(e, camera);
 			if (_clickPt === -1) return;

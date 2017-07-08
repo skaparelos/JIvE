@@ -42,14 +42,15 @@ class Entity extends EventEmitter{
         JIVE.Entities.push(this);
 
         var that = this;
-        this.on('mouseclick', function (e) {
+
+        this.on('leftclick', function (e) {
             that.selected = that.body.containsPoint(e.clientX, e.clientY);
             if (that.selected)
                 that.select();
             else
                 that.deSelect();
         });
-        
+
         this.on('multiselect', function (rect) {
             that.selected = rect.containsPoint(that.body.x, that.body.y);
             if (that.selected)
@@ -90,15 +91,11 @@ class Entity extends EventEmitter{
         return this.selected;
     }
 
-    moveTo(end) {
-        var start = this.getTilePos();
-        if (start === -1) return -1;
-        this.path = Pathfinding.findPath(new Point(start.tileX, start.tileY), end);
-        this.path.shift();
-        this.goToPt = end;
-        this.isMoving = true;
-        this.nextPt = new Point(this.path[1].x, this.path[1].y);
-        this.curPt = new Point(start.x, start.y);
+    printPath(){
+        for (var pt in this.path){
+            console.log('y: ' + this.path[pt].y + ', x: ' + this.path[pt].x );
+        }
+        console.log("----- end of path --- ");
     }
 
     goTo(e) {
@@ -126,6 +123,24 @@ class Entity extends EventEmitter{
     }
 
 
+    moveTo(scrnEndPt) {
+        var endPt = Utils.screen2MapCoords(scrnEndPt, JIVE.Camera);
+        endPt = new Point(endPt.tileX, endPt.tileY);
+        var start = this.getTilePos();
+        if (start === -1) return -1;
+        console.log("start: y: " + start.tileY + ", x: " + start.tileX);
+        console.log("screenX: " + this.screenX + ", screenY: " + this.screenY);
+        this.path = Pathfinding.findPath(new Point(start.tileX, start.tileY), endPt);
+        this.printPath();
+        this.goToPt = endPt;
+        this.isMoving = true;
+        this.nextPt = new Point(this.path[0].y, this.path[0].x);
+        console.log("y: " + this.nextPt.y + ", x: " + this.nextPt.x);
+        this.scrnNextPt = Utils.map2ScreenCoords(this.nextPt.y, this.nextPt.x, 64, 64, JIVE.Camera);
+        console.log("nextScrn: x: " + this.scrnNextPt.x + ", y: " +this.scrnNextPt.y );
+        this.direction = Utils.wrapDirection(Math.round(this.direction), this.directions);
+    }
+
     /**
      * called every frame to update the entity
      */
@@ -135,78 +150,61 @@ class Entity extends EventEmitter{
         this.screenY += dxdy.dy;
         this.body = new Rectangle(this.screenX + 26, this.screenY + 9, 15, 39);
 
-        /*
-        // pathfinding
-        if (!this.isMoving || !this.curPt) return;
-
-        // get latest curPt in tile coords
-        var e = {clientX: this.screenX + 30, clientY: this.screenY + 30};
-        var pos = Utils.screen2MapCoords(e, JIVE.Camera);
-        if (pos !== -1)
-            this.curPt.update(pos.tileX + 1, pos.tileY + 1);
-
-        // if has reached destination
-        if (this.curPt.equal(this.goToPt)) {
-            this.isMoving = false;
-            this.curPt = null;
-            this.goToPt = null;
-            this.path = null;
-        }
-
-        // if has reached next point
-        if (this.curPt.equal(this.nextPt)) {
-            this.path.shift();
-            this.nextPt = new Point(this.path[0].x, this.path[0].y);
-        }
-        var nextPtScrnPt = Utils.map2ScreenCoords(this.nextPt.y, this.nextPt.x, 64, 64, JIVE.Camera);
-
-        var scrnPt = new Point(this.screenX, this.screenY);
-
-
-         var distance = scrnPt.distance(nextPtScrnPt);
-         console.log(scrnPt.angleDeg(nextPtScrnPt));
-         var differenceX = Math.abs(nextPtScrnPt.x - this.screenX);
-         if (nextPtScrnPt.x <= this.screenX)
-         differenceX *= -1;
-
-         var differenceY = Math.abs(nextPtScrnPt.y - this.screenY);
-         if (nextPtScrnPt.y <= this.screenY)
-         differenceY *= -1;
-
-         this.screenX += differenceX/60*0.83;
-         this.screenY += differenceY/60*0.83;*/
-
-
+        // movement
         if (!this.isMoving) return;
         var scrnPt = new Point(this.screenX, this.screenY);
+        var thisPt = Utils.screen2MapCoords({clientX: this.screenX, clientY: this.screenY}, JIVE.Camera);
+        thisPt = new Point(thisPt.tileX, thisPt.tileY);
         this.directions = 8;
         this.turnSpeed = 4;
         this.speed = 40;
 
+        //this.nextPt = new Point(this.path[0].x, this.path[0].y);
+        this.scrnNextPt = Utils.map2ScreenCoords(this.nextPt.y, this.nextPt.x, 64, 64, JIVE.Camera);
+        this.scrnGoToPT = Utils.map2ScreenCoords(this.goToPt.y, this.goToPt.x, 64, 64, JIVE.Camera);
 
         // Find out where we need to turn to get to destination
-        var newDirection = Utils.findAngle(this.GOTOPTscrn, scrnPt, this.directions);
+        var newDirection = Utils.findAngle(this.scrnNextPt, scrnPt, this.directions);
 
         // Calculate difference between new direction and current direction
         var difference = Utils.angleDiff(this.direction, newDirection, this.directions);
 
         // Calculate amount that aircraft can turn per animation cycle
-        var turnAmount = this.turnSpeed/8;
+        var turnAmount = this.turnSpeed / 8;
         if (Math.abs(difference) > turnAmount){
             this.direction = Utils.wrapDirection(this.direction + turnAmount * Math.abs(difference)/difference, this.directions);
         } else {
+
             // Calculate distance that aircraft can move per animation cycle
-            var movement = this.speed /64;
+            var movement = this.speed / 64;
+
             // Calculate x and y components of the movement
-            var angleRadians = -(Math.round(this.direction)/this.directions)*2*Math.PI ;
-            this.lastMovementX = - (movement*Math.sin(angleRadians));
-            this.lastMovementY = - (movement*Math.cos(angleRadians));
+            var angleRadians = - (Math.round(this.direction) / this.directions) * 2 * Math.PI ;
+            this.lastMovementX = - (movement * Math.sin(angleRadians));
+            this.lastMovementY = - (movement * Math.cos(angleRadians));
             this.screenX += this.lastMovementX;
             this.screenY += this.lastMovementY;
 
-            if (Math.abs(this.screenY - this.GOTOPTscrn.y) < 1 &&
-                Math.abs(this.screenX - this.GOTOPTscrn.x) < 1)
+            if (Math.abs(this.screenY - this.scrnGoToPT.y) < 1 &&
+                Math.abs(this.screenX - this.scrnGoToPT.x) < 1){
                     this.isMoving = false;
+            }
+
+            if(thisPt.equal(this.goToPt))
+                this.isMoving = false;
+
+            if (Math.abs(this.screenY - this.scrnNextPt.y) < 1 &&
+                Math.abs(this.screenX - this.scrnNextPt.x) < 1){
+                    this.path.shift();
+                    if (this.path.length == 0) {
+                        this.isMoving = false;
+                        return;
+                    }
+                    this.nextPt = new Point(this.path[0].y, this.path[0].x);
+                    console.log("Doing: y: " + this.nextPt.y + ", x: " + this.nextPt.x);
+                    this.scrnNextPt = Utils.map2ScreenCoords(this.nextPt.y, this.nextPt.x, 64, 64, JIVE.Camera);
+            }
+
 
         }
     }
