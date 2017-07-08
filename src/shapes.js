@@ -30,6 +30,10 @@ class Point{
 		return this;
 	}
 
+	absSubtract(pt){
+		return new Point(Math.abs(this.x - pt.x), Math.abs(this.y - pt.y));
+	}
+
 	update(x, y){
 		this.x = x;
 		this.y = y;

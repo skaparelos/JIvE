@@ -101,12 +101,12 @@ class Utils {
         var unitTileHeight = JIVE.settings["unitTileHeight"];
 
         // Map to screen coords conversion
-        var initX = (col - row) * unitTileWidth / 2;
-        var initY = (row + col) * unitTileHeight / 2;
+        var screenX = (col - row) * unitTileWidth / 2;
+        var screenY = (row + col) * unitTileHeight / 2;
 
         // adjust screen coordinates based on zoom level and body position
-        var screenX = initX / zoomLevel + camX;
-        var screenY = initY / zoomLevel + camY;
+        screenX = screenX / zoomLevel + camX;
+        screenY = screenY / zoomLevel + camY;
 
         // make these two adjustments to position the image correctly
         // (this is to correctly draw any image in the center of the tile)

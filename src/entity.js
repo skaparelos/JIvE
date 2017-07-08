@@ -111,7 +111,6 @@ class Entity extends EventEmitter{
         // y for x, x for y
         this.nextPt = new Point(this.path[0].y, this.path[0].x);
         console.log("x: " + this.nextPt.x + ", y: " + this.nextPt.y);
-        this.distanceLeft = 32;
         //this.direction = Utils.wrapDirection(Math.round(this.direction), this.directions);
         //this.GOTOPTscrn = Utils.map2ScreenCoords(this.GOTOPT.y, this.GOTOPT.x, 64, 64, JIVE.Camera);
 
@@ -131,54 +130,70 @@ class Entity extends EventEmitter{
 
         // TODO the result of this destroys my path finding!!
         var curMapPt = Utils.screen2MapCoords({clientX: this.screenX + 32, clientY: this.screenY + 40}, JIVE.Camera);
+        if (curMapPt === -1)
+            return;
         curMapPt = new Point(curMapPt.tileX, curMapPt.tileY);
 
         this.dxMove = 0;
         this.dyMove = 0;
 
+        this.distanceLeft = 32;
+        this.direction = 0;
         //1
-        if (this.nextPt.x == curMapPt.x - 1 && this.nextPt.y == curMapPt.y - 1){
+        if (this.nextPt.x === curMapPt.x - 1 && this.nextPt.y === curMapPt.y - 1){
             this.dyMove = -this.movement;
+            this.direction = 1;
         }
 
         //2
-        if (this.nextPt.x == curMapPt.x  && this.nextPt.y == curMapPt.y - 1) {
+        if (this.nextPt.x === curMapPt.x  && this.nextPt.y === curMapPt.y - 1) {
             this.dyMove = -this.movement/2;
             this.dxMove = this.movement;
+            this.direction = 2;
         }
 
         //3
-        if (this.nextPt.x == curMapPt.x + 1 && this.nextPt.y == curMapPt.y - 1){
+        if (this.nextPt.x === curMapPt.x + 1 && this.nextPt.y === curMapPt.y - 1){
             this.dxMove = this.movement;
+            this.distanceLeft = 64;
+            this.direction = 3;
         }
 
         //4
-        if (this.nextPt.x == curMapPt.x + 1 && this.nextPt.y == curMapPt.y){
+        if (this.nextPt.x === curMapPt.x + 1 && this.nextPt.y === curMapPt.y){
             this.dyMove = this.movement/2;
             this.dxMove = this.movement;
+            this.direction = 4;
         }
 
         //5
-        if (this.nextPt.x == curMapPt.x + 1 && this.nextPt.y == curMapPt.y + 1){
+        if (this.nextPt.x === curMapPt.x + 1 && this.nextPt.y === curMapPt.y + 1){
             this.dyMove = this.movement;
+            this.direction = 5;
         }
 
         //6
-        if (this.nextPt.x == curMapPt.x && this.nextPt.y == curMapPt.y + 1){
+        if (this.nextPt.x === curMapPt.x && this.nextPt.y === curMapPt.y + 1){
             this.dyMove = this.movement/2;
             this.dxMove = -this.movement;
+            this.direction = 6;
         }
 
         //7
-        if (this.nextPt.x == curMapPt.x - 1  && this.nextPt.y == curMapPt.y + 1){
+        if (this.nextPt.x === curMapPt.x - 1  && this.nextPt.y === curMapPt.y + 1){
             this.dxMove = -this.movement;
+            this.distanceLeft = 64;
+            this.direction = 7;
         }
 
         //8
-        if (this.nextPt.x == curMapPt.x - 1  && this.nextPt.y == curMapPt.y){
+        if (this.nextPt.x === curMapPt.x - 1  && this.nextPt.y === curMapPt.y){
             this.dyMove = -this.movement/2;
             this.dxMove = -this.movement;
+            this.direction = 8;
         }
+
+        console.log("direction = " + this.direction);
 
     }
 
@@ -208,7 +223,6 @@ class Entity extends EventEmitter{
             // y for x, x for y
             this.nextPt = new Point(this.path[0].y, this.path[0].x);
             this.findDirection();
-            this.distanceLeft = 32;
         }
     }
 }
