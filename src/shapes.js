@@ -114,6 +114,7 @@ class Circle{
 
 	draw(ctx){
 		ctx.beginPath();
+        ctx.strokeStyle = "black";
 		ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false);
 		ctx.lineWidth = 1;
 		ctx.stroke();

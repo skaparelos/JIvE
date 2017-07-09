@@ -19,8 +19,12 @@ class EntityRenderer{
 			var gid = JIVE.getGID(entity.gid);
 
 			// draw the shape around the entity
-			if (entity.selected)
-				entity.getShape().draw(ctx, "black");
+			if (entity.selected) {
+                entity.getShape().draw(ctx, "black");
+                if (JIVE.settings.DRAW_DEBUG) {
+                    entity.body.draw(ctx, "red");
+                }
+            }
 
 			// draw the entity image
 			ctx.drawImage(
@@ -31,8 +35,7 @@ class EntityRenderer{
 				gid["w"], gid["h"]
 				);
 
-			//todo
-			entity.body.draw(ctx, "red");
+
 
 			// draw dots indicating the path
             for (var pt in entity.path){

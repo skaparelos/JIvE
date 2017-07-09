@@ -16,7 +16,8 @@ class Rock extends Entity {
         //this.body = new Rectangle(this.screenX, this.screenY, 64, 64);
         this.body = new Rhombus(this.screenX, this.screenY);
         this.setWalkable(false);
-        this.setSelectable(false);
+        this.setSelectable(true);
+        this.setMovable(false)
     }
 
     update(dxdy, dt) {

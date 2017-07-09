@@ -61,6 +61,12 @@ class Entity extends EventEmitter {
 
         // -- Pathfinding --
 
+        // whether it can move
+        this.movable = true;
+
+        // a boolean indicating whether the player is moving or not
+        this.isMoving = false;
+
         // the speed of movement
         this.speed = 40;
 
@@ -69,9 +75,6 @@ class Entity extends EventEmitter {
 
         // the current position of this entity in the 2D map
         this.curMapPt = null;
-
-        // a boolean indicating whether the player is moving or not
-        this.isMoving = false;
 
         // a tile position indicating the target tile to move to
         this.destinationMapPt = null;
@@ -148,6 +151,7 @@ class Entity extends EventEmitter {
 
 
     goTo(e) {
+        if (!this.movable) return;
         this.curMapPt = this.getTilePos();
         if (this.curMapPt === -1)
             return;
@@ -183,6 +187,10 @@ class Entity extends EventEmitter {
         return this;
     }
 
+    setMovable(m){
+        this.movable = m;
+        return this;
+    }
 
     /**
      *

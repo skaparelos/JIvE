@@ -10,7 +10,8 @@ class Unit extends Entity {
 
         super(screenX, screenY, gid);
 
-        this.speed = 0.5;
+        this.speed = 40;
+        this.movement = this.speed / JIVE.settings.unitTileWidth;
         this.life = 100;
         this.shape = new Ellipse(screenX, screenY, 12, 15, 33, 40);
         this.body = new Rectangle(this.screenX + 26, this.screenY + 9, 15, 39);
