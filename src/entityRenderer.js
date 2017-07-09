@@ -5,6 +5,10 @@ class EntityRenderer{
 
 	draw(entities, camera, ctx, imageLoader){
 
+		// z ordering based on screenY
+		// the one with the smallest y should be drawn first.
+		entities.sort(compare);
+
 		for (var e in entities){
 			var entity = entities[e];
 			if (!entity.isAlive ||
@@ -40,4 +44,13 @@ class EntityRenderer{
 		}
 
 	}
+}
+
+
+function compare(a,b) {
+    if (a.screenY < b.screenY)
+        return -1;
+    if (a.screenY > b.screenY)
+        return 1;
+    return 0;
 }
