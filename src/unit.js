@@ -13,11 +13,13 @@ class Unit extends Entity {
         this.speed = 0.5;
         this.life = 100;
         this.shape = new Ellipse(screenX, screenY, 12, 15, 33, 40);
+        this.body = new Rectangle(this.screenX + 26, this.screenY + 9, 15, 39);
         this.setWalkable(false);
     }
 
-    update(dxdy, dt, rect) {
-        super.update(dxdy, dt, rect);
+    update(dxdy, dt) {
+        super.update(dxdy, dt);
+        this.body.update(this.screenX + 26, this.screenY + 9);
         this.shape.setPos(this.screenX, this.screenY);
     }
 

@@ -74,6 +74,12 @@ class Rectangle{
 		};
 	}
 
+	update(x, y){
+		this.x = x;
+		this.y = y;
+		return this;
+	}
+
 	containsPoint(x, y){
         return x >= this.x &&
 			x <= this.x + this.w &&
@@ -145,16 +151,35 @@ class Ellipse{
 class Rhombus{
 
 	constructor(x,y){
-		this.x = x;
-		this.y = y;
+        this.w = JIVE.settings.unitTileWidth;
+        this.h = JIVE.settings.unitTileHeight;
+		this.x = x + this.w/2;
+		this.y = y + this.h/2;
+
+	}
+
+	containsPoint(pt){
+		return false;
 	}
 
 
-	setPos(x,y){
-
-	}
+    update(x, y){
+        this.x = x + this.w/2;
+        this.y = y + this.h;
+        return this;
+    }
 
 	draw(ctx){
-
+    	var halfW = this.w/2;
+    	var halfH = this.h/2;
+        ctx.beginPath();
+        ctx.strokeStyle = "white";
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x + halfW, this.y + halfH/2);
+        ctx.lineTo(this.x , this.y + halfH);
+        ctx.lineTo(this.x - halfW, this.y + halfH/2);
+        ctx.lineTo(this.x, this.y);
+        ctx.closePath();
+        ctx.stroke();
 	}
 }

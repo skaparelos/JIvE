@@ -26,18 +26,22 @@ class Entity extends EventEmitter {
         // e.g. like doors or bridge or whatever else
         this.isWalkable = null;
 
-        // if it has been selected by the user
-        this.isSelectable = true;
-        this.selected = false;
-
-        // todo maybe remove the hardcoded values
-        this.body = new Rectangle(this.screenX + 26, this.screenY + 9, 15, 39);
+        // todo remove the hardcoded values
+        this.body = null;
 
         JIVE.Entities.push(this);
 
+        // -- Selection --
+
+        // indicates whether it is selectable
+        this.isSelectable = true;
+
+        // if selected by the user
+        this.selected = false;
         var that = this;
 
         this.on('leftclick', function (e) {
+            if (!that.isSelectable) return;
             that.selected = that.body.containsPoint(e.clientX, e.clientY);
             if (that.selected)
                 that.select();
@@ -46,6 +50,7 @@ class Entity extends EventEmitter {
         });
 
         this.on('multiselect', function (rect) {
+            if (!that.isSelectable) return;
             that.selected = rect.containsPoint(that.body.x, that.body.y);
             if (that.selected)
                 that.select();
@@ -168,6 +173,10 @@ class Entity extends EventEmitter {
         this.isMoving = true;
     }
 
+    setSelectable(s){
+        this.isSelectable = s;
+        return this;
+    }
 
     setWalkable(w) {
         this.isWalkable = w;
@@ -254,7 +263,6 @@ class Entity extends EventEmitter {
         if (!this.isAlive) return;
         this.screenX += dxdy.dx;
         this.screenY += dxdy.dy;
-        this.body = new Rectangle(this.screenX + 26, this.screenY + 9, 15, 39);
 
         if (!this.isMoving) return;
 
