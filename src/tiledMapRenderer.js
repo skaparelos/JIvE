@@ -1,17 +1,26 @@
 class TiledMapRenderer {
 
-    constructor() {
+    constructor(map, camera, canvas, imageLoader)
+    {
+        this.map = map;
+        this.camera = camera;
+        this.canvas = canvas;
+        this.imageLoader = imageLoader;
     }
 
-    draw(map, camera, ctx, imageLoader) {
-
-        var bounds = camera.getViewport();
-        var m = map.getMap();
+    draw()
+    {
+        var ctx = this.canvas.getCtx();
+        var bounds = this.camera.getViewport();
+        var m = this.map.getMap();
         var layersNo = m["layersNo"];
 
-        for (var h = bounds.startRow; h < bounds.endRow; h++) {
-            for (var w = bounds.startCol; w < bounds.endCol; w++) {
-                for (var layer = 0; layer < layersNo; layer++) {
+        for (var h = bounds.startRow; h < bounds.endRow; h++)
+        {
+            for (var w = bounds.startCol; w < bounds.endCol; w++)
+            {
+                for (var layer = 0; layer < layersNo; layer++)
+                {
 
                     var gidValue = m["map"][layer][h][w];
                     if (gidValue === 0) continue;
@@ -20,16 +29,15 @@ class TiledMapRenderer {
                     var coords = Utils.map2ScreenCoords(
                         h, w,
                         gid["w"], gid["h"],
-                        camera
+                        this.camera
                     );
                     ctx.drawImage(
-                        imageLoader.get(gid["imagename"]),
+                        this.imageLoader.get(gid["imagename"]),
                         gid["x"], gid["y"],
                         gid["w"], gid["h"],
                         coords.x, coords.y,
                         gid["w"], gid["h"]
                     );
-
                 }
             }
         }

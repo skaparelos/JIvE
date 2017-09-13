@@ -1,12 +1,15 @@
 class SelectorRenderer{
 
-    constructor(){}
+    constructor(selector, canvas) {
+        this.selector = selector;
+        this.canvas = canvas;
+    }
 
-    draw(selector, ctx){
-        if(!selector.isActive()) return;
-        var rect = selector.getSelectedRect();
+    draw() {
+        if(!this.selector.isActive()) return;
+        var rect = this.selector.getSelectedRect();
         if (!rect) return;
-        rect.draw(ctx, "black");
+        rect.draw(this.canvas.getCtx(), "black");
     }
 }
 

@@ -1,26 +1,35 @@
 class Renderer {
 
-    constructor() {
+    constructor(canvas)
+    {
+        // items must be added here in the order to be rendered
+        // items are rendered in the order they are in the list
+        this.renderers = [];
+        this.canvas = canvas;
     }
 
-    init() {
-        this.canvas = JIVE.Canvas;
-        this.mapRenderer = new TiledMapRenderer();
-        this.entityRenderer = new EntityRenderer();
-        this.selectorRenderer = new SelectorRenderer();
-    }
+    init() {}
 
-    clearScreen(ctx) {
+    clearScreen(ctx)
+    {
         ctx.clearRect(0, 0, this.canvas.getWidth(), this.canvas.getHeight());
     }
 
-    draw(camera, map, entities, selector, imageLoader = JIVE.ImageLoader) {
-        var ctx = this.canvas.getCtx();
-        this.clearScreen(ctx);
+    draw()
+    {
+        this.clearScreen(this.canvas.getCtx());
+        this.renderers.forEach(function (renderer){
+            renderer.draw();
+        });
+    }
 
-        this.mapRenderer.draw(map, camera, ctx, imageLoader);
-        this.entityRenderer.draw(entities, camera, ctx, imageLoader);
-        if (selector !== undefined && selector.isActive())
-            this.selectorRenderer.draw(selector, ctx);
+    append(renderer)
+    {
+        this.renderers.push(renderer);
+    }
+
+    addAt(renderer, position)
+    {
+        this.renderers.splice(position, 0, renderer);
     }
 }

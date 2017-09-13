@@ -5,9 +5,10 @@ JIVE.ImageLoader = new ImageLoader();
 JIVE.Canvas = new Canvas();
 JIVE.Map = new TiledMap();
 JIVE.Camera = new Camera();
-JIVE.Renderer = new Renderer();
+JIVE.Renderer = new Renderer(JIVE.Canvas);
 JIVE.InputHandler = new InputHandler();
 JIVE.Selector = new Selector();
+
 
 JIVE._onDocumentLoad = function () {
     JIVE.Canvas.initFullScreen();

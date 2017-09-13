@@ -44,7 +44,8 @@ class Selector extends EventEmitter{
             return undefined;
 
         // in case that there is a click event return that point
-        if(this.clickEvent !== null && !this.isMouseDragging) {
+        if(this.clickEvent !== null && !this.isMouseDragging)
+        {
             return new Rectangle(this.clickEvent.clientX,
                 this.clickEvent.clientY, 0, 0);
         }
@@ -56,28 +57,32 @@ class Selector extends EventEmitter{
         var x, y, w, h;
 
         if (this.dragEventCurrently.clientX > this.dragEventOrigin.clientX
-            && this.dragEventCurrently.clientY > this.dragEventOrigin.clientY) {
+            && this.dragEventCurrently.clientY > this.dragEventOrigin.clientY)
+        {
             x = this.dragEventOrigin.clientX;
             y = this.dragEventOrigin.clientY;
             w = this.dragEventCurrently.clientX - this.dragEventOrigin.clientX;
             h = this.dragEventCurrently.clientY - this.dragEventOrigin.clientY;
         }
         if(this.dragEventCurrently.clientX > this.dragEventOrigin.clientX
-            && this.dragEventCurrently.clientY < this.dragEventOrigin.clientY){
+            && this.dragEventCurrently.clientY < this.dragEventOrigin.clientY)
+        {
             x = this.dragEventOrigin.clientX;
             y = this.dragEventCurrently.clientY;
             w = this.dragEventCurrently.clientX - this.dragEventOrigin.clientX;
             h = this.dragEventOrigin.clientY - this.dragEventCurrently.clientY;
         }
         if(this.dragEventCurrently.clientX < this.dragEventOrigin.clientX
-            && this.dragEventCurrently.clientY < this.dragEventOrigin.clientY) {
+            && this.dragEventCurrently.clientY < this.dragEventOrigin.clientY)
+        {
             x = this.dragEventCurrently.clientX;
             y = this.dragEventCurrently.clientY;
             w = this.dragEventOrigin.clientX - this.dragEventCurrently.clientX;
             h = this.dragEventOrigin.clientY - this.dragEventCurrently.clientY;
         }
         if(this.dragEventCurrently.clientX < this.dragEventOrigin.clientX
-            && this.dragEventCurrently.clientY > this.dragEventOrigin.clientY) {
+            && this.dragEventCurrently.clientY > this.dragEventOrigin.clientY)
+        {
             x = this.dragEventCurrently.clientX;
             y = this.dragEventOrigin.clientY;
             w = this.dragEventOrigin.clientX - this.dragEventCurrently.clientX;
