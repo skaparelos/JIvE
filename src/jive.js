@@ -4,7 +4,7 @@ if (typeof JIVE === "undefined")
 JIVE.ImageLoader = new ImageLoader();
 JIVE.Canvas = new Canvas();
 JIVE.Map = new TiledMap();
-JIVE.Camera = new Camera();
+JIVE.Camera = new Camera(JIVE.Canvas);
 JIVE.Renderer = new Renderer(JIVE.Canvas);
 JIVE.InputHandler = new InputHandler();
 JIVE.Selector = new Selector();
@@ -13,7 +13,6 @@ JIVE.Selector = new Selector();
 JIVE._onDocumentLoad = function () {
     JIVE.Canvas.initFullScreen();
     JIVE.Camera.init();
-    JIVE.Renderer.init();
     JIVE.InputHandler.init();
 
     // calls the user defined init() function

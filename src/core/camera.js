@@ -1,8 +1,10 @@
 class Camera extends EventEmitter {
 
-    constructor(x, y, scrollSpeed, zoomLvl) {
+    constructor(canvas, x, y, scrollSpeed, zoomLvl) {
 
         super();
+
+        this.canvas = canvas;
 
         this.body = new Rectangle(x || 0, y || 0, 0, 0);
 
@@ -17,10 +19,10 @@ class Camera extends EventEmitter {
     }
 
     init() {
-        this.initX = Math.floor(JIVE.Canvas.getWidth() / 2);
+        this.initX = Math.floor(this.canvas.getWidth() / 2);
         this.body.x = this.initX;
-        this.body.w = JIVE.Canvas.getWidth();
-        this.body.h = JIVE.Canvas.getHeight();
+        this.body.w = this.canvas.getWidth();
+        this.body.h = this.canvas.getHeight();
     }
 
     get(){
@@ -29,9 +31,9 @@ class Camera extends EventEmitter {
 
     getCamera() {
 
-        if (JIVE.Canvas.hasChanged()) {
-            this.body.w = JIVE.Canvas.getWidth();
-            this.body.h = JIVE.Canvas.getHeight();
+        if (this.canvas.hasChanged()) {
+            this.body.w = this.canvas.getWidth();
+            this.body.h = this.canvas.getHeight();
         }
 
         return {
@@ -73,8 +75,8 @@ class Camera extends EventEmitter {
         this._endRow = mapHeight;
         this._endCol = mapWidth;
 
-        var screenWidth = JIVE.Canvas.getWidth();
-        var screenHeight = JIVE.Canvas.getHeight();
+        var screenWidth = this.canvas.getWidth();
+        var screenHeight = this.canvas.getHeight();
         if (this.w !== screenWidth) this.w = screenWidth;
         if (this.h !== screenHeight) this.h = screenWidth;
 

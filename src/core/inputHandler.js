@@ -39,7 +39,7 @@ class InputHandler extends EventEmitter {
 
         // Mouse
         document.body.addEventListener('contextmenu', function (e) {
-            // disables right click
+            // disables right click menu
             e.preventDefault();
         }, false);
         document.body.addEventListener('mousedown', this.handleMouseDown.bind(this), false);
