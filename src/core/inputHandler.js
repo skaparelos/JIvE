@@ -117,7 +117,7 @@ class InputHandler extends EventEmitter {
     handleMouseUp(e) {
         if (!this.actions['mousedrag']) {
             this.emit('mouseclick', e);
-            if(e.button == 0)
+            if(e.button === 0)
                 this.emit('leftclick', e);
         }
         this.actions['mousedown'] = false;

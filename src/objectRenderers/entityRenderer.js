@@ -28,7 +28,7 @@ class EntityRenderer{
 			var gid = JIVE.getGID(entity.gid);
 
 			// draw the shape around the entity
-			if (entity.selected)
+			if (entity.isSelected())
 			{
                 entity.getShape().draw(ctx, "black");
                 if (JIVE.settings.DRAW_DEBUG)
@@ -40,19 +40,23 @@ class EntityRenderer{
 			// draw the entity image
 			ctx.drawImage(
 				this.imageLoader.get(gid["imagename"]),
-				gid["x"], gid["y"], 
-				gid["w"], gid["h"], 
+				gid["x"], gid["y"],
+				gid["w"], gid["h"],
 				entity.screenX, entity.screenY,
 				gid["w"], gid["h"]
 				);
 
 			// draw dots indicating the path
-            for (var pt in entity.path)
-            {
-				var row = entity.path[pt].x;
-				var col = entity.path[pt].y;
-				var p = Utils.map2ScreenCoords(row, col, 64, 64, this.camera);
-				ctx.fillRect(p.x + 32, p.y + 32, 5, 5);
+			if (this.entities[e].getMovable())
+			{
+                var pathToDest = entity.getPathToDestination();
+                for (var pt in pathToDest)
+                {
+                    var row = pathToDest[pt].x;
+                    var col = pathToDest[pt].y;
+                    var p = Utils.map2ScreenCoords(row, col, 64, 64, this.camera);
+                    ctx.fillRect(p.x + 32, p.y + 32, 5, 5);
+                }
             }
 		}
 

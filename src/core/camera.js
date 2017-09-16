@@ -11,7 +11,7 @@ class Camera extends EventEmitter {
         this.scrollingSpeed = scrollSpeed || 1;
         this.zoomLvl = zoomLvl || 1;
 
-        // keeps a boolean of whether there was a change in
+        // boolean of whether there was a change in
         // the position of the body.
         this.posChanged = true;
 
@@ -27,19 +27,6 @@ class Camera extends EventEmitter {
 
     get(){
         return this;
-    }
-
-    getCamera() {
-
-        if (this.canvas.hasChanged()) {
-            this.body.w = this.canvas.getWidth();
-            this.body.h = this.canvas.getHeight();
-        }
-
-        return {
-            body: this.body,
-            zoomLvl: this.zoomLvl
-        };
     }
 
     containsPoint(x, y){
@@ -137,27 +124,4 @@ class Camera extends EventEmitter {
         return {dx: dx, dy: dy};
     }
 
-    setX(x) {
-        this.x = x;
-        this.posChanged = true;
-        return this;
-    }
-
-    setY(y) {
-        this.y = y;
-        this.posChanged = true;
-        return this;
-    }
-
-    setW(w) {
-        this.w = w;
-        this.posChanged = true;
-        return this;
-    }
-
-    setH(h) {
-        this.h = h;
-        this.posChanged = true;
-        return this;
-    }
 }
