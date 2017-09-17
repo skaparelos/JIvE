@@ -6,24 +6,21 @@
 class Rock extends Entity {
 
 
-    constructor(screenX, screenY, gid) {
-
+    constructor(screenX, screenY, gid)
+    {
         super(screenX, screenY, gid);
 
-        this.speed = 0;
         this.life = 100;
-        this.shape = new Rhombus(screenX, screenY);
-        //this.body = new Rectangle(this.screenX, this.screenY, 64, 64);
-        this.body = new Rhombus(this.screenX, this.screenY);
-        this.setWalkable(false);
-        this.setSelectable(true);
-        this.setMovable(false)
+
+        var body = new Rhombus(this.screenX, this.screenY);
+        this.setBody(body);
+
+        var shape = new Rhombus(screenX, screenY);
+        this.implementsSelectable(shape);
     }
 
     update(dxdy, dt) {
         super.update(dxdy, dt);
-        this.body.update(this.screenX, this.screenY);
-        this.shape.update(this.screenX, this.screenY);
     }
 
     getShape() {

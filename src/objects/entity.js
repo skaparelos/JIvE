@@ -5,10 +5,11 @@
  * Background tiles are not considered Entities.
  */
 
-class Entity extends EventEmitter {
+class Entity extends GameObject {
 
 
-    constructor(screenX, screenY, gid) {
+    constructor(screenX, screenY, gid)
+    {
 
         super();
 
@@ -19,65 +20,90 @@ class Entity extends EventEmitter {
         this.screenX = screenX;
         this.screenY = screenY;
 
-        // indicates whether the entity is alive
+        // whether the entity is alive
         this.isAlive = true;
 
-        // indicates whether this entity can be walked over
+        // whether this entity can be walked over
         // e.g. like doors or bridge or whatever else
-        this.isWalkable = null;
+        this.isWalkable = false;
 
-        // todo remove the hardcoded values
+        // the physics body that describes the entity
         this.body = null;
 
+        /** Selection */
+        // whether it is selectable, i.e. it can be selected
+        this.isSelectable = false;
+
+        // if isSelectable is true, this holds the selectable object
+        // on how to be selected
+        this.selectable = null;
+
+        // describes the shape to draw if selected
+        this.shape = null;
+
+        /** Pathfinding */
+        // whether it can move
+        this.isMovable = false;
+
+        // if isMovable is true, this holds the movable object
+        // on how to move
+        this.movable = null;
+
+        // add it to the list of the entities
         JIVE.Entities.push(this);
+        return this;
+    }
 
-        // -- Selection --
 
-        // indicates whether it is selectable
+    setBody(body)
+    {
+        this.body = body;
+    }
+
+
+    implementsSelectable(shape)
+    {
         this.isSelectable = true;
         this.selectable = new Selectable(this);
-
-
-        // -- Pathfinding --
-
-        // whether it can move
-        this.isMovable = true;
-        this.movable = new Movable(this);
-
-        return this;
+        this.shape = shape;
     }
 
 
-    select() {
+    implementsMovable(speed)
+    {
+        this.isMovable = true;
+        this.movable = new Movable(this, speed)
+    }
+
+
+    select()
+    {
         if (!this.isSelectable) return;
         this.selectable.setSelected(true);
-        if (Selector.selectedEntities.indexOf(this) === -1)
-            Selector.selectedEntities.push(this);
+        Selector.addSelected(this);
     }
 
 
-    deSelect() {
+    deSelect()
+    {
         if (!this.isSelectable) return;
         this.selectable.setSelected(false);
-        var index = Selector.selectedEntities.indexOf(this);
-        if (index > -1)
-            Selector.selectedEntities.splice(index, 1);
+        Selector.removeDeselected(this);
     }
 
 
-    setSelectable(s){
-        this.isSelectable = s;
-        return this;
-    }
-
-
-    isSelected() {
+    isSelected()
+    {
         if (!this.isSelectable) return false;
         return this.selectable.isSelected();
     }
 
+    getShape(){
+        return this.shape;
+    }
 
-    getTilePos() {
+    getTilePos()
+    {
         return Utils.screen2MapCoords({
             clientX: this.screenX + 32,
             clientY: this.screenY + 40
@@ -85,18 +111,22 @@ class Entity extends EventEmitter {
     }
 
 
-    printPath() {
+    printPath()
+    {
         if (this.isMovable)
             this.movable.printPath();
     }
 
-    getPathToDestination(){
+
+    getPathToDestination()
+    {
         if (this.isMovable)
             return this.movable.getPath();
     }
 
 
-    goTo(e) {
+    goTo(e)
+    {
         if (this.isMovable)
             this.movable.goTo(e);
     }
@@ -104,11 +134,6 @@ class Entity extends EventEmitter {
 
     setWalkable(w) {
         this.isWalkable = w;
-        return this;
-    }
-
-    setMovable(m){
-        this.isMovable = m;
         return this;
     }
 
@@ -120,23 +145,29 @@ class Entity extends EventEmitter {
     /**
      * called every frame to update the entity
      */
-    update(dxdy, dt) {
+    update(dx, dy, dt) {
         if (!this.isAlive) return;
-        this.screenX += dxdy.dx;
-        this.screenY += dxdy.dy;
+        this.screenX += dx;
+        this.screenY += dy;
 
         if (this.isMovable){
             this.movable.update();
         }
 
+        // update the body that describes the physics of this entity
+        this.body.setPos(this.screenX, this.screenY);
+
+        if (this.isSelectable){
+            this.shape.setPos(this.screenX, this.screenY);
+        }
+
     }
 }
 
+Entity.id = 0;
 /* a map between a class name and a function
  that creates new instances of that class */
 Entity._factory = {};
-
-Entity.id = 0;
 
 if (typeof JIVE === "undefined")
     var JIVE = {};

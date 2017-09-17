@@ -2,13 +2,12 @@ class Renderer {
 
     constructor(canvas)
     {
+        this.canvas = canvas;
+
         // items must be added here in the order to be rendered
         // items are rendered in the order they are in the list
         this.renderers = [];
-        this.canvas = canvas;
     }
-
-    init() {}
 
     clearScreen(ctx)
     {

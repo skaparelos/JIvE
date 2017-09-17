@@ -1,6 +1,6 @@
 class Movable {
 
-    constructor(object)
+    constructor(object, speed)
     {
 
         this.object = object;
@@ -9,7 +9,7 @@ class Movable {
         this.isMoving = false;
 
         // the speed of movement
-        this.speed = 40;
+        this.speed = speed || 40;
 
         // how much to move per frame
         this.movement = this.speed / JIVE.settings.unitTileWidth;
@@ -50,6 +50,7 @@ class Movable {
         this.direction = 0;
     }
 
+
     update()
     {
         if (!this.isMoving) return;
@@ -59,6 +60,9 @@ class Movable {
 
         this.distanceLeft -= this.movement;
 
+        // if final destination has been reached stop moving;
+        // if next point in the path has been reach set the next one to visit
+        // and calculate how to go there
         if (this.nextMapPt.equal(this.curMapPt) || this.distanceLeft <= 0)
         {
             this.path.shift();
@@ -73,6 +77,10 @@ class Movable {
         }
     }
 
+    // go to event position
+    // translates the event position to world coordinates and
+    // finds the path to go there;
+    // starts the process of moving
     goTo(e)
     {
         this.curMapPt = this.object.getTilePos();
@@ -90,8 +98,10 @@ class Movable {
         this.nextMapPt = new Point(this.path[0].y, this.path[0].x);
 
         if (JIVE.settings.DEBUG) {
-            console.log("start: x: " + this.curMapPt.tileX + ", y: " + this.curMapPt.tileY);
-            console.log("screenX: " + this.screenX + ", screenY: " + this.screenY);
+            console.log("start: x: " + this.curMapPt.tileX + ", y: " +
+                this.curMapPt.tileY);
+            console.log("screenX: " + this.object.screenX + ", screenY: " +
+                this.object.screenY);
             this.printPath();
             console.log("x: " + this.nextMapPt.x + ", y: " + this.nextMapPt.y);
         }
@@ -104,8 +114,7 @@ class Movable {
     findDirection(curMapPt, nextMapPt)
     {
 
-        if (curMapPt === -1)
-            return;
+        if (curMapPt === -1) return;
 
         curMapPt = new Point(curMapPt.tileX, curMapPt.tileY);
         this.curMapPt = curMapPt;
@@ -114,6 +123,20 @@ class Movable {
         this.dyMove = 0;
         this.distanceLeft = JIVE.settings.unitTileWidth/2;
         this.direction = 0;
+
+        // there are 8 possible directions to move
+        // P is the player in the middle
+        // At each moment can move to either one of these 8 directions
+        // direction number 0 means no direction
+        //    --- --- ---
+        //   | 1 | 2 | 3 |
+        //    --- --- ---
+        //    --- --- ---
+        //   | 8 | P | 4 |
+        //    --- --- ---
+        //    --- --- ---
+        //   | 7 | 6 | 5 |
+        //    --- --- ---
 
         //1
         if (nextMapPt.x === curMapPt.x - 1 && nextMapPt.y === curMapPt.y - 1)

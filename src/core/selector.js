@@ -1,6 +1,7 @@
 class Selector extends EventEmitter{
 
-    constructor() {
+    constructor()
+    {
 
         super();
 
@@ -35,11 +36,15 @@ class Selector extends EventEmitter{
         });
     }
 
-    isActive(){
+
+    isActive()
+    {
         return this.isMouseDragging || this.clickEvent !== null;
     }
 
-    getSelectedRect(){
+
+    getSelectedRect()
+    {
         if(!this.isActive())
             return undefined;
 
@@ -95,6 +100,19 @@ class Selector extends EventEmitter{
     }
 
 }
+
+// if it is not in the list with the selected items add it
+Selector.addSelected = function (item){
+    if (Selector.selectedEntities.indexOf(item) === -1)
+        Selector.selectedEntities.push(item);
+}
+
+Selector.removeDeselected = function (item) {
+    var index = Selector.selectedEntities.indexOf(item);
+    if (index > -1)
+        Selector.selectedEntities.splice(index, 1);
+}
+
 
 /* @static */
 Selector.selectedEntities = [];

@@ -34,10 +34,15 @@ class Point{
 		return new Point(Math.abs(this.x - pt.x), Math.abs(this.y - pt.y));
 	}
 
-	update(x, y){
+	update(dx, dy){
+		this.x = dx;
+		this.y = dy;
+		return this;
+	}
+
+	setPos(x, y){
 		this.x = x;
 		this.y = y;
-		return this;
 	}
 
 	distance(pt){
@@ -56,16 +61,34 @@ class Point{
 
 }
 
-class Rectangle{
+/** Abstract class */
+class Shape {
+	constructor(){
+        if (new.target === Shape) {
+            throw new TypeError("Cannot construct Abstract instances directly");
+        }
+	}
+	update(){}
+	setPos(){}
+	getShape(){}
+	containsPoint(){}
+	draw(){}
+}
 
-	constructor(x, y, w, h){
+
+class Rectangle extends Shape{
+
+	constructor(x, y, w, h, offsetX, offsetY){
+		super();
 		this.x = x;
 		this.y = y;
 		this.w = w;
 		this.h = h;
-	}
+		this.offsetX = offsetX;
+		this.offsetY = offsetY;
+ 	}
 
-	getRect(){
+	getShape(){
 		return {
 			x: this.x,
 			y: this.y,
@@ -75,9 +98,14 @@ class Rectangle{
 	}
 
 	update(x, y){
-		this.x = x;
-		this.y = y;
+		this.x += x;
+		this.y += y;
 		return this;
+	}
+
+	setPos(x, y){
+		this.x = x + this.offsetX;
+		this.y = y + this.offsetY;
 	}
 
 	containsPoint(x, y){
@@ -97,14 +125,21 @@ class Rectangle{
 
 }
 
-class Circle{
+
+class Circle extends Shape{
 
 	constructor(x, y, radius, offsetX, offsetY){
+		super();
 		this.x = x + offsetX;
 		this.y = y + offsetY;
 		this.r = radius;
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
+	}
+
+	update(dx, dy){
+		this.x += dx;
+		this.y += dy;
 	}
 
 	setPos(x, y){
@@ -122,15 +157,21 @@ class Circle{
 }
 
 
-class Ellipse{
+class Ellipse extends Shape{
 
 	constructor(x, y, radiusX, radiusY, offsetX, offsetY){
+		super();
 		this.x = x + offsetX;
 		this.y = y + offsetY;
 		this.radiusX = radiusX;
 		this.radiusY = radiusY;
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
+	}
+
+	update(dx, dy){
+		this.x += dx;
+		this.y += dy;
 	}
 
 	setPos(x,y){
@@ -149,9 +190,10 @@ class Ellipse{
 }
 
 
-class Rhombus{
+class Rhombus extends Shape{
 
 	constructor(x,y){
+		super();
         this.w = JIVE.settings.unitTileWidth;
         this.h = JIVE.settings.unitTileHeight;
 		this.x = x + this.w/2;
@@ -165,10 +207,15 @@ class Rhombus{
 
 
     update(x, y){
-        this.x = x + this.w/2;
-        this.y = y + this.h;
+		this.x += x;
+		this.y += y;
         return this;
     }
+
+    setPos(x, y){
+        this.x = x + this.w/2;
+        this.y = y + this.h;
+	}
 
 	draw(ctx){
     	var halfW = this.w/2;

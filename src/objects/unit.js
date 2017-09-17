@@ -6,22 +6,27 @@
 class Unit extends Entity {
 
 
-    constructor(screenX, screenY, gid) {
-
+    constructor(screenX, screenY, gid)
+    {
         super(screenX, screenY, gid);
 
-        this.speed = 40;
-        this.movement = this.speed / JIVE.settings.unitTileWidth;
         this.life = 100;
-        this.shape = new Ellipse(screenX, screenY, 12, 15, 33, 40);
-        this.body = new Rectangle(this.screenX + 26, this.screenY + 9, 15, 39);
+
+        var body = new Rectangle(this.screenX + 26, this.screenY + 9, 15, 39, 26, 9);
+        this.setBody(body);
+
+        // cannot be walked over by other entities
         this.setWalkable(false);
+
+        var shape = new Ellipse(screenX, screenY, 12, 15, 33, 40);
+        this.implementsSelectable(shape);
+
+        this.speed = 40;
+        this.implementsMovable(this.speed);
     }
 
     update(dxdy, dt) {
         super.update(dxdy, dt);
-        this.body.update(this.screenX + 26, this.screenY + 9);
-        this.shape.setPos(this.screenX, this.screenY);
     }
 
     getShape() {

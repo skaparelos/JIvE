@@ -7,7 +7,7 @@ class Selectable {
 
          this.object = object;
 
-         // if selected by the user
+         // if selected now by the user
          this.selected = false;
 
          object.on('leftclick', function (e) {

@@ -6,27 +6,28 @@
 	<title>JIvE</title>
 
 	<script src="core/canvas.js"></script>
-	<script src="core/imageLoader.js"></script>
-	<script src="core/eventEmitter.js"></script>
 	<script src="core/interfaces/selectable.js"></script>
 	<script src="core/interfaces/movable.js"></script>
+	<script src="core/imageLoader.js"></script>
+	<script src="core/eventEmitter.js"></script>
+	<script src="core/gameObject.js"></script>
 	<script src="core/camera.js"></script>
 	<script src="core/renderer.js"></script>
 	<script src="core/selector.js"></script>
-	<script src="objectRenderers/selectorRenderer.js"></script>
 	<script src="core/inputHandler.js"></script>
 	<script src="core/utils.js"></script>
+	<script src="core/shapes.js"></script>
+	<script src="core/tiledMap.js"></script>
 	<script src="objects/entity.js"></script>
 	<script src="objects/unit.js"></script>
 	<script src="objects/rock.js"></script>
-	<script src="core/shapes.js"></script>
-	<script src="entities.js"></script>
+	<script src="objectRenderers/selectorRenderer.js"></script>
 	<script src="objectRenderers/entityRenderer.js"></script>
-	<script src="core/tiledMap.js"></script>
 	<script src="objectRenderers/tiledMapRenderer.js"></script>
-	<script src="jive.js"></script>
 	<script src="pathfinding/pathfinding.js"></script>
 	<script src="pathfinding/astar.js"></script>
+	<script src="entities.js"></script>
+	<script src="jive.js"></script>
 
 
 	<style>
@@ -139,7 +140,7 @@
 
 		// update Entities
 		JIVE.Entities.forEach( function(entity){
-			entity.update(dxdy, dt);
+			entity.update(dxdy.dx, dxdy.dy, dt);
 		});
 
 		renderer.draw();
