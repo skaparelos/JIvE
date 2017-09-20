@@ -6,8 +6,6 @@
 	<title>JIvE</title>
 
 	<script src="core/canvas.js"></script>
-	<script src="core/interfaces/selectable.js"></script>
-	<script src="core/interfaces/movable.js"></script>
 	<script src="core/imageLoader.js"></script>
 	<script src="core/eventEmitter.js"></script>
 	<script src="core/gameObject.js"></script>
@@ -19,6 +17,7 @@
 	<script src="core/shapes.js"></script>
 	<script src="core/tiledMap.js"></script>
 	<script src="objects/entity.js"></script>
+	<script src="objects/movingEntity.js"></script>
 	<script src="objects/unit.js"></script>
 	<script src="objects/rock.js"></script>
 	<script src="objectRenderers/selectorRenderer.js"></script>
@@ -74,6 +73,8 @@
         var mapRenderer = new TiledMapRenderer(map, camera, JIVE.Canvas, JIVE.ImageLoader);
         var selectorRenderer = new SelectorRenderer(selector, JIVE.Canvas);
         var entityRenderer = new EntityRenderer(JIVE.Entities, camera, JIVE.Canvas, JIVE.ImageLoader);
+
+        // add renderers in order of rendering
         renderer.append(mapRenderer);
         renderer.append(entityRenderer);
         renderer.append(selectorRenderer);
@@ -106,7 +107,8 @@
 			//console.log(JIVE.Entities[0].move(3, 0, camera).mapX);
 		});
 
-		ih.on('click-right', function(e){
+		// moved this under MovingEntity
+		/*ih.on('click-right', function(e){
 			console.log("right click");
 
             for (var ent in Selector.selectedEntities) {
@@ -117,8 +119,8 @@
             if (clickPt === -1 ) return;
             for (var ent in Selector.selectedEntities){
                 Selector.selectedEntities[ent].moveTo(new Point(clickPt.tileX, clickPt.tileY));
-            }*/
-		});
+            }
+		});*/
 
 		map.loadJSON(url, camera, function(){
 			if(map.isLoaded())

@@ -4,158 +4,180 @@
  * Examples of Entities are: units, items, fringe, rocks, houses...
  * Background tiles are not considered Entities.
  */
-
-class Entity extends GameObject {
-
+class Entity extends GameObject{
 
     constructor(screenX, screenY, gid)
     {
-
         super();
 
-        this.id = Entity.id++;
-        this.gid = gid;
+        this._id = Entity.id++;
+        this._gid = gid;
 
         // the x,y coordinates in the screen
-        this.screenX = screenX;
-        this.screenY = screenY;
+        this._screenX = screenX;
+        this._screenY = screenY;
 
         // whether the entity is alive
-        this.isAlive = true;
+        this._isAlive = true;
 
         // whether this entity can be walked over
         // e.g. like doors or bridge or whatever else
-        this.isWalkable = false;
+        this._isWalkable = false;
 
         // the physics body that describes the entity
-        this.body = null;
+        this._body = null;
 
         /** Selection */
         // whether it is selectable, i.e. it can be selected
-        this.isSelectable = false;
+        this._isSelectable = false;
 
-        // if isSelectable is true, this holds the selectable object
-        // on how to be selected
-        this.selectable = null;
-
-        this.selected = false;
+        // is it selected now
+        this._isSelected = false;
 
         // describes the shape to draw if selected
-        this.shape = null;
+        this._shape = null;
 
-        /** Pathfinding */
-        // whether it can move
-        this.isMovable = false;
+        var that = this;
+        this.on('leftclick', function (e) {
+            if (!that.isSelectable()) return;
+            var wasSelected = that._isSelected;
+            that._isSelected = that._body.containsPoint(e.clientX, e.clientY);
+            if (that._isSelected)
+                that.select();
+            else if (wasSelected)
+                that.deSelect();
+        });
 
-        // if isMovable is true, this holds the movable object
-        // on how to move
-        this.movable = null;
+        this.on('multiselect', function (rect) {
+            if (!that.isSelectable()) return;
+            var wasSelected = that._isSelected;
+            that._isSelected = rect.overlap(that._body);
+            if (that._isSelected)
+                that.select();
+            else if (wasSelected)
+                that.deSelect();
+        });
 
         // add it to the list of the entities
         JIVE.Entities.push(this);
-        return this;
     }
 
-
-    setBody(body)
+    getID()
     {
-        this.body = body;
+        return this._id;
     }
 
-
-    implementsSelectable(shape)
+    getGid()
     {
-        this.isSelectable = true;
-        this.selectable = new Selectable(this);
-        this.shape = shape;
+        return this._gid;
     }
 
-
-    implementsMovable(speed)
+    getScreenX()
     {
-        this.isMovable = true;
-        this.movable = new Movable(this, speed)
+        return this._screenX;
     }
 
-
-    select()
+    getScreenY()
     {
-        if (!this.isSelectable) return;
-        this.selectable.setSelected(true);
-        Selector.addSelected(this);
+        return this._screenY;
     }
 
-
-    deSelect()
+    getBody()
     {
-        if (!this.isSelectable) return;
-        this.selectable.setSelected(false);
-        Selector.removeDeselected(this);
+        return this._body;
     }
 
-
-    isSelected()
+    isAlive()
     {
-        if (!this.isSelectable) return false;
-        return this.selectable.isSelected();
+        return this._isAlive;
     }
 
-    getShape(){
-        return this.shape;
+    getShape()
+    {
+        return this._shape;
+    }
+
+    setBody(shape)
+    {
+        this._body = shape;
+    }
+
+    setSelectable(isSelectable)
+    {
+        this._isSelectable = isSelectable;
+    }
+
+    setWalkable(isWalkable){
+        this._isWalkable = isWalkable;
+    }
+
+    enableSelectable(shape)
+    {
+        this._isSelectable = true;
+        this._shape = shape;
+    }
+
+    // the method that is called on every frame to update the entity
+    update(dx, dy, dt)
+    {
+        if (!this._isAlive) return;
+        this._screenX += dx;
+        this._screenY += dy;
+
+        // update the body that describes the physics of this entity
+        this._body.setPos(this._screenX, this._screenY);
+
+        // update the position of the selection shape
+        if (this._isSelectable && this._isSelected){
+            this._shape.setPos(this._screenX, this._screenY);
+        }
     }
 
     getTilePos()
     {
         return Utils.screen2MapCoords({
-            clientX: this.screenX + 32,
-            clientY: this.screenY + 40
+            clientX: this._screenX + 32,
+            clientY: this._screenY + 40
         }, JIVE.Camera);
     }
 
-
-    getPathToDestination()
+    // whether this entity can be walked over
+    // e.g. like doors or bridge or whatever else
+    isWalkable()
     {
-        if (this.isMovable)
-            return this.movable.getPath();
+        return this._isWalkable
     }
 
-
-    goTo(e)
+    // whether this entity can be selected
+    isSelectable()
     {
-        if (this.isMovable)
-            this.movable.goTo(e);
+        return this._isSelectable;
     }
 
-
-    setWalkable(w) {
-        this.isWalkable = w;
-        return this;
+    // whether this entity is currently selected
+    isSelected()
+    {
+        return this._isSelected;
     }
 
-    getMovable(){
-        return this.isMovable;
+    // the shape to draw when an entity is selected
+    getSelectionShape()
+    {
+        return this._shape;
     }
 
+    // selects this entity
+    select()
+    {
+        if (!this._isSelectable) return;
+        Selector.addSelected(this);
+    }
 
-    /**
-     * called every frame to update the entity
-     */
-    update(dx, dy, dt) {
-        if (!this.isAlive) return;
-        this.screenX += dx;
-        this.screenY += dy;
-
-        if (this.isMovable){
-            this.movable.update();
-        }
-
-        // update the body that describes the physics of this entity
-        this.body.setPos(this.screenX, this.screenY);
-
-        if (this.isSelectable){
-            this.shape.setPos(this.screenX, this.screenY);
-        }
-
+    // deselects this entity
+    deSelect()
+    {
+        if (!this._isSelectable) return;
+        Selector.removeDeselected(this);
     }
 }
 

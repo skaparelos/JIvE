@@ -20,12 +20,15 @@ class EntityRenderer{
 		for (var e in this.entities)
 		{
 			var entity = this.entities[e];
-			if (!entity.isAlive ||
-				!this.camera.containsPoint(entity.screenX, entity.screenY) ||
-                 entity.gid === 0)
+			var screenX = entity.getScreenX();
+			var screenY = entity.getScreenY();
+
+			if (!entity.isAlive() ||
+				!this.camera.containsPoint(screenX, screenY) ||
+                 entity.getGid() === 0)
 				continue;
 
-			var gid = JIVE.getGID(entity.gid);
+			var gid = JIVE.getGID(entity.getGid());
 
 			// draw the shape around the entity
 			if (entity.isSelected())
@@ -33,7 +36,7 @@ class EntityRenderer{
                 entity.getShape().draw(ctx, "black");
                 if (JIVE.settings.DRAW_DEBUG)
                 {
-                    entity.body.draw(ctx, "red");
+                    entity.getBody().draw(ctx, "red");
                 }
             }
 
@@ -42,12 +45,12 @@ class EntityRenderer{
 				this.imageLoader.get(gid["imagename"]),
 				gid["x"], gid["y"],
 				gid["w"], gid["h"],
-				entity.screenX, entity.screenY,
+				screenX, screenY,
 				gid["w"], gid["h"]
 				);
 
 			// draw dots indicating the path
-			if (this.entities[e].getMovable())
+			if (this.entities[e].isMoving && this.entities[e].isMoving())
 			{
                 var pathToDest = entity.getPathToDestination();
                 for (var pt in pathToDest)
@@ -63,12 +66,16 @@ class EntityRenderer{
 	}
 }
 
+
 // used for sorting the entities
 function compare(a,b)
 {
-    if (a.screenY < b.screenY)
+	var aY, bY;
+	aY = a.getScreenY();
+	bY = b.getScreenY();
+    if (aY < bY)
         return -1;
-    if (a.screenY > b.screenY)
+    if (aY > bY)
         return 1;
     return 0;
 }

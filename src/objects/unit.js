@@ -3,9 +3,8 @@
  * e.g. a player
  */
 
-class Unit extends Entity {
-
-
+class Unit extends MovingEntity {
+    
     constructor(screenX, screenY, gid)
     {
         super(screenX, screenY, gid);
@@ -19,20 +18,11 @@ class Unit extends Entity {
         this.setWalkable(false);
 
         var shape = new Ellipse(screenX, screenY, 12, 15, 33, 40);
-        this.implementsSelectable(shape);
+        this.enableSelectable(shape);
 
-        this.speed = 40;
-        this.implementsMovable(this.speed);
+        //this.speed = 40;
+        //this.implementsMovable(this.speed);
     }
-
-    update(dxdy, dt) {
-        super.update(dxdy, dt);
-    }
-
-    getShape() {
-        return this.shape;
-    }
-
 }
 
 

@@ -72,6 +72,7 @@ class Shape {
 	setPos(){}
 	getShape(){}
 	containsPoint(){}
+	overlap(){}
 	draw(){}
 }
 
