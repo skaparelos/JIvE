@@ -115,6 +115,35 @@ class Rectangle extends Shape{
 			y <= this.y + this.h;
 	}
 
+	overlap(rect){
+		// left_rect is the one with the smaller x
+		var left_rect, right_rect;
+
+		if (this.x === rect.x && this.y === rect.y)
+			return true;
+
+		if (this.x <= rect.x){
+			left_rect = this;
+			right_rect = rect;
+		}else{
+			left_rect = rect;
+			right_rect = this;
+		}
+
+		// check cases like +
+		if (right_rect.x < left_rect.x + left_rect.w &&
+			right_rect.y < left_rect.y &&
+			right_rect.y + right_rect.h > left_rect.y)
+				return true;
+
+		// we now need to check four corners
+		return left_rect.containsPoint(right_rect.x, right_rect.y) ||
+			left_rect.containsPoint(right_rect.x + right_rect.w, right_rect.y) ||
+			left_rect.containsPoint(right_rect.x, right_rect.y + right_rect.w) ||
+			left_rect.containsPoint(right_rect.x + right_rect.w, right_rect.y + right_rect.w);
+
+	}
+
 	draw(ctx, colour){
         ctx.beginPath();
         ctx.lineWidth = "1";

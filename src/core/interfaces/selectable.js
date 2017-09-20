@@ -19,7 +19,7 @@ class Selectable {
          });
 
          object.on('multiselect', function (rect) {
-             object.selected = rect.containsPoint(object.body.x, object.body.y);
+             object.selected = rect.overlap(object.body);
              if (object.selected)
                  object.select();
              else

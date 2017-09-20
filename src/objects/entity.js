@@ -38,6 +38,8 @@ class Entity extends GameObject {
         // on how to be selected
         this.selectable = null;
 
+        this.selected = false;
+
         // describes the shape to draw if selected
         this.shape = null;
 
@@ -108,13 +110,6 @@ class Entity extends GameObject {
             clientX: this.screenX + 32,
             clientY: this.screenY + 40
         }, JIVE.Camera);
-    }
-
-
-    printPath()
-    {
-        if (this.isMovable)
-            this.movable.printPath();
     }
 
 
