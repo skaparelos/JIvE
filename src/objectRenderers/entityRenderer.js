@@ -1,11 +1,12 @@
 class EntityRenderer{
 
-	constructor(entities, camera, canvas, imageLoader)
+	constructor(entities, camera, canvas, imageLoader, map)
 	{
 		this.entities = entities;
 		this.camera = camera;
 		this.canvas = canvas;
 		this.imageLoader = imageLoader;
+		this.map = map;
 	}
 
 
@@ -28,7 +29,7 @@ class EntityRenderer{
                  entity.getGid() === 0)
 				continue;
 
-			var gid = JIVE.getGID(entity.getGid());
+			var gid = this.map.getImageByGID(entity.getGid());
 
 			// draw the shape around the entity
 			if (entity.isSelected())

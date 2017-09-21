@@ -1,0 +1,5 @@
+* When a moving entity reaches the destination, have a function called setTilePos
+that sets the entity in the middle of the tile.
+This is to avoid bugs like when setting speed=1000
+
+

@@ -59,7 +59,7 @@
 
 	<script>	
 
-	url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/map.json"
+	url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/map.json";
 	var map, renderer, camera, ih, selector;
 
 	function init()
@@ -72,7 +72,7 @@
 
         var mapRenderer = new TiledMapRenderer(map, camera, JIVE.Canvas, JIVE.ImageLoader);
         var selectorRenderer = new SelectorRenderer(selector, JIVE.Canvas);
-        var entityRenderer = new EntityRenderer(JIVE.Entities, camera, JIVE.Canvas, JIVE.ImageLoader);
+        var entityRenderer = new EntityRenderer(JIVE.Entities, camera, JIVE.Canvas, JIVE.ImageLoader, map);
 
         // add renderers in order of rendering
         renderer.append(mapRenderer);

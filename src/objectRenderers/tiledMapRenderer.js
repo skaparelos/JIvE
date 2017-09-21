@@ -12,8 +12,8 @@ class TiledMapRenderer {
     {
         var ctx = this.canvas.getCtx();
         var bounds = this.camera.getViewport();
-        var m = this.map.getMap();
-        var layersNo = m["layersNo"];
+        var map = this.map.getMap();
+        var layersNo = map["layersNo"];
 
         for (var h = bounds.startRow; h < bounds.endRow; h++)
         {
@@ -22,10 +22,10 @@ class TiledMapRenderer {
                 for (var layer = 0; layer < layersNo; layer++)
                 {
 
-                    var gidValue = m["map"][layer][h][w];
+                    var gidValue = map["map"][layer][h][w];
                     if (gidValue === 0) continue;
 
-                    var gid = JIVE.getGID(gidValue);
+                    var gid = this.map.getImageByGID(gidValue);
                     var coords = Utils.map2ScreenCoords(
                         h, w,
                         gid["w"], gid["h"],
