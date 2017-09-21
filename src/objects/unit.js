@@ -4,10 +4,14 @@
  */
 
 class Unit extends MovingEntity {
-    
+
     constructor(screenX, screenY, gid)
     {
         super(screenX, screenY, gid);
+
+        this.__gidsPtr = 0;
+        this.__gids = [33, 31, 30, 32, 35];
+        this.__prevAnim = new Date().getTime();
 
         this.life = 100;
 
@@ -22,6 +26,25 @@ class Unit extends MovingEntity {
 
         //this.speed = 40;
         //this.implementsMovable(this.speed);
+    }
+
+    animate()
+    {
+        var now = new Date().getTime();
+        if (now - this.__prevAnim > 300) {
+            this.__gidsPtr += 1;
+            this.__gidsPtr = this.__gidsPtr % this.__gids.length;
+            this.__prevAnim = now;
+        }
+    }
+
+    update(dx, dy, dt){
+        this.animate();
+        super.update(dx, dy, dt);
+    }
+
+    getGid(){
+        return this.__gids[this.__gidsPtr];
     }
 }
 
