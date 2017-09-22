@@ -95,7 +95,7 @@ class MovingEntity extends Entity
         this._speed = speed;
     }
 
-    // indicate whete to go, given a screen event.
+    // indicate where to go, given a screen event.
     // go to event position
     // translates the event position to world coordinates and
     // finds the path to go there;
@@ -218,6 +218,10 @@ class MovingEntity extends Entity
             this._dxMove = -this._movement;
             this._direction = 8;
         }
+    }
+
+    getDirection(){
+        return this._direction;
     }
 
     printPath()

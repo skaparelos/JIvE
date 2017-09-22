@@ -2,4 +2,7 @@
 that sets the entity in the middle of the tile.
 This is to avoid bugs like when setting speed=1000
 
+* things disappear if they walk towards 0,0
 
+* pixel perfect collision using colour masking. (I NEED to implement this for
+tile selection + selection objects) THIS IS HUGE
