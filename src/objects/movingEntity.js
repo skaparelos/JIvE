@@ -1,9 +1,7 @@
 /** Abstract class with default implementation */
-class MovingEntity extends Entity
-{
+class MovingEntity extends Entity {
 
-    constructor(screenX, screenY, gid)
-    {
+    constructor(screenX, screenY, gid) {
         super(screenX, screenY, gid);
 
         // a boolean indicating whether the player is moving now or not
@@ -29,7 +27,7 @@ class MovingEntity extends Entity
         this._path = null;
 
         // the distance left to reach the next map point in pixels
-        this._distanceLeft = JIVE.settings.unitTileWidth/2;
+        this._distanceLeft = JIVE.settings.unitTileWidth / 2;
 
         // the displacement to move in each axis for movement
         this._dxMove = 0;
@@ -52,19 +50,17 @@ class MovingEntity extends Entity
 
 
         var that = this;
-        this.on('click-right', function(e){
+        this.on('click-right', function (e) {
             if (that.isSelected())
                 that.goTo(e);
         });
     }
 
-    isMoving()
-    {
+    isMoving() {
         return this._isMoving;
     }
 
-    update(dx, dy, dt)
-    {
+    update(dx, dy, dt) {
         super.update(dx, dy, dt);
         if (!this._isMoving) return;
 
@@ -76,11 +72,9 @@ class MovingEntity extends Entity
         // if final destination has been reached stop moving;
         // if next point in the path has been reach set the next one to visit
         // and calculate how to go there
-        if (this._nextMapPt.equal(this._curMapPt) || this._distanceLeft <= 0)
-        {
+        if (this._nextMapPt.equal(this._curMapPt) || this._distanceLeft <= 0) {
             this._path.shift();
-            if (this._path.length === 0)
-            {
+            if (this._path.length === 0) {
                 this._isMoving = false;
                 return;
             }
@@ -90,8 +84,7 @@ class MovingEntity extends Entity
         }
     }
 
-    setSpeed(speed)
-    {
+    setSpeed(speed) {
         this._speed = speed;
     }
 
@@ -100,8 +93,7 @@ class MovingEntity extends Entity
     // translates the event position to world coordinates and
     // finds the path to go there;
     // starts the process of moving
-    goTo(e)
-    {
+    goTo(e) {
         this._curMapPt = this.getTilePos();
         if (this._curMapPt === -1)
             return;
@@ -130,8 +122,7 @@ class MovingEntity extends Entity
     }
 
 
-    findDirection(curMapPt, nextMapPt)
-    {
+    findDirection(curMapPt, nextMapPt) {
 
         if (curMapPt === -1) return;
 
@@ -140,7 +131,7 @@ class MovingEntity extends Entity
 
         this._dxMove = 0;
         this._dyMove = 0;
-        this._distanceLeft = JIVE.settings.unitTileWidth/2;
+        this._distanceLeft = JIVE.settings.unitTileWidth / 2;
         this._direction = 0;
 
         // there are 8 possible directions to move
@@ -158,82 +149,72 @@ class MovingEntity extends Entity
         //    --- --- ---
 
         //1
-        if (nextMapPt.x === curMapPt.x - 1 && nextMapPt.y === curMapPt.y - 1)
-        {
+        if (nextMapPt.x === curMapPt.x - 1 && nextMapPt.y === curMapPt.y - 1) {
             this._dyMove = -this._movement;
             this._direction = 1;
         }
 
         //2
-        if (nextMapPt.x === curMapPt.x && nextMapPt.y === curMapPt.y - 1)
-        {
+        if (nextMapPt.x === curMapPt.x && nextMapPt.y === curMapPt.y - 1) {
             this._dyMove = -this._movement / 2;
             this._dxMove = this._movement;
             this._direction = 2;
         }
 
         //3
-        if (nextMapPt.x === curMapPt.x + 1 && nextMapPt.y === curMapPt.y - 1)
-        {
+        if (nextMapPt.x === curMapPt.x + 1 && nextMapPt.y === curMapPt.y - 1) {
             this._dxMove = this._movement;
             this._distanceLeft *= 2;
             this._direction = 3;
         }
 
         //4
-        if (nextMapPt.x === curMapPt.x + 1 && nextMapPt.y === curMapPt.y)
-        {
+        if (nextMapPt.x === curMapPt.x + 1 && nextMapPt.y === curMapPt.y) {
             this._dyMove = this._movement / 2;
             this._dxMove = this._movement;
             this._direction = 4;
         }
 
         //5
-        if (nextMapPt.x === curMapPt.x + 1 && nextMapPt.y === curMapPt.y + 1)
-        {
+        if (nextMapPt.x === curMapPt.x + 1 && nextMapPt.y === curMapPt.y + 1) {
             this._dyMove = this._movement;
             this._direction = 5;
         }
 
         //6
-        if (nextMapPt.x === curMapPt.x && nextMapPt.y === curMapPt.y + 1)
-        {
+        if (nextMapPt.x === curMapPt.x && nextMapPt.y === curMapPt.y + 1) {
             this._dyMove = this._movement / 2;
             this._dxMove = -this._movement;
             this._direction = 6;
         }
 
         //7
-        if (nextMapPt.x === curMapPt.x - 1 && nextMapPt.y === curMapPt.y + 1)
-        {
+        if (nextMapPt.x === curMapPt.x - 1 && nextMapPt.y === curMapPt.y + 1) {
             this._dxMove = -this._movement;
             this._distanceLeft *= 2;
             this._direction = 7;
         }
 
         //8
-        if (nextMapPt.x === curMapPt.x - 1 && nextMapPt.y === curMapPt.y)
-        {
+        if (nextMapPt.x === curMapPt.x - 1 && nextMapPt.y === curMapPt.y) {
             this._dyMove = -this._movement / 2;
             this._dxMove = -this._movement;
             this._direction = 8;
         }
     }
 
-    getDirection(){
+    getDirection() {
         return this._direction;
     }
 
-    printPath()
-    {
+    printPath() {
         for (var pt in this._path) {
             console.log('x: ' + this._path[pt].y + ', y: ' + this._path[pt].x);
         }
         console.log("----- end of path --- ");
     }
 
-    getPathToDestination()
-    {
+    getPathToDestination() {
         return this._path;
     }
 

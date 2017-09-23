@@ -1,7 +1,6 @@
 class Renderer {
 
-    constructor(canvas)
-    {
+    constructor(canvas) {
         this.canvas = canvas;
 
         // items must be added here in the order to be rendered
@@ -9,26 +8,22 @@ class Renderer {
         this.renderers = [];
     }
 
-    clearScreen(ctx)
-    {
+    clearScreen(ctx) {
         ctx.clearRect(0, 0, this.canvas.getWidth(), this.canvas.getHeight());
     }
 
-    draw()
-    {
+    draw() {
         this.clearScreen(this.canvas.getCtx());
-        this.renderers.forEach(function (renderer){
+        this.renderers.forEach(function (renderer) {
             renderer.draw();
         });
     }
 
-    append(renderer)
-    {
+    append(renderer) {
         this.renderers.push(renderer);
     }
 
-    addAt(renderer, position)
-    {
+    addAt(renderer, position) {
         this.renderers.splice(position, 0, renderer);
     }
 }

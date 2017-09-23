@@ -25,15 +25,15 @@ class Camera extends EventEmitter {
         this.body.h = this.canvas.getHeight();
     }
 
-    get(){
+    get() {
         return this;
     }
 
-    containsPoint(x, y){
+    containsPoint(x, y) {
         return x >= this.body.x - this.initX &&
-                x <= this.body.x + this.body.w &&
-                y >= this.body.y &&
-                y <= this.body.y + this.body.h;
+            x <= this.body.x + this.body.w &&
+            y >= this.body.y &&
+            y <= this.body.y + this.body.h;
     }
 
     /**

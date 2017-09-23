@@ -1,7 +1,6 @@
 class GameObject extends EventEmitter {
 
-    constructor()
-    {
+    constructor() {
         super();
         this.id = GameObject.id++;
         GameObject.list.push(this);

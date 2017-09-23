@@ -47,14 +47,14 @@ class Utils {
         var adjustX = -40 / zoomLvl;
 
         var tileX = Math.floor(zoomLvl * (
-                ((clientX - camX + adjustX) / unitTileWidth) +
-                ((clientY - camY) / unitTileHeight)
-            ));
+            ((clientX - camX + adjustX) / unitTileWidth) +
+            ((clientY - camY) / unitTileHeight)
+        ));
 
         var tileY = Math.floor(zoomLvl * (
-                ((clientY - camY) / unitTileHeight) -
-                ((clientX - camX + adjustX) / unitTileWidth)
-            ));
+            ((clientY - camY) / unitTileHeight) -
+            ((clientX - camX + adjustX) / unitTileWidth)
+        ));
 
         if (tileX < 0 || tileY < 0 || tileX >= mapWidth || tileY >= mapHeight)
             return -1;

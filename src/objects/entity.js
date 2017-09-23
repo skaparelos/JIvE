@@ -4,10 +4,9 @@
  * Examples of Entities are: units, items, fringe, rocks, houses...
  * Background tiles are not considered Entities.
  */
-class Entity extends GameObject{
+class Entity extends GameObject {
 
-    constructor(screenX, screenY, gid)
-    {
+    constructor(screenX, screenY, gid) {
         super();
 
         this._id = Entity.id++;
@@ -62,64 +61,53 @@ class Entity extends GameObject{
         JIVE.Entities.push(this);
     }
 
-    getID()
-    {
+    getID() {
         return this._id;
     }
 
-    getGid()
-    {
+    getGid() {
         return this._gid;
     }
 
-    getScreenX()
-    {
+    getScreenX() {
         return this._screenX;
     }
 
-    getScreenY()
-    {
+    getScreenY() {
         return this._screenY;
     }
 
-    getBody()
-    {
+    getBody() {
         return this._body;
     }
 
-    isAlive()
-    {
+    isAlive() {
         return this._isAlive;
     }
 
-    getShape()
-    {
+    getShape() {
         return this._shape;
     }
 
-    setBody(shape)
-    {
+    setBody(shape) {
         this._body = shape;
     }
 
-    setSelectable(isSelectable)
-    {
+    setSelectable(isSelectable) {
         this._isSelectable = isSelectable;
     }
 
-    setWalkable(isWalkable){
+    setWalkable(isWalkable) {
         this._isWalkable = isWalkable;
     }
 
-    enableSelectable(shape)
-    {
+    enableSelectable(shape) {
         this._isSelectable = true;
         this._shape = shape;
     }
 
     // the method that is called on every frame to update the entity
-    update(dx, dy, dt)
-    {
+    update(dx, dy, dt) {
         if (!this._isAlive) return;
         this._screenX += dx;
         this._screenY += dy;
@@ -128,13 +116,12 @@ class Entity extends GameObject{
         this._body.setPos(this._screenX, this._screenY);
 
         // update the position of the selection shape
-        if (this._isSelectable && this._isSelected){
+        if (this._isSelectable && this._isSelected) {
             this._shape.setPos(this._screenX, this._screenY);
         }
     }
 
-    getTilePos()
-    {
+    getTilePos() {
         return Utils.screen2MapCoords({
             clientX: this._screenX + 32,
             clientY: this._screenY + 40
@@ -143,39 +130,33 @@ class Entity extends GameObject{
 
     // whether this entity can be walked over
     // e.g. like doors or bridge or whatever else
-    isWalkable()
-    {
+    isWalkable() {
         return this._isWalkable
     }
 
     // whether this entity can be selected
-    isSelectable()
-    {
+    isSelectable() {
         return this._isSelectable;
     }
 
     // whether this entity is currently selected
-    isSelected()
-    {
+    isSelected() {
         return this._isSelected;
     }
 
     // the shape to draw when an entity is selected
-    getSelectionShape()
-    {
+    getSelectionShape() {
         return this._shape;
     }
 
     // selects this entity
-    select()
-    {
+    select() {
         if (!this._isSelectable) return;
         Selector.addSelected(this);
     }
 
     // deselects this entity
-    deSelect()
-    {
+    deSelect() {
         if (!this._isSelectable) return;
         Selector.removeDeselected(this);
     }

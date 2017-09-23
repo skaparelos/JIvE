@@ -1,7 +1,6 @@
-class Selector extends EventEmitter{
+class Selector extends EventEmitter {
 
-    constructor()
-    {
+    constructor() {
 
         super();
 
@@ -37,20 +36,17 @@ class Selector extends EventEmitter{
     }
 
 
-    isActive()
-    {
+    isActive() {
         return this.isMouseDragging || this.clickEvent !== null;
     }
 
 
-    getSelectedRect()
-    {
-        if(!this.isActive())
+    getSelectedRect() {
+        if (!this.isActive())
             return undefined;
 
         // in case that there is a click event return that point
-        if(this.clickEvent !== null && !this.isMouseDragging)
-        {
+        if (this.clickEvent !== null && !this.isMouseDragging) {
             return new Rectangle(this.clickEvent.clientX,
                 this.clickEvent.clientY, 0, 0);
         }
@@ -62,32 +58,28 @@ class Selector extends EventEmitter{
         var x, y, w, h;
 
         if (this.dragEventCurrently.clientX > this.dragEventOrigin.clientX
-            && this.dragEventCurrently.clientY > this.dragEventOrigin.clientY)
-        {
+            && this.dragEventCurrently.clientY > this.dragEventOrigin.clientY) {
             x = this.dragEventOrigin.clientX;
             y = this.dragEventOrigin.clientY;
             w = this.dragEventCurrently.clientX - this.dragEventOrigin.clientX;
             h = this.dragEventCurrently.clientY - this.dragEventOrigin.clientY;
         }
-        if(this.dragEventCurrently.clientX > this.dragEventOrigin.clientX
-            && this.dragEventCurrently.clientY < this.dragEventOrigin.clientY)
-        {
+        if (this.dragEventCurrently.clientX > this.dragEventOrigin.clientX
+            && this.dragEventCurrently.clientY < this.dragEventOrigin.clientY) {
             x = this.dragEventOrigin.clientX;
             y = this.dragEventCurrently.clientY;
             w = this.dragEventCurrently.clientX - this.dragEventOrigin.clientX;
             h = this.dragEventOrigin.clientY - this.dragEventCurrently.clientY;
         }
-        if(this.dragEventCurrently.clientX < this.dragEventOrigin.clientX
-            && this.dragEventCurrently.clientY < this.dragEventOrigin.clientY)
-        {
+        if (this.dragEventCurrently.clientX < this.dragEventOrigin.clientX
+            && this.dragEventCurrently.clientY < this.dragEventOrigin.clientY) {
             x = this.dragEventCurrently.clientX;
             y = this.dragEventCurrently.clientY;
             w = this.dragEventOrigin.clientX - this.dragEventCurrently.clientX;
             h = this.dragEventOrigin.clientY - this.dragEventCurrently.clientY;
         }
-        if(this.dragEventCurrently.clientX < this.dragEventOrigin.clientX
-            && this.dragEventCurrently.clientY > this.dragEventOrigin.clientY)
-        {
+        if (this.dragEventCurrently.clientX < this.dragEventOrigin.clientX
+            && this.dragEventCurrently.clientY > this.dragEventOrigin.clientY) {
             x = this.dragEventCurrently.clientX;
             y = this.dragEventOrigin.clientY;
             w = this.dragEventOrigin.clientX - this.dragEventCurrently.clientX;
@@ -102,7 +94,7 @@ class Selector extends EventEmitter{
 }
 
 // if it is not in the list with the selected items add it
-Selector.addSelected = function (item){
+Selector.addSelected = function (item) {
     if (Selector.selectedEntities.indexOf(item) === -1)
         Selector.selectedEntities.push(item);
 }
@@ -116,6 +108,6 @@ Selector.removeDeselected = function (item) {
 
 /* @static */
 Selector.selectedEntities = [];
-Selector.getSelectedItems = function (){
+Selector.getSelectedItems = function () {
     return Selector.selectedEntities;
 }

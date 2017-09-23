@@ -2,70 +2,69 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8" />
-	<title>JIvE</title>
+    <meta charset="UTF-8"/>
+    <title>JIvE</title>
 
-	<script src="core/canvas.js"></script>
-	<script src="core/imageLoader.js"></script>
-	<script src="core/eventEmitter.js"></script>
-	<script src="core/gameObject.js"></script>
-	<script src="core/camera.js"></script>
-	<script src="core/renderer.js"></script>
-	<script src="core/selector.js"></script>
-	<script src="core/inputHandler.js"></script>
-	<script src="core/utils.js"></script>
-	<script src="core/shapes.js"></script>
-	<script src="core/tiledMap.js"></script>
-	<script src="objects/entity.js"></script>
-	<script src="objects/movingEntity.js"></script>
-	<script src="objects/unit.js"></script>
-	<script src="objects/rock.js"></script>
-	<script src="objectRenderers/selectorRenderer.js"></script>
-	<script src="objectRenderers/entityRenderer.js"></script>
-	<script src="objectRenderers/tiledMapRenderer.js"></script>
-	<script src="pathfinding/pathfinding.js"></script>
-	<script src="pathfinding/astar.js"></script>
-	<script src="entities.js"></script>
-	<script src="jive.js"></script>
+    <script src="core/canvas.js"></script>
+    <script src="core/imageLoader.js"></script>
+    <script src="core/eventEmitter.js"></script>
+    <script src="core/gameObject.js"></script>
+    <script src="core/camera.js"></script>
+    <script src="core/renderer.js"></script>
+    <script src="core/selector.js"></script>
+    <script src="core/inputHandler.js"></script>
+    <script src="core/utils.js"></script>
+    <script src="core/shapes.js"></script>
+    <script src="core/tiledMap.js"></script>
+    <script src="objects/entity.js"></script>
+    <script src="objects/movingEntity.js"></script>
+    <script src="objects/unit.js"></script>
+    <script src="objects/rock.js"></script>
+    <script src="objectRenderers/selectorRenderer.js"></script>
+    <script src="objectRenderers/entityRenderer.js"></script>
+    <script src="objectRenderers/tiledMapRenderer.js"></script>
+    <script src="pathfinding/pathfinding.js"></script>
+    <script src="pathfinding/astar.js"></script>
+    <script src="entities.js"></script>
+    <script src="jive.js"></script>
 
 
-	<style>
+    <style>
 
-		html {
-			height: 100%;
-			overflow: hidden
-		}
+        html {
+            height: 100%;
+            overflow: hidden
+        }
 
-		body {
-			margin: 0px;
-			padding: 0px;
-			height: 100%;
-			overflow: hidden;
-			font-family: 'Proxima Nova Regular', 'Helvetica Neue', Arial, Helvetica, sans-serif;
-			font-size: 12px;
-		}
+        body {
+            margin: 0px;
+            padding: 0px;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Proxima Nova Regular', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            font-size: 12px;
+        }
 
-		canvas {
-			border: 1px solid #d3d3d3;
-			background-color: #f1f1f1;
-		}
+        canvas {
+            border: 1px solid #d3d3d3;
+            background-color: #f1f1f1;
+        }
 
-	</style>
+    </style>
 </head>
 
 <body>
-	
 
 
-	<script>	
+<script>
 
-	url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/map.json";
-	var map, renderer, camera, ih, selector;
+    //url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/map.json";
+    url = "file:///Users/sp0wner/Desktop/JIvE/src/map.json";
+    var map, renderer, camera, ih, selector;
 
-	function init()
-	{
-		renderer = JIVE.Renderer;
-		camera = JIVE.Camera;
+    function init() {
+        renderer = JIVE.Renderer;
+        camera = JIVE.Camera;
         ih = JIVE.InputHandler;
         selector = JIVE.Selector;
         map = JIVE.Map;
@@ -79,37 +78,40 @@
         renderer.append(entityRenderer);
         renderer.append(selectorRenderer);
 
-		// register bindings
-		ih.bind(JIVE.Keys.ARROW_UP, 'move-up');
-		ih.bind(JIVE.Keys.W, 'move-up');
-		ih.bind(JIVE.Keys.ARROW_DOWN, 'move-down');
-		ih.bind(JIVE.Keys.S, 'move-down');
-		ih.bind(JIVE.Keys.ARROW_LEFT, 'move-left');
-		ih.bind(JIVE.Keys.A, 'move-left');
-		ih.bind(JIVE.Keys.ARROW_RIGHT, 'move-right');
-		ih.bind(JIVE.Keys.D, 'move-right');
-		ih.bind(JIVE.Mouse.LEFT, 'click-left');
-		ih.bind(JIVE.Mouse.RIGHT, 'click-right');
+        // register bindings
+        ih.bind(JIVE.Keys.ARROW_UP, 'move-up');
+        ih.bind(JIVE.Keys.W, 'move-up');
+        ih.bind(JIVE.Keys.ARROW_DOWN, 'move-down');
+        ih.bind(JIVE.Keys.S, 'move-down');
+        ih.bind(JIVE.Keys.ARROW_LEFT, 'move-left');
+        ih.bind(JIVE.Keys.A, 'move-left');
+        ih.bind(JIVE.Keys.ARROW_RIGHT, 'move-right');
+        ih.bind(JIVE.Keys.D, 'move-right');
+        ih.bind(JIVE.Mouse.LEFT, 'click-left');
+        ih.bind(JIVE.Mouse.RIGHT, 'click-right');
 
-		// you can do something like this, but it is veeery slow
-		camera.on('move-up', function(){
-			//camera.move({up:1, right:0, left:0, down:0}, dt)
+        // you can do something like this, but it is veeery slow
+        camera.on('move-up', function () {
+            //camera.move({up:1, right:0, left:0, down:0}, dt)
 
-			// TODO problem with dt. we need to be able to access dt
-			// when calling the camera.
-		});
+            // TODO problem with dt. we need to be able to access dt
+            // when calling the camera.
+        });
 
 
-		ih.on('click-left', function(e) {
-			console.log(Utils.screen2MapCoords(e, camera));
+        ih.on('click-left', function (e) {
+            console.log(Utils.screen2MapCoords(e, camera));
 
-			//Entities[0].move(1, 0, map);
-			//console.log(JIVE.Entities[0].move(3, 0, camera).mapX);
-		});
+            // imageData returns an array with four elements: r, g, b, a
+            var imageData = JIVE.Canvas.getCtx().getImageData(e.clientX, e.clientY, 1, 1);
+            console.log(imageData);
+            //Entities[0].move(1, 0, map);
+            //console.log(JIVE.Entities[0].move(3, 0, camera).mapX);
+        });
 
-		// moved this under MovingEntity
-		/*ih.on('click-right', function(e){
-			console.log("right click");
+        // moved this under MovingEntity
+        /*ih.on('click-right', function(e){
+            console.log("right click");
 
             for (var ent in Selector.selectedEntities) {
                 Selector.selectedEntities[ent].goTo(e);
@@ -120,36 +122,35 @@
             for (var ent in Selector.selectedEntities){
                 Selector.selectedEntities[ent].moveTo(new Point(clickPt.tileX, clickPt.tileY));
             }
-		});*/
+        });*/
 
-		map.loadJSON(url, camera, function(){
-			if(map.isLoaded())
-				JIVE.reqAnimFrame(animate);
-		});
-	}
+        map.loadJSON(url, camera, function () {
+            if (map.isLoaded())
+                JIVE.reqAnimFrame(animate);
+        });
+    }
 
-	function animate(dt)
-	{
+    function animate(dt) {
 
-		var direction = {
-		    up: ih.getActionState("move-up"),
-			right: ih.getActionState('move-right'),
-			left: ih.getActionState('move-left'),
-			down: ih.getActionState('move-down')
-		};
+        var direction = {
+            up: ih.getActionState("move-up"),
+            right: ih.getActionState('move-right'),
+            left: ih.getActionState('move-left'),
+            down: ih.getActionState('move-down')
+        };
 
-		var dxdy = camera.move(direction, dt);
+        var dxdy = camera.move(direction, dt);
 
-		// update Entities
-		JIVE.Entities.forEach( function(entity){
-			entity.update(dxdy.dx, dxdy.dy, dt);
-		});
+        // update Entities
+        JIVE.Entities.forEach(function (entity) {
+            entity.update(dxdy.dx, dxdy.dy, dt);
+        });
 
-		renderer.draw();
+        renderer.draw();
 
-	}
+    }
 
 
-	</script>
+</script>
 
 </body>

@@ -5,8 +5,7 @@
 
 class Rock extends Entity {
 
-    constructor(screenX, screenY, gid)
-    {
+    constructor(screenX, screenY, gid) {
         super(screenX, screenY, gid);
 
         this.life = 100;

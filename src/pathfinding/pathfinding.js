@@ -1,13 +1,14 @@
-class Pathfinding{
+class Pathfinding {
 
-    constructor(){}
+    constructor() {
+    }
 
     /**
      *
      * @param map
      * @param entities
      */
-    static buildPassableGrid(entities, mapW, mapH){
+    static buildPassableGrid(entities, mapW, mapH) {
 
         var passableGrid = [];
         for (var i = 0; i < mapH; i++) {
@@ -17,7 +18,7 @@ class Pathfinding{
             }
         }
 
-        for (var e in entities){
+        for (var e in entities) {
             var entPos = entities[e].getTilePos();
             if (entPos === -1) continue;
             passableGrid[entPos.tileY][entPos.tileX] = 0; //occupied
@@ -32,9 +33,9 @@ class Pathfinding{
      * @param startPoint
      * @param endPoint
      */
-    static findPath(startPoint, endPoint){
+    static findPath(startPoint, endPoint) {
         var passableGrid = Pathfinding.buildPassableGrid(JIVE.Entities, JIVE.Map.mapWidth, JIVE.Map.mapHeight);
-        var graph = new Graph(passableGrid, {diagonal : true});
+        var graph = new Graph(passableGrid, {diagonal: true});
         var start = graph.grid[startPoint.y][startPoint.x];
         var end = graph.grid[endPoint.y][endPoint.x];
         return astar.search(graph, start, end);
