@@ -1,27 +1,42 @@
 if (typeof JIVE === "undefined")
     var JIVE = {};
 
-JIVE.ImageLoader = new ImageLoader();
-JIVE.Canvas = new Canvas();
-JIVE.Map = new TiledMap();
-JIVE.Camera = new Camera(JIVE.Canvas);
-JIVE.Renderer = new Renderer(JIVE.Canvas);
-JIVE.InputHandler = new InputHandler();
-JIVE.Selector = new Selector();
-
-
 JIVE._onDocumentLoad = function () {
-    JIVE.Canvas.initFullScreen();
-    JIVE.Camera.init();
-    JIVE.InputHandler.init();
-
     // calls the user defined init() function
     init();
 };
 window.onload = JIVE._onDocumentLoad;
 
-JIVE.Spawn = function (entityName, x, y, gid) {
-    return Entity._factory[entityName](x, y, gid);
+JIVE.ImageLoader = function (){
+    return new ImageLoader();
+};
+
+JIVE.Canvas = function () {
+    return new Canvas();
+};
+
+JIVE.Map = function () {
+    return new TiledMap();
+}
+
+JIVE.Camera = function (canvas) {
+    return new Camera(canvas);
+};
+
+JIVE.Renderer = function (canvas) {
+    return new Renderer(canvas);
+};
+
+JIVE.InputHandler = function () {
+    return new InputHandler();
+};
+
+JIVE.Selector = function () {
+    return new Selector();
+};
+
+JIVE.Spawn = function (entityName, x, y, gid, camera, map) {
+    return Entity._factory[entityName](x, y, gid, camera, map);
 };
 
 JIVE.reqAnimFrame = function (fn) {

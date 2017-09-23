@@ -60,18 +60,26 @@
 
     //url = "https://raw.githubusercontent.com/skaparelos/random-tests/master/map.json";
     url = "file:///Users/sp0wner/Desktop/JIvE/src/map.json";
-    var map, renderer, camera, ih, selector;
+    var imageLoader, canvas, map, renderer, camera, ih, selector;
+    var mapRenderer, selectorRenderer, entityRenderer;
 
     function init() {
-        renderer = JIVE.Renderer;
-        camera = JIVE.Camera;
-        ih = JIVE.InputHandler;
-        selector = JIVE.Selector;
-        map = JIVE.Map;
 
-        var mapRenderer = new TiledMapRenderer(map, camera, JIVE.Canvas, JIVE.ImageLoader);
-        var selectorRenderer = new SelectorRenderer(selector, JIVE.Canvas);
-        var entityRenderer = new EntityRenderer(JIVE.Entities, camera, JIVE.Canvas, JIVE.ImageLoader, map);
+        imageLoader = JIVE.ImageLoader();
+        canvas = JIVE.Canvas("JiveCanvas");
+        camera = JIVE.Camera(canvas);
+        renderer = JIVE.Renderer(canvas);
+        ih = JIVE.InputHandler();
+        selector = JIVE.Selector();
+        map = JIVE.Map();
+
+        canvas.initFullScreen();
+        camera.init();
+        ih.init(canvas);
+
+        mapRenderer = new TiledMapRenderer(map, camera, canvas, imageLoader);
+        selectorRenderer = new SelectorRenderer(selector, canvas);
+        entityRenderer = new EntityRenderer(JIVE.Entities, camera, canvas, imageLoader, map);
 
         // add renderers in order of rendering
         renderer.append(mapRenderer);
@@ -103,7 +111,7 @@
             console.log(Utils.screen2MapCoords(e, camera));
 
             // imageData returns an array with four elements: r, g, b, a
-            var imageData = JIVE.Canvas.getCtx().getImageData(e.clientX, e.clientY, 1, 1);
+            var imageData = canvas.getCtx().getImageData(e.clientX, e.clientY, 1, 1);
             console.log(imageData);
             //Entities[0].move(1, 0, map);
             //console.log(JIVE.Entities[0].move(3, 0, camera).mapX);
@@ -124,7 +132,7 @@
             }
         });*/
 
-        map.loadJSON(url, camera, function () {
+        map.loadJSON(url, camera, imageLoader, function () {
             if (map.isLoaded())
                 JIVE.reqAnimFrame(animate);
         });

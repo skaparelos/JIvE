@@ -33,8 +33,8 @@ class Pathfinding {
      * @param startPoint
      * @param endPoint
      */
-    static findPath(startPoint, endPoint) {
-        var passableGrid = Pathfinding.buildPassableGrid(JIVE.Entities, JIVE.Map.mapWidth, JIVE.Map.mapHeight);
+    static findPath(startPoint, endPoint, mapW, mapH) {
+        var passableGrid = Pathfinding.buildPassableGrid(JIVE.Entities, mapW, mapH);
         var graph = new Graph(passableGrid, {diagonal: true});
         var start = graph.grid[startPoint.y][startPoint.x];
         var end = graph.grid[endPoint.y][endPoint.x];

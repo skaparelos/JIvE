@@ -31,11 +31,11 @@ class TiledMap {
     /**
      * loadJSON takes a JSON exported from tiled and loads the map.
      * @param JsonURI string
-     * @param callback function
      * @param imageLoader instance of imageLoader class
+     * @param callback function
+     *
      */
-    loadJSON(JsonURI, camera, callback, imageLoader) {
-        imageLoader = imageLoader || JIVE.ImageLoader;
+    loadJSON(JsonURI, camera, imageLoader, callback) {
         var that = this;
 
         Utils.xhrGet(JsonURI, function (data) {
@@ -55,6 +55,13 @@ class TiledMap {
         return this.loaded;
     }
 
+    getWidth(){
+        return this.mapWidth;
+    }
+
+    getHeight(){
+        return this.mapHeight;
+    }
 
     getMap() {
         return {
@@ -135,7 +142,9 @@ class TiledMap {
     // the data on that layer and create the map.
     createMap(layers, tileSets, camera) {
         var map2d = [], ctr = 0;
+
         for (var layer = 0; layer < layers.length; layer++) {
+
             // if the name of the layer contains the word "base" then we DO NOT
             // create Entities out of the layer.
             var isBaseLayer = layers[layer]["name"].includes("base");
@@ -164,8 +173,10 @@ class TiledMap {
 
                         // screenCoords of the entity
                         var screenCoords = Utils.map2ScreenCoords(
-                            i, j,
-                            this.getImageByGID(tgid)["w"], this.getImageByGID(tgid)["h"],
+                            i,
+                            j,
+                            this.getImageByGID(tgid)["w"],
+                            this.getImageByGID(tgid)["h"],
                             camera
                         );
 
@@ -181,9 +192,13 @@ class TiledMap {
                         // get the entity name and spawn it
                         var entityType = tileSets[0]["tileproperties"][tgid - 1]["type"];
                         if (entityType) {
-                            JIVE.Spawn(entityType,
-                                screenCoords.x, screenCoords.y,
-                                tgid
+                            JIVE.Spawn(
+                                entityType,
+                                screenCoords.x,
+                                screenCoords.y,
+                                tgid,
+                                camera,
+                                this
                             );
                         }
                     }
@@ -217,6 +232,5 @@ class TiledMap {
 
         this.mapGIDs2Images(tilesets);
         this.createMap(layers, tilesets, camera);
-
     }
 }

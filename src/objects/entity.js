@@ -6,11 +6,14 @@
  */
 class Entity extends GameObject {
 
-    constructor(screenX, screenY, gid) {
+    constructor(screenX, screenY, gid, camera, map) {
         super();
 
         this._id = Entity.id++;
         this._gid = gid;
+
+        this._camera = camera;
+        this._map = map;
 
         // the x,y coordinates in the screen
         this._screenX = screenX;
@@ -125,7 +128,7 @@ class Entity extends GameObject {
         return Utils.screen2MapCoords({
             clientX: this._screenX + 32,
             clientY: this._screenY + 40
-        }, JIVE.Camera);
+        }, this._camera);
     }
 
     // whether this entity can be walked over

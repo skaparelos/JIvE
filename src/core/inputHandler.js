@@ -31,7 +31,7 @@ class InputHandler extends EventEmitter {
      * init() is used by the user to initialise the basic event listeners.
      * This function must be called by the user explicitly.
      */
-    init() {
+    init(canvas) {
 
         // Keyboard
         document.body.addEventListener('keydown', this.handleKeyDown.bind(this), false);
@@ -47,7 +47,7 @@ class InputHandler extends EventEmitter {
         document.body.addEventListener('mousemove', this.handleMouseMove.bind(this), false);
 
         // Window
-        window.addEventListener('resize', JIVE.Canvas.updateCanvasSize.bind(this));
+        window.addEventListener('resize', canvas.updateCanvasSize.bind(this));
 
         return this;
     }

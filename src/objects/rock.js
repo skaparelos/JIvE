@@ -5,8 +5,8 @@
 
 class Rock extends Entity {
 
-    constructor(screenX, screenY, gid) {
-        super(screenX, screenY, gid);
+    constructor(screenX, screenY, gid, camera, map) {
+        super(screenX, screenY, gid, camera, map);
 
         this.life = 100;
 
@@ -19,6 +19,6 @@ class Rock extends Entity {
 }
 
 
-Entity._factory["Rock"] = function (x, y, gid) {
-    return new Rock(x, y, gid);
+Entity._factory["Rock"] = function (x, y, gid, camera, map) {
+    return new Rock(x, y, gid, camera, map);
 };

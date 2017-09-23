@@ -1,8 +1,8 @@
 /** Abstract class with default implementation */
 class MovingEntity extends Entity {
 
-    constructor(screenX, screenY, gid) {
-        super(screenX, screenY, gid);
+    constructor(screenX, screenY, gid, camera, map) {
+        super(screenX, screenY, gid, camera, map);
 
         // a boolean indicating whether the player is moving now or not
         this._isMoving = false;
@@ -98,11 +98,13 @@ class MovingEntity extends Entity {
         if (this._curMapPt === -1)
             return;
 
-        var destMapPt = Utils.screen2MapCoords(e, JIVE.Camera);
+        var destMapPt = Utils.screen2MapCoords(e, this._camera);
         this._destinationMapPt = new Point(destMapPt.tileX, destMapPt.tileY);
         this._path = Pathfinding.findPath(
             new Point(this._curMapPt.tileX, this._curMapPt.tileY),
-            this._destinationMapPt
+            this._destinationMapPt,
+            this._map.getWidth(),
+            this._map.getHeight()
         );
 
         // y for x, x for y
